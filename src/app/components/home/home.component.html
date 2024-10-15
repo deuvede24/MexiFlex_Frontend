@@ -3,19 +3,22 @@
   <div id="recipeCarousel" class="carousel slide" data-bs-ride="carousel">
     <div class="carousel-inner">
       @for (group of groupedRecipes; track $index) {
-        <div class="carousel-item" [class.active]="$index === 0">
-          <div class="row justify-content-center">
-            <div class="col-md-4">
-              <div class="card">
-                <img [src]="group.versions[0]?.image" class="card-img-top lazyload" [alt]="group.title">
-                <div class="card-body">
-                  <h5 class="card-title">{{ group.title }}</h5>
-                  <p class="card-text">{{ group.generalDescription }}</p>
-                  <p class="card-text">
-                    <small class="text-muted">Tiempo promedio de preparación: {{ group.averagePreparationTime }} minutos</small>
-                  </p>
+      <div class="carousel-item" [class.active]="$index === 0">
+        <div class="row justify-content-center">
+          <div class="col-md-4">
+            <div class="card">
+              <img [src]="group.versions[0]?.image" class="card-img-top lazyload" [alt]="group.title">
+              <div class="card-body">
+                <h5 class="card-title">{{ group.title }}</h5>
+                <p class="card-text">{{ group.generalDescription }}</p>
+                <p class="card-text">
+                  <small class="text-muted">Tiempo promedio de preparación: {{ group.averagePreparationTime }}
+                    minutos</small>
+                </p>
+                <div class="d-flex justify-content-between"> <!-- Botones en fila -->
                   <!-- Botón de receta tradicional -->
-                  <button (click)="openRecipeModal(group.traditionalVersion, 'Tradicional')" class="btn btn-traditional">
+                  <button (click)="openRecipeModal(group.traditionalVersion, 'Tradicional')"
+                    class="btn btn-traditional">
                     Ver versión Tradicional
                   </button>
                   <!-- Botón de receta flexi -->
@@ -27,6 +30,7 @@
             </div>
           </div>
         </div>
+      </div>
       }
     </div>
     <a class="carousel-control-prev" href="#recipeCarousel" role="button" data-bs-slide="prev">
@@ -42,33 +46,45 @@
 
 <!-- Modal de la receta -->
 @if (selectedRecipe) {
-  <div class="modal fade show" tabindex="-1" style="display: block;" aria-modal="true" role="dialog">
-    <div class="modal-dialog">
-      <div class="modal-content" [ngClass]="{'modal-traditional': selectedCategory === 'Tradicional', 'modal-flexi': selectedCategory === 'Flexi'}">
-        <div class="modal-header">
-          <h5 class="modal-title">{{ selectedRecipe.title }} ({{ selectedCategory }})</h5>
-          <button type="button" class="close" aria-label="Close" (click)="closeRecipeModal()">
-            <span aria-hidden="true">&times;</span>
-          </button>
+<div class="modal fade show" tabindex="-1" style="display: block;" aria-modal="true" role="dialog">
+  <div class="modal-dialog modal-lg"> <!-- Aumentamos el tamaño para escritorio -->
+    <div class="modal-content"
+      [ngClass]="{'modal-traditional': selectedCategory === 'Tradicional', 'modal-flexi': selectedCategory === 'Flexi'}">
+      <div class="modal-header">
+        <h5 class="modal-title">{{ selectedRecipe.title }} ({{ selectedCategory }})</h5>
+        <button type="button" class="close" aria-label="Close" (click)="closeRecipeModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>{{ selectedRecipe.description }}</p>
+        <p>Categoría: {{ selectedRecipe.category }}</p>
+        <p>Porciones: {{ selectedRecipe.serving_size }}</p>
+        <p>Tiempo de preparación: {{ selectedRecipe.preparation_time }} minutos</p>
+
+        <!-- Nuevo: Selector de porciones -->
+        <div class="porciones-selector mb-3">
+          <label for="porciones">Porciones:</label>
+          <select id="porciones" [(ngModel)]="selectedPortions" (change)="updateIngredients(selectedPortions)">
+            <option [value]="1">1 porción</option>
+            <option [value]="2">2 porciones</option>
+            <option [value]="3">3 porciones</option>
+          </select>
         </div>
-        <div class="modal-body">
-          <p>{{ selectedRecipe.description }}</p>
-          <p>Categoría: {{ selectedRecipe.category }}</p>
-          <p>Porciones: {{ selectedRecipe.serving_size }}</p>
-          <p>Tiempo de preparación: {{ selectedRecipe.preparation_time }} minutos</p>
-          <ul>
-            @for (ingredient of selectedRecipe.RecipeIngredients; track $index) {
-              <li>{{ ingredient.quantity }} de {{ ingredient.ingredient_name }}</li>
-            }
-          </ul>
-          <p>Pasos:</p>
-          <p>{{ selectedRecipe.steps }}</p>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" (click)="closeRecipeModal()">Cerrar</button>
-        </div>
+        <ul>
+          <!-- Nuevo título para los ingredientes -->
+          <h5>Ingredientes:</h5>
+          @for (ingredient of selectedRecipe.RecipeIngredients; track $index) {
+          <li>{{ ingredient.quantity }} de {{ ingredient.ingredient_name }}</li>
+          }
+        </ul>
+        <p>Pasos:</p>
+        <p>{{ selectedRecipe.steps }}</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="closeRecipeModal()">Cerrar</button>
       </div>
     </div>
   </div>
+</div>
 }
-

@@ -1,47 +1,122 @@
+/* Contenedor general del carrusel */
+.carousel-container {
+  display: flex;
+  overflow-x: hidden;
+  overflow-y: auto;  /* Desplazamiento vertical por defecto en móviles */
+  flex-direction: column;  /* Carrusel vertical para móviles */
+  scroll-snap-type: y mandatory;  /* Scroll suave en móviles */
+}
+
+/* Carrusel en móviles: scroll vertical */
+@media (max-width: 576px) {
+  .carousel-inner {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .carousel-item {
+    scroll-snap-align: start;
+    margin-bottom: 20px;  /* Separación entre cards */
+  }
+}
+
+/* Carrusel en tabletas y pantallas grandes: scroll horizontal */
+@media (min-width: 577px) {
+  .carousel-container {
+    overflow-x: auto;
+    overflow-y: hidden;  /* Desplazamiento horizontal */
+    flex-direction: row;  /* Carrusel horizontal */
+    scroll-snap-type: x mandatory;  /* Scroll horizontal suave */
+  }
+
+  .carousel-inner {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .carousel-item {
+    scroll-snap-align: start;
+    flex: 0 0 auto;  /* Evita que las cards se expandan */
+    margin-right: 20px;  /* Separación entre cards */
+  }
+
+  .card {
+    width: 300px;  /* Ajusta el tamaño de las cards */
+  }
+}
+
+/* En pantallas grandes puedes ajustar más el tamaño de las cards */
+@media (min-width: 992px) {
+  .card {
+    width: 350px;
+  }
+}
+
+/* Alineación de botones dentro de la card */
+.btn-container {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
 /* Estilo general para las cards */
 .card {
-    border-radius: 15px;  /* Bordes redondeados */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);  /* Sombra suave */
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    
-    &:hover {
-      transform: scale(1.05);  /* Aumenta ligeramente el tamaño al hacer hover */
-      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);  /* Sombra más fuerte al hacer hover */
-    }
+  border-radius: 15px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
   }
-  
-  /* Clases para el modal */
-  .modal-traditional {
-    background-color: #f06306;  /* Naranja intenso para recetas tradicionales */
-    color: white;
+}
+
+/* Clases para el modal */
+.modal-traditional {
+  background-color: #f06306;
+  color: white;
+}
+
+.modal-flexi {
+  background-color: #038009;
+  color: white;
+}
+
+/* Botones */
+.btn-traditional {
+  background-color: #f06306;
+  color: white;
+  width: 48%;  /* Tamaño del botón */
+}
+
+.btn-flexi {
+  background-color: #038009;
+  color: white;
+  width: 48%;  /* Tamaño del botón */
+}
+
+/* Ajustar el modal para que ocupe casi toda la pantalla en móviles */
+.modal-dialog {
+  max-width: 95%; /* Ocupar casi toda la pantalla en móviles */
+}
+
+@media (min-width: 768px) {
+  .modal-dialog {
+    max-width: 80%; /* Ocupar mayor parte de la pantalla en tabletas */
   }
-  
-  .modal-flexi {
-    background-color: #038009;  /* Verde para recetas flexi */
-    color: white;
+}
+
+@media (min-width: 1024px) {
+  .modal-dialog {
+    max-width: 70%; /* Diseño horizontal en pantallas grandes */
   }
-  
-  .btn-traditional {
-    background-color: #f06306;  /* Botón naranja para recetas tradicionales */
-    color: white;
-  }
-  
-  .btn-flexi {
-    background-color: #038009;  /* Botón verde para recetas flexi */
-    color: white;
-  }
-  
-  /* Ajustar el tamaño de las cards en pantallas más grandes */
-  @media (min-width: 768px) {
-    .card {
-      width: 350px;
-      margin: 0 auto;
-    }
-  }
-  
-  @media (min-width: 1200px) {
-    .card {
-      width: 400px;
-    }
-  }
-  
+}
+
+/* Centrar contenido del modal en móviles */
+.modal-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+
