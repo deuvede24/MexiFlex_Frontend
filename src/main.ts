@@ -1,6 +1,26 @@
 import { bootstrapApplication } from '@angular/platform-browser';
-import { appConfig } from './app/app.config';
 import { AppComponent } from './app/app.component';
+import { appConfig } from './app/app.config';
+import { provideToastr } from 'ngx-toastr';
+import { provideHttpClient } from '@angular/common/http';
+import { importProvidersFrom } from '@angular/core';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
-bootstrapApplication(AppComponent, appConfig)
-  .catch((err) => console.error(err));
+// Polyfill para `process`
+(window as any).process = {
+  env: { DEBUG: undefined },
+};
+
+bootstrapApplication(AppComponent, {
+  ...appConfig,
+  providers: [
+    provideHttpClient(),
+    ...appConfig.providers!,
+    importProvidersFrom(BrowserAnimationsModule),  // Animaciones
+    provideToastr({
+      timeOut: 3000,
+      positionClass: 'toast-top-right',
+    }),
+  ]
+});
+

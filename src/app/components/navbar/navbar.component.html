@@ -1,0 +1,34 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+    <div class="container-fluid">
+      <!-- Logo a la izquierda -->
+      <a class="navbar-brand" routerLink="/">
+        <img src='/icons/Food-Taco-icon.png' alt="Mexi-Flex" style="width: 60px;">  <!-- Ajusta el tamaño del logo -->
+      </a>
+  
+      <!-- Descripción del proyecto en el centro -->
+      <div class="mx-auto">
+        <span class="navbar-text text-white">
+          Bienvenido a Mexi-Flex: Tus recetas favoritas, ¡al alcance de un clic!
+        </span>
+      </div>
+  
+      <!-- Avatar o botones de login/register -->
+      <div class="d-flex">
+        <!-- Si está logueado, mostrar avatar -->
+        <ng-container *ngIf="authService.isLoggedIn(); else guestOptions">
+          <div class="d-flex align-items-center">
+            <span class="text-white me-2">{{ getUsername() }}</span>
+            <img [src]="authService.currentUser?.avatar" alt="avatar" class="rounded-circle" width="40" height="40">
+            <a class="nav-link text-white ms-2" (click)="logout()">Cerrar sesión</a>
+          </div>
+        </ng-container>
+  
+        <!-- Opciones para invitados (login y registro) -->
+        <ng-template #guestOptions>
+          <a class="nav-link text-white" routerLink="/login">Iniciar sesión</a>
+          <a class="nav-link text-white" routerLink="/register">Registrarse</a>
+        </ng-template>
+      </div>
+    </div>
+  </nav>
+  

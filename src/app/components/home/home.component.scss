@@ -1,0 +1,47 @@
+/* Estilo general para las cards */
+.card {
+    border-radius: 15px;  /* Bordes redondeados */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);  /* Sombra suave */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    
+    &:hover {
+      transform: scale(1.05);  /* Aumenta ligeramente el tamaño al hacer hover */
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);  /* Sombra más fuerte al hacer hover */
+    }
+  }
+  
+  /* Clases para el modal */
+  .modal-traditional {
+    background-color: #f06306;  /* Naranja intenso para recetas tradicionales */
+    color: white;
+  }
+  
+  .modal-flexi {
+    background-color: #038009;  /* Verde para recetas flexi */
+    color: white;
+  }
+  
+  .btn-traditional {
+    background-color: #f06306;  /* Botón naranja para recetas tradicionales */
+    color: white;
+  }
+  
+  .btn-flexi {
+    background-color: #038009;  /* Botón verde para recetas flexi */
+    color: white;
+  }
+  
+  /* Ajustar el tamaño de las cards en pantallas más grandes */
+  @media (min-width: 768px) {
+    .card {
+      width: 350px;
+      margin: 0 auto;
+    }
+  }
+  
+  @media (min-width: 1200px) {
+    .card {
+      width: 400px;
+    }
+  }
+  
