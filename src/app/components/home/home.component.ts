@@ -71,8 +71,8 @@ ngOnInit(): void {
 
         // Asignar versiones flexi y tradicional para las recetas del backend
         this.groupedRecipes.forEach((group: any) => {
-          group.traditionalVersion = group.versions.find((v: Recipe) => v.category === 'Tradicional');
-          group.flexiVersion = group.versions.find((v: Recipe) => v.category === 'Flexi');
+          group.traditionalVersion = group.versions.find((v: Recipe) => v.category === 'tradicional');
+          group.flexiVersion = group.versions.find((v: Recipe) => v.category === 'flexi');
         });
         // Verificar los datos después de agrupar
       console.log('Recetas agrupadas del backend:', this.groupedRecipes);
@@ -127,6 +127,8 @@ ngOnInit(): void {
     this.selectedPortions = 1;  // Inicializamos las porciones en 1
     //this.adjustedIngredients = [...this.selectedRecipe.RecipeIngredients];  // Ingredientes originales
     // Guardamos los ingredientes originales para poder hacer los cálculos siempre con estos valores
+    console.log('Receta seleccionada:', recipe);
+    console.log('Categoría seleccionada:', category);
     this.originalIngredients = recipe.RecipeIngredients.map(ingredient => ({
       ...ingredient,
       quantity: ingredient.quantity // Guardamos las cantidades originales
