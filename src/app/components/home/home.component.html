@@ -7,7 +7,9 @@
         <div class="row justify-content-center">
           <div class="col-md-4">
             <div class="card">
-              <img [src]="group.versions[0]?.image" class="card-img-top lazyload" [alt]="group.title">
+              <!--<img [src]="group.versions[0]?.image" class="card-img-top lazyload" [alt]="group.title">-->
+              <img [src]="getImageUrl(group.versions[0]?.image)" class="card-img-top lazyload" [alt]="group.title">
+
               <div class="card-body">
                 <h5 class="card-title">{{ group.title }}</h5>
                 <p class="card-text">{{ group.generalDescription }}</p>

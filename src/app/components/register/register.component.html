@@ -1,0 +1,82 @@
+<h1>REGISTER</h1>
+<div class="container mt-3">
+    <div class="border p-4 shadow form-custom">
+        <form [formGroup]="registerForm" (ngSubmit)="register()">
+            <h2 class="text-center mb-4">REGISTER</h2>
+
+
+            <div class="form-group mb-3">
+                <label for="username" class="form-label">Username:</label>
+                <input type="text" formControlName="username" id="username" class="form-control"
+                    [ngClass]="{ 'is-invalid': isControlInvalid('username') }" required />
+                <div class="text-danger mt-1">
+                    @if (isControlInvalid('username')) {
+                    @if (registerForm.controls['username'].errors?.['required']) {
+                    <small>Username is required</small>
+                    }
+                    @if (registerForm.controls['username'].errors?.['pattern']) {
+                    <small>Enter a valid username</small>
+                    }
+                    }
+                </div>
+            </div>
+
+
+            <div class="form-group mb-3">
+                <label for="email" class="form-label">Email:</label>
+                <input type="email" formControlName="email" id="email" class="form-control"
+                    [ngClass]="{ 'is-invalid': isControlInvalid('email') }" required />
+                <div class="text-danger mt-1">
+                    @if (isControlInvalid('email')) {
+                    @if (registerForm.controls['email'].errors?.['required']) {
+                    <small>Email is required</small>
+                    }
+                    @if (registerForm.controls['email'].errors?.['email']) {
+                    <small>Enter a valid email</small>
+                    }
+                    }
+                </div>
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="password" class="form-label">Password:</label>
+                <input type="password" formControlName="password" id="password" class="form-control"
+                    [ngClass]="{ 'is-invalid': isControlInvalid('password') }" required />
+                <div class="text-danger mt-1">
+                    @if (isControlInvalid('password')) {
+                    @if (registerForm.controls['password'].errors?.['required']) {
+                    <small>Password is required</small>
+                    }
+                    @if (registerForm.controls['password'].errors?.['minlength']) {
+                    <small>Password must be at least 6 characters</small>
+                    }
+                    }
+                </div>
+            </div>
+
+            <div class="form-group mb-3">
+                <label for="confirmPassword" class="form-label">Confirm Password:</label>
+                <input type="password" formControlName="confirmPassword" id="confirmPassword" class="form-control"
+                    [ngClass]="{ 'is-invalid': isControlInvalid('confirmPassword') || (submitted && registerForm.hasError('mismatch')) }"
+                    required />
+                <div class="text-danger mt-1">
+                    @if (isControlInvalid('confirmPassword') || (submitted && registerForm.hasError('mismatch'))) {
+                    @if (registerForm.controls['confirmPassword'].errors?.['required']) {
+                    <small>Confirm Password is required</small>
+                    }
+                    @if (registerForm.controls['confirmPassword'].errors?.['mismatch']) {
+                    <small>Passwords must match</small>
+                    }
+                    }
+                </div>
+            </div>
+
+            <button type="submit" class="btn w-100">Register</button>
+            @if (errorMessage) {
+            <div class="text-danger mt-2">
+                {{ errorMessage }}
+            </div>
+            }
+        </form>
+    </div>
+</div>
