@@ -50,7 +50,10 @@
         @if (authService.isLoggedIn()) {
           <div class="d-flex align-items-center">
             <span class="text-white me-2">{{ getUsername() }}</span>
-            <img [src]="authService.getAvatarUrl()" alt="avatar" class="rounded-circle" width="40" height="40" style="border: 2px solid white;"> <!-- Avatar con iniciales -->
+           <!--- <img [src]="authService.getAvatarUrl()" alt="avatar" class="rounded-circle" width="40" height="40" style="border: 2px solid white;">  -->
+            
+            <img [src]="getAvatarUrl()" alt="avatar" class="rounded-circle" width="40" height="40" style="border: 2px solid white;">
+
             <a class="nav-link text-white ms-2" (click)="logout()">Cerrar sesión</a>
           </div>
         } @else {
