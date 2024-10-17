@@ -1,7 +1,171 @@
-.avatar {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    margin-left: 10px;
+/* Fondo general de la página */
+body {
+  background-color: #f5f5f5;  /* Fondo uniforme blanco suave */
+  color: #333;  /* Texto en un tono gris oscuro */
+  font-family: 'Roboto', sans-serif;  /* Tipografía moderna */
+  margin: 0;
+  padding: 0;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+/* Estilo para el navbar invisible */
+.navbar {
+  background-color: transparent;  /* Fondo transparente para la navbar */
+  padding: 10px 0;
+  font-size: 8.1rem;
+  color:#333;
+  border-bottom: none;
+  position: relative;  /* Posicionamos la navbar en el flujo de la página */
+  z-index: 10;  /* Nos aseguramos de que esté siempre en la parte superior */
+}
+
+/* Logo y título de la aplicación */
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  font-size: 2rem;  /* Tamaño grande para el nombre de la app */
+  font-weight: bold;
+  color: #ff9500;  /* Color naranja para el logo */
+}
+
+.navbar-brand img {
+  height: 50px;  /* Tamaño del logo */
+  margin-right: 10px;
+}
+
+/* Links del navbar */
+.nav-link {
+  color: #ffffff;  /* Texto blanco */
+  font-weight: 600;
+  text-transform: uppercase;
+  transition: color 0.3s ease;
+  position: relative;
+
+  &:hover {
+    color: #ff9500;  /* Efecto hover naranja */
   }
+
+  /* Efecto subrayado al pasar por encima */
+  &::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    background-color: #ff9500;
+    bottom: -3px;
+    left: 0;
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+  }
+
+  &:hover::after {
+    transform: scaleX(1);
+  }
+}
+
+/* Botones de login y logout */
+.btn-outline-danger,
+.btn-outline-success {
+  font-weight: bold;
+  color:#038009;
+  border-radius: 40px;
+  padding: 10px 20px;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #FF6200;  /* Naranja para hover */
+    color: #fff;
+  }
+}
+
+/* Botones diferenciados por tipo de receta */
+.btn-traditional {
+  background-color: #f06306;  /* Naranja para recetas tradicionales */
+  color: white;
+}
+
+.btn-flexi {
+  background-color: #038009;  /* Verde para recetas flexi */
+  color: white;
+}
+
+/* Avatar del usuario */
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid #FF6200;  /* Borde en color naranja */
+  margin-left: 10px;
+}
+
+/* Estilo del modal para recetas */
+.modal-content {
+  border-radius: 10px;
+  padding: 20px;
+}
+
+.modal-dialog {
+  max-width: 95%;
+}
+
+@media (min-width: 768px) {
+  .modal-dialog {
+    max-width: 80%;
+  }
+}
+
+@media (min-width: 1024px) {
+  .modal-dialog {
+    max-width: 70%;
+  }
+}
+
+
+
+  /* navbar.component.scss */
+
+/* Fondo del navbar transparente */
+.navbar {
+  background-color: transparent;
+  box-shadow: none;
+  border-bottom: none;
+  font-size: 1.1rem;
   
+}
+
+/* Estilo para el logo y nombre de la marca */
+.navbar-brand {
+  font-size: 1.5rem;
+  color: #080808;
+  display: flex;
+  align-items: center;
+  margin-left: 3rem;
+}
+
+/* Efecto hover en los enlaces del navbar */
+.nav-link {
+  color: #080808;  /* Color gris oscuro */
+  font-weight: 600;
+  &:hover {
+      color: #FF6200;  /* Efecto hover en naranja */
+  }
+}
+
+/* Botones en la navbar */
+.btn-outline-success, .btn-outline-danger {
+  font-weight: bold;
+  border: 2px solid #038009;  /* Color del borde (verde en este caso) */
+  padding: 5px 15px;
+  border-radius: 20px;
+  &:hover {
+      background-color: #FF6200;  /* Efecto hover con fondo naranja */
+      color: white;
+  }
+}
+
+
+.navbar-nav {
+  margin-left: auto;  /* Empuja los elementos a la derecha */
+  margin-right: 50px;
+}

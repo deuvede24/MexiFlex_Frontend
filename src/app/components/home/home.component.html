@@ -1,5 +1,7 @@
-<div class="container mt-5">
-  <h2 class="text-center">Recetas destacadas</h2>
+<app-header></app-header>
+
+<div class="container mt-2">
+ 
   <div id="recipeCarousel" class="carousel slide" data-bs-ride="carousel">
     <div class="carousel-inner">
       @for (group of groupedRecipes; track $index) {
@@ -7,7 +9,7 @@
         <div class="row justify-content-center">
           <div class="col-md-4">
             <div class="card">
-              <!--<img [src]="group.versions[0]?.image" class="card-img-top lazyload" [alt]="group.title">-->
+            
               <img [src]="getImageUrl(group.versions[0]?.image)" class="card-img-top lazyload" [alt]="group.title">
 
               <div class="card-body">
@@ -21,11 +23,11 @@
                   <!-- Botón de receta tradicional -->
                   <button (click)="openRecipeModal(group.traditionalVersion, 'Tradicional')"
                     class="btn btn-traditional">
-                    Ver versión Tradicional
+                    Receta Tradicional
                   </button>
                   <!-- Botón de receta flexi -->
                   <button (click)="openRecipeModal(group.flexiVersion, 'Flexi')" class="btn btn-flexi">
-                    Ver versión Flexi
+                    Receta Flexi
                   </button>
                 </div>
               </div>

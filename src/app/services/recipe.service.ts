@@ -116,7 +116,8 @@ export class RecipeService {
       serving_size: 2,
       created_at: new Date(),
       steps: 'Paso 1: Cocinar el chicharrón vegano. Paso 2: Servir con salsa verde.'
-    }
+    },
+    
   ];
 
    // Agrupar recetas por título y calcular tiempo promedio y descripción general

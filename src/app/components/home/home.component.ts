@@ -7,11 +7,15 @@ import { Router } from '@angular/router';
 import { Recipe } from '../../interfaces/recipe.interface';
 import { RecipeService } from '../../services/recipe.service';
 import { FormsModule } from '@angular/forms';  // Importar FormsModule
+import { HeaderComponent } from '../header/header.component';  // Asegúrate de que el path sea correcto
+
+import Swiper from 'swiper';
+
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule],
+  imports: [CommonModule, RouterModule, FormsModule, HeaderComponent],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })

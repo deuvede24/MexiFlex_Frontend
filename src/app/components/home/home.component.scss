@@ -5,6 +5,8 @@
   overflow-y: auto;  /* Desplazamiento vertical por defecto en móviles */
   flex-direction: column;  /* Carrusel vertical para móviles */
   scroll-snap-type: y mandatory;  /* Scroll suave en móviles */
+
+  padding: 20px;
 }
 
 /* Carrusel en móviles: scroll vertical */
@@ -63,6 +65,7 @@
 .card {
   border-radius: 15px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 
   &:hover {
@@ -112,11 +115,12 @@
   }
 }
 
+
+
 /* Centrar contenido del modal en móviles */
 .modal-content {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
-
 

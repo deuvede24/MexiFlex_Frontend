@@ -1,0 +1,112 @@
+/* Contenedor de texto */
+.text-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-family: 'Poppins', sans-serif;
+    width: 100%;
+  }
+  
+  /* Estilos para las palabras clave */
+  .tradition {
+    color: #FF6200; /* Naranja */
+    font-size: 4.5rem;
+    font-weight: bold;
+    letter-spacing: -0.04em;
+    margin-left: -14rem;
+    margin-top: -40px; /* Ajuste para acercar el texto al flexi */
+    
+  }
+  
+  .flexi {
+    color: #08AA2B; /* Verde */
+    font-size: 4.5rem;
+    font-weight: bold;
+    letter-spacing: -0.01em;
+    margin-bottom: 0;
+    position: relative;
+    margin-top: -60px; /* Ajuste para acercar el texto al flexi */
+    margin-bottom: 30px;
+   margin-left: -17rem;
+  }
+  
+  /* Ajuste del resto del texto */
+  .rest-text {
+    color: #080808; /* Gris oscuro */
+    font-size: 5rem;
+    font-weight: bold;
+    letter-spacing: -0.02em;
+  // margin: top 60px; /* Ajuste para acercar el texto al flexi */
+    //margin-left: 1rem;
+  }
+  
+  /* Flecha entre FLEXI y en un click */
+  .arrow-down {
+    display: inline-block;
+    font-size: 4rem; /* Tamaño de la flecha más grande */
+    transform: rotate(90deg); /* Apunta hacia abajo */
+    margin: -2px 0 0 15px; /* Ajuste para colocar la flecha más cerca del texto "en un click" */
+    animation: bounce 3s infinite;
+    color: #08AA2B; /* Color naranja */
+  }
+
+  
+  
+  /* Animación de la flecha */
+  @keyframes bounce {
+    0%, 100% {
+      transform: translateY(0) rotate(95deg);
+    }
+    50% {
+      transform: translateY(10px) rotate(80deg); /* Movimiento de rebote */
+    }
+  }
+  
+
+  /* Estilos para pantallas más pequeñas (móviles) */
+@media (max-width: 768px) {
+    .tradition {
+        font-size: 2rem;  /* Reducimos el tamaño de la fuente en móviles */
+        margin-top: 20px;
+    }
+    
+    .flexi {
+        font-size: 3rem;  /* Reducimos el tamaño de la fuente en móviles */
+        margin-top: -20px;
+    }
+
+    .rest-text {
+        font-size: 1.5rem;  /* Ajustamos el tamaño de la fuente del resto del texto */
+        margin-top: -20px;
+    }
+
+    .arrow-down {
+        font-size: 2.5rem;  /* Reducimos el tamaño de la flecha */
+        margin-top: -10px;
+    }
+}
+
+/* Estilos para pantallas muy pequeñas (extra small devices) */
+@media (max-width: 480px) {
+    .tradition {
+        font-size: 1.8rem;  /* Aún más pequeño en pantallas pequeñas */
+        margin-top: 15px;
+    }
+    
+    .flexi {
+        font-size: 2.5rem;  /* Ajustamos el tamaño para pantallas pequeñas */
+        margin-top: -15px;
+    }
+
+    .rest-text {
+        font-size: 1.2rem;
+        margin-top: -15px;
+    }
+
+    .arrow-down {
+        font-size: 2rem;  /* Flecha aún más pequeña */
+        margin-top: -8px;
+    }
+}
