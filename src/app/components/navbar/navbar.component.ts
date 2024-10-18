@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';  // Asegúrate de tener AuthService
 
 @Component({
@@ -11,7 +11,7 @@ import { AuthService } from '../../services/auth.service';  // Asegúrate de ten
   styleUrls: ['./navbar.component.scss']
 })
 export class NavbarComponent {
-  constructor(public authService: AuthService) {}
+  constructor(public authService: AuthService, private router: Router) {}
 
    // Este método ya estará en el servicio, pero lo llamamos en el template
  /*  getAvatarUrl(): string {
@@ -27,6 +27,9 @@ export class NavbarComponent {
 
   logout(): void {
     this.authService.logout();
+    this.authService.currentUser = null; // Asegurarte de limpiar el estado
+    this.router.navigate(['/']);
+    window.location.reload();  
   }
 
   getUsername(): string {

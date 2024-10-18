@@ -2,8 +2,8 @@
 
 /* Fondo general de la página */
 body {
-    background-color: #fff;  /* Puedes cambiar este color a uno que prefieras */
-    color: #080808;  /* Color del texto general */
+    background-color: #fff;  
+    color: #080808;  
     margin: 0;
     padding: 0;
     font-family: 'Roboto', sans-serif;
@@ -14,7 +14,7 @@ html {
     scroll-behavior: smooth;
 }
 
-/* Modal ajustes */
+/* Estilos del modal */
 .modal-dialog {
     max-width: 95%;
     @media (min-width: 768px) {
@@ -25,47 +25,39 @@ html {
     }
 }
 
-/* Aquí podrías definir otros estilos globales como los botones, etc. */
-body {
+/* Ajustes generales */
+body, * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-  }
-  
-  /* Empujar las recetas hacia abajo para no pisarlas con el header */
-  .main-content {
-    margin-top: 100px; /* Ajusta según la altura del header */
+}
+
+.main-content {
+    margin-top: 100px; /* Para dar espacio con el header */
     padding: 20px;
-  }
-  
-  /* Ajustar la altura del header para que no pise el contenido */
-  .header-container {
-    position: relative;
-    height: 400px; /* Ajusta la altura del header */
+}
+
+.header-container {
+    height: 400px;
     background: linear-gradient(to right, #FF6200, #08AA2B);
     display: flex;
     align-items: center;
     justify-content: flex-start;
-  }
-  
-  body {
-    font-family: 'Poppins', sans-serif; /* O cambia 'Poppins' por la fuente que prefieras */
-  }
-  
-  h1, h2, h3, .navbar, .nav-link, p {
-    font-family: 'Poppins', sans-serif; /* Aplica a los títulos, navbar y párrafos */
-  }
-  
-  
-  h1 {
-    font-weight: 700; /* Extra bold */
-  }
-  
-  p {
-    font-weight: 400; /* Regular */
-  }
-  
-  .nav-link {
-    font-weight: 600; /* Semi bold */
-  }
-  
+}
+
+/* Tipografías globales */
+body, h1, h2, h3, .navbar, .nav-link, p {
+    font-family: 'Poppins', sans-serif;
+}
+
+h1 {
+    font-weight: 700;
+}
+
+p, .nav-link {
+    font-weight: 400;
+}
+
+.nav-link {
+    font-weight: 600;
+}

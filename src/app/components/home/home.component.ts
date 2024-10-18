@@ -87,6 +87,13 @@ ngOnInit(): void {
     });
   }
 
+    // Al cerrar sesión, actualizar el estado y cargar solo recetas del frontend
+    onLogout(): void {
+      this.authService.logout();  // Llama al logout del AuthService
+      this.isUserLoggedIn = false;  // Actualizamos el estado del usuario
+      this.loadGroupedRecipes();  // Volvemos a cargar las recetas del frontend
+    }
+
   getImageUrl(imagePath: string): string {
     if (!imagePath) {
       return '/assets/images/default.jpg';  // En caso de que no haya imagen

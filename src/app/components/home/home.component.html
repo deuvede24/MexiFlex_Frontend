@@ -1,42 +1,45 @@
 <app-header></app-header>
 
 <div class="container mt-2">
- 
   <div id="recipeCarousel" class="carousel slide" data-bs-ride="carousel">
     <div class="carousel-inner">
       @for (group of groupedRecipes; track $index) {
       <div class="carousel-item" [class.active]="$index === 0">
         <div class="row justify-content-center">
-          <div class="col-md-4">
+          <div class="col-md-8"> <!-- Cambiado a col-md-8 para pantallas grandes -->
             <div class="card">
-            
+              
+              <!-- Imagen de la receta -->
               <img [src]="getImageUrl(group.versions[0]?.image)" class="card-img-top lazyload" [alt]="group.title">
 
+              <!-- Contenido de la receta -->
               <div class="card-body">
                 <h5 class="card-title">{{ group.title }}</h5>
                 <p class="card-text">{{ group.generalDescription }}</p>
                 <p class="card-text">
-                  <small class="text-muted">Tiempo promedio de preparación: {{ group.averagePreparationTime }}
-                    minutos</small>
+                  <small class="text-muted">Tiempo promedio de preparación: {{ group.averagePreparationTime }} minutos</small>
                 </p>
-                <div class="d-flex justify-content-between"> <!-- Botones en fila -->
+
+                <!-- Botones para seleccionar versión de receta -->
+                <div class="d-flex justify-content-between">
                   <!-- Botón de receta tradicional -->
-                  <button (click)="openRecipeModal(group.traditionalVersion, 'Tradicional')"
-                    class="btn btn-traditional">
-                    Receta Tradicional
+                  <button (click)="openRecipeModal(group.traditionalVersion, 'Tradicional')" class="btn btn-traditional">
+                    Tradicional
                   </button>
                   <!-- Botón de receta flexi -->
                   <button (click)="openRecipeModal(group.flexiVersion, 'Flexi')" class="btn btn-flexi">
-                    Receta Flexi
+                     Flexi
                   </button>
                 </div>
               </div>
-            </div>
+            </div> <!-- Fin de la card -->
           </div>
         </div>
       </div>
       }
     </div>
+
+    <!-- Controles del carrusel -->
     <a class="carousel-control-prev" href="#recipeCarousel" role="button" data-bs-slide="prev">
       <span class="carousel-control-prev-icon" aria-hidden="true"></span>
       <span class="visually-hidden">Anterior</span>
@@ -51,7 +54,7 @@
 <!-- Modal de la receta -->
 @if (selectedRecipe) {
 <div class="modal fade show" tabindex="-1" style="display: block;" aria-modal="true" role="dialog">
-  <div class="modal-dialog modal-lg"> <!-- Aumentamos el tamaño para escritorio -->
+  <div class="modal-dialog modal-lg">
     <div class="modal-content"
       [ngClass]="{'modal-traditional': selectedCategory === 'Tradicional', 'modal-flexi': selectedCategory === 'Flexi'}">
       <div class="modal-header">
@@ -66,7 +69,7 @@
         <p>Porciones: {{ selectedRecipe.serving_size }}</p>
         <p>Tiempo de preparación: {{ selectedRecipe.preparation_time }} minutos</p>
 
-        <!-- Nuevo: Selector de porciones -->
+        <!-- Selector de porciones -->
         <div class="porciones-selector mb-3">
           <label for="porciones">Porciones:</label>
           <select id="porciones" [(ngModel)]="selectedPortions" (change)="updateIngredients(selectedPortions)">
@@ -75,13 +78,16 @@
             <option [value]="3">3 porciones</option>
           </select>
         </div>
+
+        <!-- Ingredientes de la receta -->
+        <h5>Ingredientes:</h5>
         <ul>
-          <!-- Nuevo título para los ingredientes -->
-          <h5>Ingredientes:</h5>
           @for (ingredient of selectedRecipe.RecipeIngredients; track $index) {
           <li>{{ ingredient.quantity }} de {{ ingredient.ingredient_name }}</li>
           }
         </ul>
+
+        <!-- Pasos de la receta -->
         <p>Pasos:</p>
         <p>{{ selectedRecipe.steps }}</p>
       </div>
