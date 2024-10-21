@@ -19,6 +19,7 @@ export class NavbarComponent {
    }*/
   //Menu
   isMenuOpen = false;
+  isAuthModalOpen = false; // Controla la apertura del modal
 
   toggleMenu() {
     this.isMenuOpen = !this.isMenuOpen;
@@ -26,13 +27,22 @@ export class NavbarComponent {
 
   closeMenu() {
     this.isMenuOpen = false;
-      // Cierra el colapsable si está abierto
-  const menu = document.querySelector('#navbarNav') as HTMLElement;
-  if (menu) {
-    menu.classList.remove('show');
+    // Cierra el colapsable si está abierto
+    const menu = document.querySelector('#navbarNav') as HTMLElement;
+    if (menu) {
+      menu.classList.remove('show');
+    }
   }
+
+  // Abre el modal de autenticación
+  openAuthModal(): void {
+    this.isAuthModalOpen = true;
   }
-  
+
+  // Cierra el modal de autenticación
+  closeAuthModal(): void {
+    this.isAuthModalOpen = false;
+  }
   getAvatarUrl(): string {
     const username = this.authService.currentUser?.username || 'Invitado';
     console.log('Username para avatar:', username);  // Agrega este log

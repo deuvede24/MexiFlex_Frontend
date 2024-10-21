@@ -83,19 +83,19 @@
 /* Estilos para pantallas más pequeñas (móviles) */
 @media (max-width: 768px) {
   .tradition {
-    font-size: 3rem;
+    font-size: rem;
     /* Reducimos el tamaño de la fuente en móviles */
     margin-top: 20px;
   }
 
   .flexi {
-    font-size: 3rem;
+    font-size: 5rem;
     /* Reducimos el tamaño de la fuente en móviles */
     margin-top: -20px;
   }
 
   .rest-text {
-    font-size: 3.2rem;
+    font-size: 5.2rem;
     /* Ajustamos el tamaño de la fuente del resto del texto */
     margin-top: -20px;
   }

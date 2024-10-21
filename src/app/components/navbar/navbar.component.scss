@@ -10,7 +10,7 @@
   .navbar-brand {
     display: flex;
     align-items: center;
-    font-size: 1.8rem;
+    font-size: 1.4rem;
     font-weight: bold;
 
     img {
@@ -79,21 +79,18 @@
     border: none;
     background: transparent;
     outline: none;
-    box-shadow: none !important; /* Elimina cualquier sombra */
-    margin-right: 3px;
-    padding: 5px; /* Ajusta este valor para hacer más pequeño el botón */
-    width: 40px; /* Ajusta el ancho del botón */
-    height: 40px; /* Ajusta el alto del botón */
-    //
-    
+    box-shadow: none !important;
+    margin-left: 10px;
+    padding: 5px;
+    width: 40px;
+    height: 40px;
 
-    
     .navbar-toggler-icon,
     .close-icon {
       font-size: 1.5rem;
       color: #FF6200;
-      padding: 1px; /* Ajusta el espacio interno del ícono */
-      margin-right: 1; /* Asegúrate de que el ícono esté centrado */
+      padding: 1px;
+      margin-right: 1px;
       background-color: transparent;
     }
   }
@@ -104,81 +101,62 @@
     align-items: center;
     margin-right: 10px;
 
-    .btn {
-      margin-left: 10px;
-      min-width: 110px;
-      text-align: center;
+    .fa-user {
+      font-size: 1.8rem;
+      color: #000;
+      cursor: pointer;
+      transition: color 0.3s ease;
+
+      &:hover {
+        color: #FF6200;
+      }
     }
 
-    .user-avatar {
-      margin-left: 10px;
+    .fa-sign-out-alt {
+      font-size: 1.5rem;
+      color: #FF6200;
+      cursor: pointer;
     }
   }
 }
 
+/* Para dispositivos móviles */
 @media (max-width: 991px) {
-  .navbar-brand {
-    img {
-      height: 30px;
-    }
-  }
+  .navbar {
+    position: relative;
 
-  .navbar-collapse {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    background-color: #fff;
-    padding: 1rem;
-    z-index: 1000;
-  }
-
-  .navbar-nav {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .nav-item {
-    margin-bottom: 0.5rem;
-  }
-
-  .navbar-collapse {
-    z-index: 1000;
-    background-color: #fff;
-  }
-
-  .nav-auth-buttons {
-    position: absolute;
-    right: 10px;
-    top: 60px;
-    /* Ajustar para que los botones estén debajo del logo */
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-
-    @media (max-width: 991px) {
-      right: 20px;
-      /* Más espacio para separar del menú hamburguesa */
-      top: 100px;
-      /* Mantener en línea debajo del logo */
+    .navbar-brand {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      top: 10px;
+      font-size: 1rem;
     }
 
-    @media (max-width: 480px) {
-      right: 20px;
-      /* Más espacio en pantallas más pequeñas */
-      top: 80px;
-      /* Aseguramos que sigan estando alineados debajo del logo */
+    .navbar-toggler {
+      position: absolute;
+      left: 10px;
+      top: 10px;
     }
 
+    .nav-auth-buttons {
+      position: absolute;
+      right: 10px;
+      top: 10px;
+      display: flex;
+      align-items: center;
 
-    .btn {
-      font-size: 0.8rem;
-      padding: 5px 8px;
-      min-width: 100px;
+      .fa-user {
+        font-size: 1.5rem;
+        color: #080808;
+        &:hover {
+          color: #FF6200;
+        }
+      }
     }
 
-    .user-avatar {
-      margin-left: 10px;
+    .navbar-collapse {
+      margin-top: 50px;
     }
   }
 }
@@ -188,21 +166,112 @@
     height: 30px;
   }
 
-  .navbar-brand .logo-text {
-    font-size: 1.2rem;
+  .navbar-toggler {
+    margin-left: 5px;
   }
 
   .nav-auth-buttons {
     margin-top: 10px;
 
-    .btn {
-      padding: 4px 8px;
-      font-size: 0.7rem;
+    .fa-user {
+      font-size: 1.6rem;
+      margin-right: 10px;
     }
   }
 }
 
+/* Estilos para el modal */
+/* Estilos para el modal */
+/* Fondo oscuro para el modal */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1040;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.7); /* Fondo oscuro semi-transparente */
+  transition: opacity 0.3s ease;
+}
+
+/* Estilos para el modal */
+.modal.show {
+  display: block;
+  background-color: rgba(0, 0, 0, 0.7); /* Fondo oscuro semi-transparente */
+}
+
+.modal-dialog {
+  position: relative;
+  margin: 10vh auto; /* Centrar el modal verticalmente */
+  max-width: 400px; /* Tamaño máximo del modal */
+}
+
+.modal-content {
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+}
+
+/* Título y cierre */
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: none;
+}
+
+.modal-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+
+.btn-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #888;
+  cursor: pointer;
+
+  &:hover {
+    color: #FF6200;
+  }
+}
+
+/* Estilos para los botones */
+.modal-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .btn {
+    background-color: #FF6200;
+    color: #fff;
+    border-radius: 20px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    width: 100%;
+    margin-bottom: 15px;
+    text-align: center;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: #038009; /* Cambia el color al pasar */
+    }
+  }
+
+  /* Leyenda para incentivar el registro */
+  .register-legend {
+    font-size: 0.9rem;
+    color: #888;
+    text-align: center;
+    margin-top: 10px;
+  }
+}
+
+
+
 .container-fluid {
   margin-bottom: 20px;
 }
-

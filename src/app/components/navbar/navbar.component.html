@@ -5,11 +5,13 @@
       <span class="logo-text">MexiFlex</span>
     </a>
 
+    <!-- Botón de menú hamburguesa -->
     <button class="navbar-toggler" type="button" (click)="toggleMenu()" [attr.aria-expanded]="isMenuOpen" aria-controls="navbarNav">
       <i class="fa-solid fa-bars navbar-toggler-icon" [class.d-none]="isMenuOpen"></i>
       <i class="fa-solid fa-x close-icon" [class.d-none]="!isMenuOpen"></i>
     </button>
 
+    <!-- Menú de navegación -->
     <div class="collapse navbar-collapse" id="navbarNav" [class.show]="isMenuOpen" (click)="closeMenu()">
       <ul class="navbar-nav mx-auto">
         <li class="nav-item">
@@ -24,16 +26,37 @@
       </ul>
     </div>
 
-    <!-- Botones de login/register o avatar y cerrar sesión -->
+    <!-- Sección de login/register o avatar y cerrar sesión -->
     <div class="nav-auth-buttons">
       @if (authService.isLoggedIn()) {
+        <!-- Avatar y cerrar sesión si el usuario está logueado -->
         <span class="text-dark me-2">{{ getUsername() }}</span>
         <img [src]="getAvatarUrl()" alt="avatar" class="user-avatar">
-        <a class="btn btn-outline-danger ms-3" (click)="logout()">Cerrar sesión</a>
+        <a class="btn btn-outline-danger ms-3" (click)="logout()">
+          <i class="fa fa-sign-out-alt"></i> <!-- Ícono de logout -->
+        </a>
       } @else {
-        <a class="btn btn-outline-success me-2" routerLink="/login">Iniciar sesión</a>
-        <a class="btn btn-outline-success" routerLink="/register">Registrarse</a>
+        <!-- Ícono de persona para abrir modal de login/register si no está logueado -->
+        <i class="fa fa-user" (click)="openAuthModal()"></i> <!-- Ícono de login/register -->
       }
+    </div>
+  </div>
+  
+  <!-- Modal de autenticación para login/register -->
+  <div class="modal" tabindex="-1" [ngClass]="{ 'show': isAuthModalOpen }" (click)="closeAuthModal()">
+    <div class="modal-dialog" (click)="$event.stopPropagation()">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Autenticación</h5>
+          <button type="button" class="btn-close" (click)="closeAuthModal()"></button>
+        </div>
+        <div class="modal-body">
+          <button routerLink="/login" class="btn w-100 mb-2" (click)="closeAuthModal()">Iniciar sesión</button>
+          <button routerLink="/register" class="btn w-100" (click)="closeAuthModal()">Registrarse</button>
+          <!-- Leyenda para incentivar el registro -->
+          <p class="register-legend">Al registrarte, podrás disfrutar de beneficios como guardar recetas, recibir recomendaciones personalizadas y más.</p>
+        </div>
+      </div>
     </div>
   </div>
 </nav>
