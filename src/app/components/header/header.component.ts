@@ -11,4 +11,3 @@ import { CommonModule } from '@angular/common';
 export class HeaderComponent {
   // Aquí podemos agregar funciones relacionadas con el scroll u otras interacciones en el futuro.
 }
-

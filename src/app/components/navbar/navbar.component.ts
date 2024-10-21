@@ -11,14 +11,28 @@ import { AuthService } from '../../services/auth.service';  // Asegúrate de ten
   styleUrls: ['./navbar.component.scss']
 })
 export class NavbarComponent {
-  constructor(public authService: AuthService, private router: Router) {}
+  constructor(public authService: AuthService, private router: Router) { }
 
-   // Este método ya estará en el servicio, pero lo llamamos en el template
- /*  getAvatarUrl(): string {
-    return this.authService.getAvatarUrl();  // Llamamos al método para obtener la URL del avatar
-  }*/
+  // Este método ya estará en el servicio, pero lo llamamos en el template
+  /*  getAvatarUrl(): string {
+     return this.authService.getAvatarUrl();  // Llamamos al método para obtener la URL del avatar
+   }*/
+  //Menu
+  isMenuOpen = false;
 
+  toggleMenu() {
+    this.isMenuOpen = !this.isMenuOpen;
+  }
 
+  closeMenu() {
+    this.isMenuOpen = false;
+      // Cierra el colapsable si está abierto
+  const menu = document.querySelector('#navbarNav') as HTMLElement;
+  if (menu) {
+    menu.classList.remove('show');
+  }
+  }
+  
   getAvatarUrl(): string {
     const username = this.authService.currentUser?.username || 'Invitado';
     console.log('Username para avatar:', username);  // Agrega este log
@@ -29,7 +43,8 @@ export class NavbarComponent {
     this.authService.logout();
     this.authService.currentUser = null; // Asegurarte de limpiar el estado
     this.router.navigate(['/']);
-    window.location.reload();  
+    //window.location.reload();
+    this.closeMenu(); //
   }
 
   getUsername(): string {

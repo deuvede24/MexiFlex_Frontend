@@ -39,7 +39,7 @@ body, * {
 
 .header-container {
     height: 400px;
-    background: linear-gradient(to right, #FF6200, #08AA2B);
+    background-color: #fff;  /* Fondo blanco */
     display: flex;
     align-items: center;
     justify-content: flex-start;
@@ -61,3 +61,5 @@ p, .nav-link {
 .nav-link {
     font-weight: 600;
 }
+///////////////////////////////////////////7
+/// 

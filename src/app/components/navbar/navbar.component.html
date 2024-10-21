@@ -1,36 +1,31 @@
 <nav class="navbar navbar-expand-lg">
   <div class="container-fluid">
-    <!-- Logo y nombre de la aplicación alineado a la izquierda -->
     <a class="navbar-brand" routerLink="/">
       <img src='/icons/Food-Taco-icon.png' alt="Mexi-Flex">
-      MexiFlex
+      <span class="logo-text">MexiFlex</span>
     </a>
 
-    <!-- Botón hamburguesa para móviles -->
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-      <span class="navbar-toggler-icon"></span>
+    <button class="navbar-toggler" type="button" (click)="toggleMenu()" [attr.aria-expanded]="isMenuOpen" aria-controls="navbarNav">
+      <i class="fa-solid fa-bars navbar-toggler-icon" [class.d-none]="isMenuOpen"></i>
+      <i class="fa-solid fa-x close-icon" [class.d-none]="!isMenuOpen"></i>
     </button>
 
-    <!-- Links del navbar alineados al centro -->
-    <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
-      <ul class="navbar-nav">
+    <div class="collapse navbar-collapse" id="navbarNav" [class.show]="isMenuOpen" (click)="closeMenu()">
+      <ul class="navbar-nav mx-auto">
         <li class="nav-item">
-          <a class="nav-link" routerLink="/recetas">Recetas</a>
+          <a class="nav-link" routerLink="/recetas-ia" (click)="closeMenu()">Recetas IA</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" routerLink="/recetas-ia">Recetas IA</a>
+          <a class="nav-link" routerLink="/eventos" (click)="closeMenu()">Novedades</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" routerLink="/eventos">Eventos</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" routerLink="/mapa">Mapa</a>
+          <a class="nav-link" routerLink="/mapa" (click)="closeMenu()">Restaurantes & Productos</a>
         </li>
       </ul>
     </div>
 
-    <!-- Botones de usuario alineados a la derecha -->
-    <div class="d-flex align-items-center">
+    <!-- Botones de login/register o avatar y cerrar sesión -->
+    <div class="nav-auth-buttons">
       @if (authService.isLoggedIn()) {
         <span class="text-dark me-2">{{ getUsername() }}</span>
         <img [src]="getAvatarUrl()" alt="avatar" class="user-avatar">
