@@ -9,44 +9,69 @@
   width: 100%;
   margin-top: 60px;
   margin-bottom: 100px;
+  position: relative;
+  height: 500px !important;
+
+  /* Imagen de fondo ajustada */
+  background: #ffffff url('/images/tacos-fb.jpg'); /* Aquí va la ruta de tu imagen */
+  background-size: contain; /* Ajusta el tamaño para que la imagen no se corte */
+  background-position: right center;
+  background-repeat: no-repeat;
+  height: 400px; /* Ajusta la altura según tus necesidades */
+
+   /* Sombreado semitransparente para resaltar el texto */
+   &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(251, 251, 251, 0.4); /* Fondo claro semitransparente para resaltar el texto */
+    z-index: 1;
+  }
+  
+  /* Asegura que el texto esté por encima del sombreado y la imagen */
+  span {
+    position: relative;
+    z-index: 2;
+  }
 }
 
 /* Estilos para las palabras clave */
 .tradition {
   color: #FF6200;
   /* Naranja */
-  font-size: 4.5rem;
+  font-size: 5.5rem;
   font-weight: bold;
   letter-spacing: -0.04em;
-  //margin-left: -14rem;
   margin-top: -50px;
   /* Ajuste para acercar el texto al flexi */
-
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8); /* Añade una sombra suave al texto */
 }
 
 .flexi {
   color: #08AA2B;
   /* Verde */
-  font-size: 4.5rem;
+  font-size: 5.5rem;
   font-weight: bold;
   letter-spacing: -0.01em;
   margin-bottom: 0;
   position: relative;
   margin-top: -60px;
-  /* Ajuste para acercar el texto al flexi */
   margin-bottom: 30px;
- // margin-left: -17rem;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8); /* Añade una sombra suave al texto */
 }
 
 /* Ajuste del resto del texto */
 .rest-text {
   color: #080808;
   /* Gris oscuro */
-  font-size: 5rem;
+  font-size: 6rem;
   font-weight: bold;
   letter-spacing: -0.02em;
-//  margin: top 60px; /* Ajuste para acercar el texto al flexi */
-  //margin-left: 1rem;
+ // text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2); /* Sombra sutil */
+ text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); /* Añade una sombra suave al texto */
 }
 
 /* Flecha entre FLEXI y en un click */
@@ -60,14 +85,11 @@
   /* Ajuste para colocar la flecha más cerca del texto "en un click" */
   animation: bounce 3s infinite;
   color: #08AA2B;
-  /* Color naranja */
+  /* Color verde */
 }
-
-
 
 /* Animación de la flecha */
 @keyframes bounce {
-
   0%,
   100% {
     transform: translateY(0) rotate(95deg);
@@ -78,7 +100,6 @@
     /* Movimiento de rebote */
   }
 }
-
 
 /* Estilos para pantallas más pequeñas (móviles) */
 @media (max-width: 768px) {
@@ -100,7 +121,6 @@
     margin-top: -20px;
     margin: 0;
     padding: 0;
-
     line-height: 1;
   }
 
@@ -108,6 +128,10 @@
     font-size: 2.5rem;
     /* Reducimos el tamaño de la flecha */
     margin-top: -10px;
+  }
+
+  .text-container {
+    height: 300px; /* Ajustamos la altura en móviles */
   }
 }
 
@@ -117,11 +141,10 @@
     font-size: 2.2rem;
     /* Aún más pequeño en pantallas pequeñas */
     margin-top: -5px;
-    
   }
 
   .flexi {
-    font-size:2.2rem;
+    font-size: 2.2rem;
     /* Ajustamos el tamaño para pantallas pequeñas */
     margin-top: -25px;
   }
@@ -139,15 +162,17 @@
     /* Flecha aún más pequeña */
     margin-top: -8px;
   }
-}
 
+  .text-container {
+    height: 200px; /* Ajustamos la altura en pantallas muy pequeñas */
+  }
+}
 
 /* Ajuste del header */
 .text-container {
   margin-top: 20px;
   /* Aumentamos el espacio para separarlo del navbar */
   padding-top: 40px;
-  /* Añadimos más espacio para pantallas grandes */
   display: flex;
   flex-direction: column;
   justify-content: center;
