@@ -11,15 +11,10 @@ import { AuthService } from '../../services/auth.service';  // Asegúrate de ten
   styleUrls: ['./navbar.component.scss']
 })
 export class NavbarComponent {
-  constructor(public authService: AuthService, private router: Router) { }
-
-  // Este método ya estará en el servicio, pero lo llamamos en el template
-  /*  getAvatarUrl(): string {
-     return this.authService.getAvatarUrl();  // Llamamos al método para obtener la URL del avatar
-   }*/
-  //Menu
   isMenuOpen = false;
   isAuthModalOpen = false; // Controla la apertura del modal
+  isAccountModalOpen = false;
+  constructor(public authService: AuthService, private router: Router) { }
 
   toggleMenu() {
     this.isMenuOpen = !this.isMenuOpen;
@@ -43,22 +38,42 @@ export class NavbarComponent {
   closeAuthModal(): void {
     this.isAuthModalOpen = false;
   }
+
+  openAccountModal(): void {
+    this.isAccountModalOpen = true;
+  }
+
+
+  closeAccountModal(): void {
+    this.isAccountModalOpen = false;
+  }
+
   getAvatarUrl(): string {
     const username = this.authService.currentUser?.username || 'Invitado';
     console.log('Username para avatar:', username);  // Agrega este log
     return this.authService.getAvatarUrl(username);  // Pasamos el username como argumento
   }
 
-  logout(): void {
-    this.authService.logout();
-    this.authService.currentUser = null; // Asegurarte de limpiar el estado
-    this.router.navigate(['/']);
-    //window.location.reload();
-    this.closeMenu(); //
-  }
-
   getUsername(): string {
     console.log('Usuario actual:', this.authService.currentUser);  // Agrega este log
     return this.authService.currentUser?.username || 'Invitado';
   }
+
+
+  goToTop3() {
+    console.log("Navegando a Top 3..."); // Placeholder por ahora
+    // Lógica futura para redireccionar o mostrar el top 3
+  }
+
+  logout(): void {
+    this.authService.logout();
+    this.authService.currentUser = null; // Asegurarte de limpiar el estado
+    this.router.navigate(['/']);
+    this.closeAccountModal(); // Cierra el modal al cerrar sesión
+    this.closeMenu(); //
+    window.location.reload();
+  }
+
+
+
 }

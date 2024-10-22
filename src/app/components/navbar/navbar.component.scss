@@ -1,4 +1,7 @@
 .navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   background-color: transparent;
   padding: 30px 0;
   font-size: 1.1rem;
@@ -8,6 +11,8 @@
   z-index: 10;
 
   .navbar-brand {
+    flex: 1; /* Ocupa 1/3 del espacio de la navbar */
+    justify-content: flex-start;
     display: flex;
     align-items: center;
     font-size: 1.4rem;
@@ -24,7 +29,9 @@
   }
 
   .nav-link {
+    flex: 1; /* Ocupa 1/3 del espacio */
     color: #080808;
+    padding: 0 30px; /* Añade espacio entre las tabs */
     font-weight: 600;
     text-transform: uppercase;
     transition: color 0.3s ease;
@@ -68,11 +75,11 @@
   }
 
   .user-avatar {
-    width: 30px;
-    height: 30px;
+    width: 37px;
+    height: 3px;
     border-radius: 50%;
     border: 2px solid #FF6200;
-    margin-left: 10px;
+   // margin-left: 10px;
   }
 
   .navbar-toggler {
@@ -96,13 +103,14 @@
   }
 
   .nav-auth-buttons {
+    flex: 1; /* Ocupa 1/3 del espacio */
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    margin-right: 10px;
+    margin-right: 20px;
 
     .fa-user {
-      font-size: 1.8rem;
+      font-size: 2rem;
       color: #000;
       cursor: pointer;
       transition: color 0.3s ease;
@@ -113,9 +121,10 @@
     }
 
     .fa-sign-out-alt {
-      font-size: 1.5rem;
+      font-size: 0.8rem; /* Tamaño más pequeño para logout */
       color: #FF6200;
       cursor: pointer;
+     // margin-left: 10px; /* Separación con el avatar */
     }
   }
 }
@@ -130,7 +139,7 @@
       left: 50%;
       transform: translateX(-50%);
       top: 10px;
-      font-size: 1rem;
+      font-size: 1.2rem;
     }
 
     .navbar-toggler {
@@ -145,6 +154,10 @@
       top: 10px;
       display: flex;
       align-items: center;
+      .user-avatar {
+        width: 27px; /* Más pequeño en móvil */
+        height: 2px;
+      }
 
       .fa-user {
         font-size: 1.5rem;
@@ -153,10 +166,47 @@
           color: #FF6200;
         }
       }
+
+      .fa-sign-out-alt {
+        font-size: 1.2rem; /* Tamaño más pequeño para logout en móviles */
+        margin-left: 5px; /* Ajusta el espacio entre avatar e icono */
+      }
     }
 
     .navbar-collapse {
       margin-top: 50px;
+    }
+  }
+}
+
+
+/* Para pantallas pequeñas */
+@media (max-width: 768px) {
+  .navbar {
+    .navbar-brand {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      top: 10px;
+      font-size: 1rem;
+    }
+
+    .navbar-toggler {
+      left: 10px;
+      top: 10px;
+    }
+
+    .nav-auth-buttons {
+      position: absolute;
+      right: 10px;
+      top: 10px;
+      .user-avatar {
+        width: 25px; /* Más pequeño en móvil */
+        height: 25px;
+      }
+      .fa-sign-out-alt {
+        font-size: 1rem;
+      }
     }
   }
 }
@@ -177,12 +227,20 @@
       font-size: 1.6rem;
       margin-right: 10px;
     }
+
+    .fa-sign-out-alt {
+      font-size: 1rem; /* Ajusta el tamaño del logout icon */
+      margin-left: 5px;
+    }
+
+    /* En móviles y tablets ocultamos el nombre de usuario */
+    .text-dark {
+      display: none;
+    }
   }
 }
 
-/* Estilos para el modal */
-/* Estilos para el modal */
-/* Fondo oscuro para el modal */
+/* Estilos para el modal y otros elementos */
 .modal-backdrop {
   position: fixed;
   top: 0;
@@ -190,20 +248,18 @@
   z-index: 1040;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.7); /* Fondo oscuro semi-transparente */
+  background-color: rgba(0, 0, 0, 0.7);
   transition: opacity 0.3s ease;
 }
 
-/* Estilos para el modal */
 .modal.show {
   display: block;
-  background-color: rgba(0, 0, 0, 0.7); /* Fondo oscuro semi-transparente */
 }
 
 .modal-dialog {
   position: relative;
-  margin: 10vh auto; /* Centrar el modal verticalmente */
-  max-width: 400px; /* Tamaño máximo del modal */
+  margin: 10vh auto;
+  max-width: 400px;
 }
 
 .modal-content {
@@ -214,7 +270,6 @@
   transition: all 0.3s ease;
 }
 
-/* Título y cierre */
 .modal-header {
   display: flex;
   justify-content: space-between;
@@ -239,7 +294,6 @@
   }
 }
 
-/* Estilos para los botones */
 .modal-body {
   display: flex;
   flex-direction: column;
@@ -257,11 +311,10 @@
     transition: background-color 0.3s ease;
 
     &:hover {
-      background-color: #038009; /* Cambia el color al pasar */
+      background-color: #038009;
     }
   }
 
-  /* Leyenda para incentivar el registro */
   .register-legend {
     font-size: 0.9rem;
     color: #888;
@@ -271,7 +324,46 @@
 }
 
 
+//////////////// 
+.modal-top {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  max-width: 300px;
+  position: absolute;
+  top: 50px; /* Ajusta según la posición del avatar */
+  right: 20px; /* Ajusta según la posición */
+  z-index: 1000;
+}
 
-.container-fluid {
-  margin-bottom: 20px;
+.modal-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+}
+
+.modal-body {
+  margin-top: 10px;
+  .favorites-section {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    color: #FF6200;
+  }
+  .btn-close-session {
+    background-color: #FF6200;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    &:hover {
+      background-color: #D94C00;
+    }
+  }
 }

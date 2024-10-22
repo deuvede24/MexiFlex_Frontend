@@ -6,7 +6,8 @@
     </a>
 
     <!-- Botón de menú hamburguesa -->
-    <button class="navbar-toggler" type="button" (click)="toggleMenu()" [attr.aria-expanded]="isMenuOpen" aria-controls="navbarNav">
+    <button class="navbar-toggler" type="button" (click)="toggleMenu()" [attr.aria-expanded]="isMenuOpen"
+      aria-controls="navbarNav">
       <i class="fa-solid fa-bars navbar-toggler-icon" [class.d-none]="isMenuOpen"></i>
       <i class="fa-solid fa-x close-icon" [class.d-none]="!isMenuOpen"></i>
     </button>
@@ -29,19 +30,15 @@
     <!-- Sección de login/register o avatar y cerrar sesión -->
     <div class="nav-auth-buttons">
       @if (authService.isLoggedIn()) {
-        <!-- Avatar y cerrar sesión si el usuario está logueado -->
-        <span class="text-dark me-2">{{ getUsername() }}</span>
-        <img [src]="getAvatarUrl()" alt="avatar" class="user-avatar">
-        <a class="btn btn-outline-danger ms-3" (click)="logout()">
-          <i class="fa fa-sign-out-alt"></i> <!-- Ícono de logout -->
-        </a>
+      <!-- Avatar con click para abrir modal -->
+      <img [src]="getAvatarUrl()" alt="avatar" class="user-avatar" (click)="openAccountModal()">
       } @else {
-        <!-- Ícono de persona para abrir modal de login/register si no está logueado -->
-        <i class="fa fa-user" (click)="openAuthModal()"></i> <!-- Ícono de login/register -->
+      <!-- Ícono de persona para abrir modal de login/register si no está logueado -->
+      <i class="fa fa-user" (click)="openAuthModal()"></i>
       }
     </div>
   </div>
-  
+
   <!-- Modal de autenticación para login/register -->
   <div class="modal" tabindex="-1" [ngClass]="{ 'show': isAuthModalOpen }" (click)="closeAuthModal()">
     <div class="modal-dialog" (click)="$event.stopPropagation()">
@@ -54,9 +51,28 @@
           <button routerLink="/login" class="btn w-100 mb-2" (click)="closeAuthModal()">Iniciar sesión</button>
           <button routerLink="/register" class="btn w-100" (click)="closeAuthModal()">Registrarse</button>
           <!-- Leyenda para incentivar el registro -->
-          <p class="register-legend">Al registrarte, podrás disfrutar de beneficios como guardar recetas, recibir recomendaciones personalizadas y más.</p>
+          <p class="register-legend">Al registrarte, podrás disfrutar de beneficios como guardar recetas, recibir
+            recomendaciones personalizadas y más.</p>
         </div>
       </div>
     </div>
   </div>
+
+  <!-- Modal de gestión de cuenta -->
+<div class="modal" tabindex="-1" [ngClass]="{ 'show': isAccountModalOpen }" (click)="closeAccountModal()">
+  <div class="modal-dialog" (click)="$event.stopPropagation()">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Tu cuenta</h5>
+        <button type="button" class="btn-close" (click)="closeAccountModal()"></button> <!-- Botón para cerrar -->
+      </div>
+      <div class="modal-body">
+        <h5>Hola, {{ getUsername() }}!</h5>
+        <button class="btn btn-link" (click)="goToTop3()">Tus recetas Top 3</button> <!-- Hacemos clickable este botón -->
+        <button class="btn btn-outline-danger" (click)="logout()">Cerrar sesión</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 </nav>

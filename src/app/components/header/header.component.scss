@@ -83,21 +83,25 @@
 /* Estilos para pantallas más pequeñas (móviles) */
 @media (max-width: 768px) {
   .tradition {
-    font-size: rem;
+    font-size: 5.2rem;
     /* Reducimos el tamaño de la fuente en móviles */
-    margin-top: 20px;
+    margin-top: -10px;
   }
 
   .flexi {
-    font-size: 5rem;
+    font-size: 5.2rem;
     /* Reducimos el tamaño de la fuente en móviles */
-    margin-top: -20px;
+    margin-top: -40px;
   }
 
   .rest-text {
     font-size: 5.2rem;
     /* Ajustamos el tamaño de la fuente del resto del texto */
     margin-top: -20px;
+    margin: 0;
+    padding: 0;
+
+    line-height: 1;
   }
 
   .arrow-down {
@@ -110,20 +114,24 @@
 /* Estilos para pantallas muy pequeñas (extra small devices) */
 @media (max-width: 480px) {
   .tradition {
-    font-size: 1.4rem;
+    font-size: 2.2rem;
     /* Aún más pequeño en pantallas pequeñas */
-    margin-top: -15px;
+    margin-top: -5px;
+    
   }
 
   .flexi {
-    font-size: 1.4rem;
+    font-size:2.2rem;
     /* Ajustamos el tamaño para pantallas pequeñas */
-    margin-top: -15px;
+    margin-top: -25px;
   }
 
   .rest-text {
-    font-size: 1.4rem;
-    margin-top: -2px;
+    font-size: 2.4rem;
+    margin-top: -4px;
+    margin: 0;
+    padding: 0;
+    line-height: 1;
   }
 
   .arrow-down {
