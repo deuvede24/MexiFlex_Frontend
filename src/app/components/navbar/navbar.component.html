@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg">
+<nav class="navbar navbar-expand-lg" [ngClass]="{ 'scrolled': scrolled }">
   <div class="container-fluid">
     <a class="navbar-brand" routerLink="/">
       <img src='/icons/Food-Taco-icon.png' alt="Mexi-Flex">
@@ -59,20 +59,21 @@
   </div>
 
   <!-- Modal de gestión de cuenta -->
-<div class="modal" tabindex="-1" [ngClass]="{ 'show': isAccountModalOpen }" (click)="closeAccountModal()">
-  <div class="modal-dialog" (click)="$event.stopPropagation()">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Tu cuenta</h5>
-        <button type="button" class="btn-close" (click)="closeAccountModal()"></button> <!-- Botón para cerrar -->
-      </div>
-      <div class="modal-body">
-        <h5>Hola, {{ getUsername() }}!</h5>
-        <button class="btn btn-link" (click)="goToTop3()">Tus recetas Top 3</button> <!-- Hacemos clickable este botón -->
-        <button class="btn btn-outline-danger" (click)="logout()">Cerrar sesión</button>
+  <div class="modal" tabindex="-1" [ngClass]="{ 'show': isAccountModalOpen }" (click)="closeAccountModal()">
+    <div class="modal-dialog" (click)="$event.stopPropagation()">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Tu cuenta</h5>
+          <button type="button" class="btn-close" (click)="closeAccountModal()"></button> <!-- Botón para cerrar -->
+        </div>
+        <div class="modal-body">
+          <h5>Hola, {{ getUsername() }}!</h5>
+          <button class="btn btn-link" (click)="goToTop3()">Tus recetas Top 3</button>
+          <!-- Hacemos clickable este botón -->
+          <button class="btn btn-outline-danger" (click)="logout()">Cerrar sesión</button>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
 </nav>

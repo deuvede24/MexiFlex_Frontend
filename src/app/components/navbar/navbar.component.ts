@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';  // Asegúrate de tener AuthService
@@ -14,7 +14,18 @@ export class NavbarComponent {
   isMenuOpen = false;
   isAuthModalOpen = false; // Controla la apertura del modal
   isAccountModalOpen = false;
+  scrolled = false;
   constructor(public authService: AuthService, private router: Router) { }
+
+  // Escucha el evento de scroll de la ventana
+  @HostListener('window:scroll', [])
+  onWindowScroll() {
+    // Usar RequestAnimationFrame para mejor rendimiento
+    requestAnimationFrame(() => {
+      const scrollTop = window.scrollY || document.documentElement.scrollTop || document.body.scrollTop || 0;
+      this.scrolled = scrollTop > 50;
+    });
+  }
 
   toggleMenu() {
     this.isMenuOpen = !this.isMenuOpen;

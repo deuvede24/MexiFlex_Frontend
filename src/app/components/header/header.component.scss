@@ -1,189 +1,119 @@
-/* Contenedor de texto */
+/* Contenedor principal */
+.header-container {
+  position: relative;
+  width: 100%;
+  height: 600px;
+  margin-top: 60px;
+  margin-bottom: 100px;
+  overflow: hidden;
+}
+
+/* Div de la imagen (irá detrás) */
+.image-background {
+  position: relative;
+  top: 0;
+  right: 0;
+  width: 80%; /* Controla cuánto espacio ocupa la imagen */
+  height: 110%;
+  z-index: 1;
+}
+
+.image-background img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: right center;
+}
+
+/* Contenedor del texto (irá adelante) */
 .text-container {
+  position: relative;
+  z-index: 2;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
-  text-align: center;
-  font-family: 'Poppins', sans-serif;
-  width: 100%;
-  margin-top: 60px;
-  margin-bottom: 100px;
-  position: relative;
-  height: 500px !important;
-
-  /* Imagen de fondo ajustada */
-  background: #ffffff url('/images/tacos-fb.jpg'); /* Aquí va la ruta de tu imagen */
-  background-size: contain; /* Ajusta el tamaño para que la imagen no se corte */
-  background-position: right center;
-  background-repeat: no-repeat;
-  height: 400px; /* Ajusta la altura según tus necesidades */
-
-   /* Sombreado semitransparente para resaltar el texto */
-   &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(251, 251, 251, 0.4); /* Fondo claro semitransparente para resaltar el texto */
-    z-index: 1;
-  }
-  
-  /* Asegura que el texto esté por encima del sombreado y la imagen */
-  span {
-    position: relative;
-    z-index: 2;
-  }
+  height: 100%;
+  padding-left: 20px;
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(255, 255, 255, 0.95) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
 }
 
-/* Estilos para las palabras clave */
-.tradition {
-  color: #FF6200;
-  /* Naranja */
-  font-size: 5.5rem;
+/* Mantener los estilos del texto como estaban */
+.rest-text {
+  color: #080808;
+  font-size: 5rem;
   font-weight: bold;
   letter-spacing: -0.04em;
-  margin-top: -50px;
-  /* Ajuste para acercar el texto al flexi */
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8); /* Añade una sombra suave al texto */
+  line-height: 0.8;
+  
+}
+
+.tradition, .flexi {
+  font-weight: bold;
+  font-size: 4.5rem;
+  letter-spacing: -0.02em;
+  margin-top: -20px;
+}
+
+.tradition {
+  color: #FF6200;
 }
 
 .flexi {
   color: #08AA2B;
-  /* Verde */
-  font-size: 5.5rem;
-  font-weight: bold;
-  letter-spacing: -0.01em;
-  margin-bottom: 0;
-  position: relative;
   margin-top: -60px;
   margin-bottom: 30px;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8); /* Añade una sombra suave al texto */
 }
 
-/* Ajuste del resto del texto */
-.rest-text {
-  color: #080808;
-  /* Gris oscuro */
-  font-size: 6rem;
-  font-weight: bold;
-  letter-spacing: -0.02em;
- // text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2); /* Sombra sutil */
- text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.4); /* Añade una sombra suave al texto */
-}
-
-/* Flecha entre FLEXI y en un click */
-.arrow-down {
-  display: inline-block;
-  font-size: 4rem;
-  /* Tamaño de la flecha más grande */
-  transform: rotate(90deg);
-  /* Apunta hacia abajo */
-  margin: -2px 0 0 15px;
-  /* Ajuste para colocar la flecha más cerca del texto "en un click" */
-  animation: bounce 3s infinite;
-  color: #08AA2B;
-  /* Color verde */
-}
-
-/* Animación de la flecha */
-@keyframes bounce {
-  0%,
-  100% {
-    transform: translateY(0) rotate(95deg);
-  }
-
-  50% {
-    transform: translateY(10px) rotate(80deg);
-    /* Movimiento de rebote */
+/* Media queries actualizados */
+@media (min-width: 992px) {
+  .image-background {
+    width: 50%;
   }
 }
 
-/* Estilos para pantallas más pequeñas (móviles) */
+@media (max-width: 992px) and (min-width: 768px) {
+  .header-container {
+    height: 450px;
+  }
+  
+  .image-background {
+    width: 40%; /* Imagen más pequeña en tablets */
+  }
+  
+  .tradition, .flexi, .rest-text {
+    font-size: 4.5rem;
+  }
+}
+
 @media (max-width: 768px) {
-  .tradition {
-    font-size: 5.2rem;
-    /* Reducimos el tamaño de la fuente en móviles */
-    margin-top: -10px;
+  .header-container {
+    height: 400px;
   }
-
-  .flexi {
-    font-size: 5.2rem;
-    /* Reducimos el tamaño de la fuente en móviles */
-    margin-top: -40px;
+  
+  .image-background {
+    width: 35%; /* Imagen aún más pequeña en móviles */
   }
-
-  .rest-text {
-    font-size: 5.2rem;
-    /* Ajustamos el tamaño de la fuente del resto del texto */
-    margin-top: -20px;
-    margin: 0;
-    padding: 0;
-    line-height: 1;
-  }
-
-  .arrow-down {
-    font-size: 2.5rem;
-    /* Reducimos el tamaño de la flecha */
-    margin-top: -10px;
-  }
-
-  .text-container {
-    height: 300px; /* Ajustamos la altura en móviles */
+  
+  .tradition, .flexi, .rest-text {
+    font-size: 3.5rem;
   }
 }
 
-/* Estilos para pantallas muy pequeñas (extra small devices) */
 @media (max-width: 480px) {
-  .tradition {
-    font-size: 2.2rem;
-    /* Aún más pequeño en pantallas pequeñas */
-    margin-top: -5px;
+  .header-container {
+    height: 350px;
   }
-
-  .flexi {
-    font-size: 2.2rem;
-    /* Ajustamos el tamaño para pantallas pequeñas */
-    margin-top: -25px;
+  
+  .image-background {
+    width: 30%;
   }
-
-  .rest-text {
-    font-size: 2.4rem;
-    margin-top: -4px;
-    margin: 0;
-    padding: 0;
-    line-height: 1;
-  }
-
-  .arrow-down {
-    font-size: 1rem;
-    /* Flecha aún más pequeña */
-    margin-top: -8px;
-  }
-
-  .text-container {
-    height: 200px; /* Ajustamos la altura en pantallas muy pequeñas */
-  }
-}
-
-/* Ajuste del header */
-.text-container {
-  margin-top: 20px;
-  /* Aumentamos el espacio para separarlo del navbar */
-  padding-top: 40px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  width: 100%;
-
-  /* Ajustes para pantallas grandes */
-  @media (min-width: 1024px) {
-    margin-top: 40px;
-    padding-top: 60px;
-    /* Mayor separación en pantallas grandes */
+  
+  .tradition, .flexi, .rest-text {
+    font-size: 2.5rem;
   }
 }
