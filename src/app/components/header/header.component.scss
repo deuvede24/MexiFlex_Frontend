@@ -3,36 +3,26 @@
   position: relative;
   width: 100%;
   height: 600px;
-  margin-top: 100px !important;
+  margin-top: 100px;
   margin-bottom: 100px;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  
+  @media (min-width: 992px) {
+    flex-direction: row;
+    height: 600px;
+  }
 }
 
-/* Div de la imagen (irá detrás) */
-.image-background {
-  position: relative;
-  top: 0;
-  right: 0;
-  width: 80%; /* Controla cuánto espacio ocupa la imagen */
-  height: 110%;
-  z-index: 1;
-}
-
-.image-background img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  object-position: right center;
-}
-
-/* Contenedor del texto (irá adelante) */
+/* Contenedor del texto */
 .text-container {
   position: relative;
   z-index: 2;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  height: 100%;
+  width: 100%;
   padding-left: 20px;
   background: linear-gradient(
     to right,
@@ -40,53 +30,81 @@
     rgba(255, 255, 255, 0.95) 50%,
     rgba(255, 255, 255, 0) 100%
   );
-}
 
-/* Mantener los estilos del texto como estaban */
-.rest-text {
-  color: #080808;
-  font-size: 5rem;
-  font-weight: bold;
-  letter-spacing: -0.04em;
-  line-height: 0.8;
-  
-}
-
-.tradition, .flexi {
-  font-weight: bold;
-  font-size: 4.5rem;
-  letter-spacing: -0.02em;
-  margin-top: -20px;
-}
-
-.tradition {
-  color: #FF6200;
-}
-
-.flexi {
-  color: #08AA2B;
-  margin-top: -60px;
-  margin-bottom: 30px;
-}
-
-/* Media queries actualizados */
-@media (min-width: 992px) {
-  .image-background {
+  @media (min-width: 992px) {
     width: 50%;
   }
 }
 
-@media (max-width: 992px) and (min-width: 768px) {
+/* Estilos del texto - Aquí está el fix principal */
+.rest-text {
+  color: #080808;
+  font-size: 4.8rem;
+  font-weight: bold;
+  letter-spacing: -0.05em;
+  line-height: 0.8;
+  white-space: nowrap;
+  display: block; /* Añadimos display block */
+  margin-bottom: 20px; /* Añadimos margen inferior */
+}
+
+.tradition {
+  color: #FF6200;
+  font-weight: bold;
+  font-size: 4.5rem;
+  letter-spacing: -0.02em;
+  margin-top: -40px;
+  display: block; /* Añadimos display block */
+}
+
+.flexi {
+  color: #08AA2B;
+  font-weight: bold;
+  font-size: 4.5rem;
+  letter-spacing: -0.02em;
+  margin-top: -60px;
+  margin-bottom: 30px;
+  display: block; /* Añadimos display block */
+}
+
+/* Contenedor de la imagen */
+.image-background {
+  width: 100%;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  img {
+    width: 90% !important;
+    height: auto;
+    object-fit: contain;
+    object-position: center;
+  }
+
+  @media (min-width: 992px) {
+    width: 50%;
+    justify-content: flex-end;
+    img {
+      width: 100%;
+      height: 100%;
+      object-position: right center;
+    }
+  }
+}
+
+/* Media queries existentes */
+@media (max-width: 991px) and (min-width: 768px) {
   .header-container {
     height: 450px;
   }
   
-  .image-background {
-    width: 40%; /* Imagen más pequeña en tablets */
+  .rest-text {
+    font-size: 4rem;
   }
-  
-  .tradition, .flexi, .rest-text {
-    font-size: 4.5rem;
+
+  .tradition, .flexi {
+    font-size: 3.5rem;
   }
 }
 
@@ -95,25 +113,37 @@
     height: 400px;
   }
   
-  .image-background {
-    width: 35%; /* Imagen aún más pequeña en móviles */
+  .rest-text {
+    font-size: 3rem;
   }
-  
-  .tradition, .flexi, .rest-text {
-    font-size: 3.5rem;
+
+  .tradition, .flexi {
+    font-size: 3rem;
   }
 }
 
 @media (max-width: 480px) {
   .header-container {
-    height: 350px;
+    height: 500px;
   }
   
-  .image-background {
-    width: 30%;
+  .rest-text {
+    font-size: 1.5rem;
+    margin-top: 30px;
+  
+  }
+
+  .tradition, .flexi {
+    font-size: 1.5rem;
+    line-height: 2.9;
+  }
+  .tradition{
+    margin-top: -45px;
   }
   
-  .tradition, .flexi, .rest-text {
-    font-size: 2.5rem;
+  .image-background img {
+    margin-top: -20px;
+    width: 100%;
+    height: auto;
   }
 }

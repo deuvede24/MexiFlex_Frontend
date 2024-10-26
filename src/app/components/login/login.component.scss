@@ -1,10 +1,10 @@
 /* Estilos comunes para login y register */
 .container {
-    margin-top: 120px; /* Ajustar según la altura de la navbar para evitar solapamiento */
+    margin-top: 150px; /* Ajustar según la altura de la navbar para evitar solapamiento */
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: calc(100vh - 150px);
+    min-height: calc(100vh - 30px);
   }
   
   .form-custom {
