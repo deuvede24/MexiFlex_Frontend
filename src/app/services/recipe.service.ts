@@ -163,6 +163,7 @@ export class RecipeService {
   ////////////////////
   // Obtener las recetas favoritas del usuario
   getFavoriteRecipes(): Observable<{ data: Recipe[] }> {
+    console.log('Obteniendo favoritos del usuario');
     return this.http.get<{ data: Recipe[] }>(this.favoriteUrl, { withCredentials: true });
   }
 
@@ -174,6 +175,7 @@ export class RecipeService {
 
   // Eliminar una receta de favoritos
   removeFavoriteRecipe(recipeId: number): Observable<{ message: string }> {
+    console.log('Eliminando de favoritos:', recipeId);
     return this.http.delete<{ message: string }>(`${this.favoriteUrl}/${recipeId}`, { withCredentials: true });
   }
   // Calificar una receta

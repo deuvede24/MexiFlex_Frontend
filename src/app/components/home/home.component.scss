@@ -221,3 +221,13 @@
 .average-star {
   color: orange; /* Estrella llena para promedio de calificación */
 }
+
+.favorite-icon {
+  font-size: 24px;
+  color: gray; // Corazón sin color
+  cursor: pointer;
+}
+
+.favorite-icon.active {
+  color: red; // Corazón con color cuando es favorito
+}

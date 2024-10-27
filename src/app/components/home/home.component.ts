@@ -72,7 +72,7 @@ export class HomeComponent implements OnInit {
   }
 
   // Cargar recetas favoritas del usuario
-  loadFavoriteRecipes(): void {
+  /*loadFavoriteRecipes(): void {
     this.recipeService.getFavoriteRecipes().subscribe({
       next: (response) => {
         // Convertimos la lista de IDs de recetas en un Set para manejo rápido en frontend
@@ -80,10 +80,23 @@ export class HomeComponent implements OnInit {
       },
       error: (error) => console.error('Error al cargar favoritos', error)
     });
-  }
+  }*/
+
+    loadFavoriteRecipes(): void {
+      this.recipeService.getFavoriteRecipes().subscribe({
+        next: (response) => {
+          if (Array.isArray(response.data)) {
+            response.data.forEach(recipe => this.favoriteRecipes.add(recipe.id_recipe));
+          } else {
+            console.error('Datos de favoritos no son un array:', response.data);
+          }
+        },
+        error: (error) => console.error('Error al cargar favoritos', error)
+      });
+    }
 
   // Añadir o eliminar favoritos
-  toggleFavorite(recipeId: number): void {
+ /* toggleFavorite(recipeId: number): void {
     console.log('Toggle favorite clicked', recipeId); // Confirmar clic
     if (this.favoriteRecipes.has(recipeId)) {
       // Eliminar de favoritos
@@ -98,7 +111,67 @@ export class HomeComponent implements OnInit {
         error: (error) => console.error('Error al agregar a favoritos', error)
       });
     }
+  }*/
+ // Añadir o eliminar favoritos
+/*toggleFavorite(recipeId: number): void {
+  console.log('Toggle favorite clicked', recipeId);
+
+  if (this.favoriteRecipes.has(recipeId)) {
+    // Eliminar de favoritos en el frontend
+    this.favoriteRecipes.delete(recipeId);
+
+    // Solo hacemos la solicitud al backend si realmente necesitamos eliminar
+    this.recipeService.removeFavoriteRecipe(recipeId).subscribe({
+      next: () => console.log('Receta eliminada de favoritos en backend'),
+      error: (error) => {
+        console.error('Error al eliminar de favoritos', error);
+        // Si hay un error, volvemos a añadir el favorito localmente
+        this.favoriteRecipes.add(recipeId);
+      }
+    });
+  } else if (this.favoriteRecipes.size < 3) {
+    // Añadir a favoritos en el frontend
+    this.favoriteRecipes.add(recipeId);
+
+    // Solo hacemos la solicitud al backend si realmente necesitamos añadir
+    this.recipeService.addFavoriteRecipe(recipeId).subscribe({
+      next: () => console.log('Receta añadida a favoritos en backend'),
+      error: (error) => {
+        console.error('Error al agregar a favoritos', error);
+        // Si hay un error, eliminamos el favorito localmente
+        this.favoriteRecipes.delete(recipeId);
+      }
+    });
   }
+}*/
+toggleFavorite(recipeId: number): void {
+  console.log('Toggle favorite clicked', recipeId);
+
+  if (this.favoriteRecipes.has(recipeId)) {
+    // Si ya está en favoritos, muestra un mensaje
+    console.log("La receta ya está en favoritos.");
+    alert("Esta receta ya está en tus favoritos."); // Puedes usar otra forma de notificación si prefieres
+    return;
+  }
+
+  // Añadir a favoritos en el frontend y backend
+  if (this.favoriteRecipes.size < 3) {
+    this.favoriteRecipes.add(recipeId);
+    this.recipeService.addFavoriteRecipe(recipeId).subscribe({
+      next: () => console.log('Receta añadida a favoritos en backend'),
+      error: (error) => {
+        console.error('Error al agregar a favoritos', error);
+        // Si hay un error, eliminamos el favorito localmente
+        this.favoriteRecipes.delete(recipeId);
+      }
+    });
+  } else {
+    alert("Solo puedes agregar un máximo de 3 recetas a favoritos.");
+  }
+}
+
+
+
 
   // Comprobar si la receta está en favoritos
   isFavorite(recipeId: number): boolean {
@@ -151,7 +224,14 @@ export class HomeComponent implements OnInit {
         quantity: ingredient.quantity
       }));
     
-      // Obtener calificación promedio de la receta
+      // Obtener calificación promedio de la recetaGPT
+      DALL·E
+      
+      Examina els GPT
+      Ahir
+      Continuación de conversación
+      
+      
       this.recipeService.getRecipeRatings(recipe.id_recipe).subscribe({
         next: (response) => {
           this.averageRating = response.averageRating;
