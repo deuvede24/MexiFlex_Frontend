@@ -10,6 +10,9 @@ import { Recipe } from '../interfaces/recipe.interface.js';
 export class RecipeService {
   private apiUrl = `${environment.apiUrl}/recipes`;  // Aquí se usará la URL del entorno
 
+  private favoriteUrl = `${environment.apiUrl}/favorites`; // Endpoint de favoritos
+  private ratingUrl = `${environment.apiUrl}/rankings`; // Endpoint de ranking
+
   constructor(private http: HttpClient) { }
 
 
@@ -18,6 +21,10 @@ export class RecipeService {
     return this.http.get<{ code: number; message: string; data: Recipe[] }>(this.apiUrl, { withCredentials: true });
   }
 
+  // Obtener todas las calificaciones de una receta específica
+  getRecipeRatings(recipeId: number): Observable<{ ratings: number[] }> {
+    return this.http.get<{ ratings: number[] }>(`${this.ratingUrl}/${recipeId}/ratings`, { withCredentials: true });
+  }
   // Obtener una receta por ID
   getRecipeById(id: number): Observable<{ code: number; message: string; data: Recipe }> {
     return this.http.get<{ code: number; message: string; data: Recipe }>(`${this.apiUrl}/${id}`, { withCredentials: true });
@@ -54,7 +61,7 @@ export class RecipeService {
   // Todas las recetas disponibles
   recipes: Recipe[] = [
     {
-      id_recipe: 1, 
+      id_recipe: 1,
       title: 'Tacos de Alambre',
       description: 'Deliciosos tacos de alambre con carne asada, pimientos y cebolla.',
       preparation_time: 30,
@@ -117,11 +124,11 @@ export class RecipeService {
       created_at: new Date(),
       steps: 'Paso 1: Cocinar el chicharrón vegano. Paso 2: Servir con salsa verde.'
     },
-    
+
   ];
 
-   // Agrupar recetas por título y calcular tiempo promedio y descripción general
-   groupRecipes(recipes: Recipe[]): any[] {
+  // Agrupar recetas por título y calcular tiempo promedio y descripción general
+  groupRecipes(recipes: Recipe[]): any[] {
     const grouped: { [key: string]: Recipe[] } = recipes.reduce((acc: { [key: string]: Recipe[] }, recipe) => {
       if (!acc[recipe.title]) {
         acc[recipe.title] = [];
@@ -152,6 +159,34 @@ export class RecipeService {
   getInitialRecipes(): Recipe[] {
     return this.recipes;
   }
+  ////////////////////
+  // Obtener las recetas favoritas del usuario
+  getFavoriteRecipes(): Observable<{ data: Recipe[] }> {
+    return this.http.get<{ data: Recipe[] }>(this.favoriteUrl, { withCredentials: true });
+  }
 
+  // Agregar una receta a favoritos
+  addFavoriteRecipe(recipeId: number): Observable<{ message: string }> {
+    console.log('Agregando a favoritos:', recipeId); // Agrega este log para verificar
+    return this.http.post<{ message: string }>(this.favoriteUrl, { recipe_id: recipeId }, { withCredentials: true });
+  }
 
+  // Eliminar una receta de favoritos
+  removeFavoriteRecipe(recipeId: number): Observable<{ message: string }> {
+    return this.http.delete<{ message: string }>(`${this.favoriteUrl}/${recipeId}`, { withCredentials: true });
+  }
+  // Calificar una receta
+  /*rateRecipe(recipeId: number, rating: number): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(this.ratingUrl, { recipe_id: recipeId, rating }, { withCredentials: true });
+  }*/
+
+  // Calificar una receta
+  rateRecipe(recipeId: number, rating: number): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(`${this.ratingUrl}`, { recipe_id: recipeId, rating }, { withCredentials: true });
+  }
+
+  // Obtener el promedio de calificación de una receta
+  getRecipeRating(recipeId: number): Observable<{ averageRating: number }> {
+    return this.http.get<{ averageRating: number }>(`${this.ratingUrl}/${recipeId}/average`, { withCredentials: true });
+  }
 }

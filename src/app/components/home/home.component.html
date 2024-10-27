@@ -8,7 +8,7 @@
         <div class="row justify-content-center">
           <div class="col-md-8"> <!-- Cambiado a col-md-8 para pantallas grandes -->
             <div class="card">
-              
+
               <!-- Imagen de la receta -->
               <img [src]="getImageUrl(group.versions[0]?.image)" class="card-img-top lazyload" [alt]="group.title">
 
@@ -17,18 +17,20 @@
                 <h5 class="card-title">{{ group.title }}</h5>
                 <p class="card-text">{{ group.generalDescription }}</p>
                 <p class="card-text">
-                  <small class="text-muted">Tiempo promedio de preparación: {{ group.averagePreparationTime }} minutos</small>
+                  <small class="text-muted">Tiempo promedio de preparación: {{ group.averagePreparationTime }}
+                    minutos</small>
                 </p>
 
                 <!-- Botones para seleccionar versión de receta -->
                 <div class="d-flex justify-content-between">
                   <!-- Botón de receta tradicional -->
-                  <button (click)="openRecipeModal(group.traditionalVersion, 'Tradicional')" class="btn btn-traditional">
+                  <button (click)="openRecipeModal(group.traditionalVersion, 'Tradicional')"
+                    class="btn btn-traditional">
                     Tradicional
                   </button>
                   <!-- Botón de receta flexi -->
                   <button (click)="openRecipeModal(group.flexiVersion, 'Flexi')" class="btn btn-flexi">
-                     Flexi
+                    Flexi
                   </button>
                 </div>
               </div>
@@ -59,6 +61,15 @@
       [ngClass]="{'modal-traditional': selectedCategory === 'Tradicional', 'modal-flexi': selectedCategory === 'Flexi'}">
       <div class="modal-header">
         <h5 class="modal-title">{{ selectedRecipe.title }} ({{ selectedCategory }})</h5>
+
+
+        <!-- Ícono de favorito -->
+        <span class="favorite-icon" (click)="toggleFavorite(selectedRecipe.id_recipe)"
+          [ngClass]="{'active': isFavorite(selectedRecipe.id_recipe)}">
+          <i class="fas fa-heart"></i> <!-- Ícono de corazón de Font Awesome -->
+        </span>
+
+
         <button type="button" class="close" aria-label="Close" (click)="closeRecipeModal()">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -90,6 +101,20 @@
         <!-- Pasos de la receta -->
         <p>Pasos:</p>
         <p>{{ selectedRecipe.steps }}</p>
+
+        <!-- Ranking de la receta -->
+        <div class="recipe-rating">
+          <h5>Valora esta receta:</h5>
+          <div class="stars">
+            @for (star of [1, 2, 3, 4, 5]; track $index) {
+            <span (click)="setRating(star)" [ngClass]="{'active-star': star <= currentRating|| star <= averageRating}">&#9733;</span>
+            }
+          </div>
+          @if (averageRating) {
+          <p>Promedio de calificación: {{ averageRating }} estrellas</p>
+          }
+        </div>
+
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="closeRecipeModal()">Cerrar</button>
