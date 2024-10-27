@@ -193,17 +193,31 @@
 /////////////////////////
 
 
-.favorite-icon,
+/*.favorite-icon,
 .stars span {
   cursor: pointer;
   font-size: 1.5rem;
   color: #ccc; // Color para estrellas vacías
  // z-index: 1060;
-  /* Más alto que el modal */
 
 
-}
+
+}*/
 
 .active-star {
   color: #ffc107; // Color para estrellas llenas
+}
+
+.star {
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: lightgray; /* Estrella vacía */
+}
+
+.filled-star {
+  color: gold; /* Estrella llena según calificación del usuario */
+}
+
+.average-star {
+  color: orange; /* Estrella llena para promedio de calificación */
 }

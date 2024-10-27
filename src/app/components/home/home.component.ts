@@ -123,6 +123,7 @@ export class HomeComponent implements OnInit {
      // Obtener todas las calificaciones y calcular el promedio
      this.recipeService.getRecipeRatings(recipe.id_recipe).subscribe({
       next: (response) => {
+        console.log('Calificaciones recibidas:', response.ratings); // Verificar las calificaciones recibidas
         const ratings = response.ratings;
         if (ratings.length > 0) {
           this.averageRating = ratings.reduce((acc, rating) => acc + rating, 0) / ratings.length;
@@ -188,6 +189,7 @@ export class HomeComponent implements OnInit {
       this.recipeService.rateRecipe(this.selectedRecipe.id_recipe, rating).subscribe({
         next: () => {
           this.currentRating = rating;
+          console.log('Calificación actualizada a:', this.currentRating); // Verificar calificación actualizada
          // Solo llama a openRecipeModal si selectedRecipe no es null
         if (this.selectedRecipe) {
           this.openRecipeModal(this.selectedRecipe, this.selectedCategory);

@@ -23,6 +23,7 @@ export class RecipeService {
 
   // Obtener todas las calificaciones de una receta específica
   getRecipeRatings(recipeId: number): Observable<{ ratings: number[] }> {
+    console.log('Obteniendo calificaciones para recipeId:', recipeId); // Verificar ID de la receta
     return this.http.get<{ ratings: number[] }>(`${this.ratingUrl}/${recipeId}/ratings`, { withCredentials: true });
   }
   // Obtener una receta por ID
