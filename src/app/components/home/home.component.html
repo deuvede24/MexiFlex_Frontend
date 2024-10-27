@@ -107,7 +107,7 @@
           <h5>Valora esta receta:</h5>
           <div class="stars">
             @for (star of [1, 2, 3, 4, 5]; track $index) {
-            <span (click)="setRating(star)" [ngClass]="{'active-star': star <= currentRating|| star <= averageRating}">&#9733;</span>
+            <span (click)="setRating(star)" [ngClass]="{'active-star': star <= currentRating}">&#9733;</span>
             }
           </div>
           @if (averageRating) {

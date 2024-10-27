@@ -106,7 +106,7 @@ export class HomeComponent implements OnInit {
   }
 
   // Abrir modal de receta y cargar calificación promedio
-  openRecipeModal(recipe: Recipe, category: string): void {
+ openRecipeModal(recipe: Recipe, category: string): void {
     console.log('Receta seleccionada:', recipe); // Añade esta línea para depurar
     if (!recipe || !recipe.RecipeIngredients) {
         console.error('La receta o los ingredientes no están definidos:', recipe);
@@ -133,6 +133,32 @@ export class HomeComponent implements OnInit {
       error: (error) => console.error('Error al obtener calificaciones', error)
     });
   }
+
+    /*openRecipeModal(recipe: Recipe, category: string): void {
+      console.log('Receta seleccionada:', recipe);
+    
+      if (!recipe || !recipe.RecipeIngredients) {
+        console.error('La receta o los ingredientes no están definidos:', recipe);
+        return;
+      }
+    
+      this.selectedRecipe = recipe;
+      this.selectedCategory = category;
+      this.selectedPortions = 1;
+      this.originalIngredients = recipe.RecipeIngredients.map(ingredient => ({
+        ...ingredient,
+        quantity: ingredient.quantity
+      }));
+    
+      // Obtener calificación promedio de la receta
+      this.recipeService.getRecipeRatings(recipe.id_recipe).subscribe({
+        next: (response) => {
+          this.averageRating = response.averageRating;
+        },
+        error: (error) => console.error('Error al obtener calificaciones', error)
+      });
+    }*/
+    
 
   // Actualizar cantidad de ingredientes según porciones
   updateIngredients(portions: number): void {
@@ -171,6 +197,31 @@ export class HomeComponent implements OnInit {
     });
     }
   }
+
+    /*setRating(rating: number): void {
+      console.log('Star clicked', rating);
+      if (!this.isUserLoggedIn) {
+        console.error("Usuario no autenticado. Inicia sesión para calificar.");
+        return;
+      }
+    
+      if (this.selectedRecipe) {
+        this.recipeService.rateRecipe(this.selectedRecipe.id_recipe!, rating).subscribe({
+          next: () => {
+            this.currentRating = rating;
+            this.recipeService.getRecipeRatings(this.selectedRecipe?.id_recipe!).subscribe({
+              next: (response) => {
+                this.averageRating = response.averageRating; // Actualizamos el promedio
+              },
+              error: (error) => console.error('Error al obtener el promedio', error)
+            });
+          },
+          error: (error) => console.error('Error al calificar receta', error)
+        });
+      }
+      
+    }*/
+    
 
   // Cerrar modal
   closeRecipeModal(): void {
