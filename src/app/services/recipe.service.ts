@@ -162,10 +162,14 @@ export class RecipeService {
   }
   ////////////////////
   // Obtener las recetas favoritas del usuario
-  getFavoriteRecipes(): Observable<{ data: Recipe[] }> {
+  /*getFavoriteRecipes(): Observable<{ data: Recipe[] }> {
     console.log('Obteniendo favoritos del usuario');
     return this.http.get<{ data: Recipe[] }>(this.favoriteUrl, { withCredentials: true });
-  }
+  }*/
+    getFavoriteRecipes(): Observable<{ data: { id_recipe: number }[] }> {
+      return this.http.get<{ data: { id_recipe: number }[] }>(`${this.favoriteUrl}`, { withCredentials: true });
+    }
+    
 
   // Agregar una receta a favoritos
   addFavoriteRecipe(recipeId: number): Observable<{ message: string }> {
