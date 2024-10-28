@@ -190,20 +190,6 @@
 }
 
 
-/////////////////////////
-
-
-/*.favorite-icon,
-.stars span {
-  cursor: pointer;
-  font-size: 1.5rem;
-  color: #ccc; // Color para estrellas vacías
- // z-index: 1060;
-
-
-
-}*/
-
 .active-star {
   color: #ffc107; // Color para estrellas llenas
 }
@@ -216,6 +202,7 @@
 
 .filled-star {
   color: gold; /* Estrella llena según calificación del usuario */
+  cursor: pointer;
 }
 
 .average-star {
@@ -231,3 +218,4 @@
 .favorite-icon.active {
   color: red; // Corazón con color cuando es favorito
 }
+
