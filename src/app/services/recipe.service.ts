@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment'
 import { Recipe } from '../interfaces/recipe.interface.js';
+import { FavoriteRecipe } from '../interfaces/favoriteRecipe.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -160,15 +161,10 @@ export class RecipeService {
   getInitialRecipes(): Recipe[] {
     return this.recipes;
   }
-  ////////////////////
-  // Obtener las recetas favoritas del usuario
-  /*getFavoriteRecipes(): Observable<{ data: Recipe[] }> {
-    console.log('Obteniendo favoritos del usuario');
-    return this.http.get<{ data: Recipe[] }>(this.favoriteUrl, { withCredentials: true });
-  }*/
-    getFavoriteRecipes(): Observable<{ data: { recipe_id: number }[] }> {
-      return this.http.get<{ data: { recipe_id: number }[] }>(`${this.favoriteUrl}`, { withCredentials: true });
-   }
+
+  getFavoriteRecipes(): Observable<{ data: { recipe_id: number }[] }> {
+    return this.http.get<{ data: { recipe_id: number }[] }>(`${this.favoriteUrl}`, { withCredentials: true });
+  }
 
   // Agregar una receta a favoritos
   addFavoriteRecipe(recipeId: number): Observable<{ message: string }> {
@@ -182,11 +178,6 @@ export class RecipeService {
     return this.http.delete<{ message: string }>(`${this.favoriteUrl}/${recipeId}`, { withCredentials: true });
   }
   // Calificar una receta
-  /*rateRecipe(recipeId: number, rating: number): Observable<{ message: string }> {
-    return this.http.post<{ message: string }>(this.ratingUrl, { recipe_id: recipeId, rating }, { withCredentials: true });
-  }*/
-
-  // Calificar una receta
   rateRecipe(recipeId: number, rating: number): Observable<{ message: string }> {
     return this.http.post<{ message: string }>(`${this.ratingUrl}`, { recipe_id: recipeId, rating }, { withCredentials: true });
   }
@@ -195,4 +186,16 @@ export class RecipeService {
   getRecipeRating(recipeId: number): Observable<{ averageRating: number }> {
     return this.http.get<{ averageRating: number }>(`${this.ratingUrl}/${recipeId}/average`, { withCredentials: true });
   }
+
+  // recipe.service.ts
+  /*getTop3FavoriteRecipes(): Observable<{ data: any[] }> {
+    return this.http.get<{ data: any[] }>(`${this.favoriteUrl}/top3`, { withCredentials: true });
+  }*/
+  // Método para obtener el Top 3 de recetas favoritas
+  getTop3FavoriteRecipes(): Observable<{ data: FavoriteRecipe[] }> {
+    return this.http.get<{ data: FavoriteRecipe[] }>(`${this.favoriteUrl}/top3`, { withCredentials: true });
+  }
+  
+
+
 }
