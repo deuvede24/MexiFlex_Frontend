@@ -4,6 +4,9 @@ import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment'
 import { Recipe } from '../interfaces/recipe.interface.js';
 import { FavoriteRecipe } from '../interfaces/favoriteRecipe.interface';
+import { BehaviorSubject } from 'rxjs';
+import { tap } from 'rxjs/operators';
+
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +17,17 @@ export class RecipeService {
   private favoriteUrl = `${environment.apiUrl}/favorites`; // Endpoint de favoritos
   private ratingUrl = `${environment.apiUrl}/rankings`; // Endpoint de ranking
 
-  constructor(private http: HttpClient) { }
+  private favoriteRecipesSubject = new BehaviorSubject<Set<number>>(new Set<number>());
+  favoriteRecipes$ = this.favoriteRecipesSubject.asObservable();
+
+  constructor(private http: HttpClient) {  this.loadFavoriteRecipes();}
+    // Método para cargar los favoritos al iniciar el servicio
+    private loadFavoriteRecipes(): void {
+      this.getFavoriteRecipes().subscribe(response => {
+        const favoriteIds = new Set(response.data.map(fav => fav.recipe_id));
+        this.favoriteRecipesSubject.next(favoriteIds);
+      });
+    }
 
 
   // Obtener todas las recetas con código, mensaje y data
@@ -167,7 +180,7 @@ export class RecipeService {
   }
 
   // Agregar una receta a favoritos
-  addFavoriteRecipe(recipeId: number): Observable<{ message: string }> {
+ /* addFavoriteRecipe(recipeId: number): Observable<{ message: string }> {
     console.log('Agregando a favoritos:', recipeId); // Agrega este log para verificar
     return this.http.post<{ message: string }>(this.favoriteUrl, { recipe_id: recipeId }, { withCredentials: true });
   }
@@ -176,7 +189,30 @@ export class RecipeService {
   removeFavoriteRecipe(recipeId: number): Observable<{ message: string }> {
     console.log('Eliminando de favoritos:', recipeId);
     return this.http.delete<{ message: string }>(`${this.favoriteUrl}/${recipeId}`, { withCredentials: true });
+  }*/
+
+  // Agregar una receta a favoritos y actualizar el BehaviorSubject
+  addFavoriteRecipe(recipeId: number): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(this.favoriteUrl, { recipe_id: recipeId }, { withCredentials: true }).pipe(
+      tap(() => {
+        const currentFavorites = this.favoriteRecipesSubject.value;
+        currentFavorites.add(recipeId);
+        this.favoriteRecipesSubject.next(new Set(currentFavorites));
+      })
+    );
   }
+
+  // Eliminar una receta de favoritos y actualizar el BehaviorSubject
+  removeFavoriteRecipe(recipeId: number): Observable<{ message: string }> {
+    return this.http.delete<{ message: string }>(`${this.favoriteUrl}/${recipeId}`, { withCredentials: true }).pipe(
+      tap(() => {
+        const currentFavorites = this.favoriteRecipesSubject.value;
+        currentFavorites.delete(recipeId);
+        this.favoriteRecipesSubject.next(new Set(currentFavorites));
+      })
+    );
+  }
+
   // Calificar una receta
   rateRecipe(recipeId: number, rating: number): Observable<{ message: string }> {
     return this.http.post<{ message: string }>(`${this.ratingUrl}`, { recipe_id: recipeId, rating }, { withCredentials: true });
@@ -187,10 +223,6 @@ export class RecipeService {
     return this.http.get<{ averageRating: number }>(`${this.ratingUrl}/${recipeId}/average`, { withCredentials: true });
   }
 
-  // recipe.service.ts
-  /*getTop3FavoriteRecipes(): Observable<{ data: any[] }> {
-    return this.http.get<{ data: any[] }>(`${this.favoriteUrl}/top3`, { withCredentials: true });
-  }*/
   // Método para obtener el Top 3 de recetas favoritas
   getTop3FavoriteRecipes(): Observable<{ data: FavoriteRecipe[] }> {
     return this.http.get<{ data: FavoriteRecipe[] }>(`${this.favoriteUrl}/top3`, { withCredentials: true });

@@ -183,6 +183,7 @@ export class HomeComponent implements OnInit {
       this.favoriteRecipes.delete(recipeId);
       this.recipeService.removeFavoriteRecipe(recipeId).subscribe({
         next: () => console.log('Receta eliminada de favoritos en backend'),
+        
         error: (error) => {
           console.error('Error al eliminar de favoritos', error);
           alert('Error al intentar eliminar de favoritos: ' + error.message);
@@ -241,6 +242,8 @@ export class HomeComponent implements OnInit {
     }));
 
     console.log('Favoritos actuales:', Array.from(this.favoriteRecipes)); // Verifica favoritos antes de abrir
+
+    
 
     // Obtener todas las calificaciones y calcular el promedio
     this.recipeService.getRecipeRatings(recipe.id_recipe).subscribe({

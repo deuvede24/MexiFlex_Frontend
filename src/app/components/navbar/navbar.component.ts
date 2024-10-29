@@ -37,6 +37,8 @@ export class NavbarComponent {
 
   ngOnInit(): void {
     this.loadTop3Favorites();
+
+    
   }
 
   // navbar.component.ts
