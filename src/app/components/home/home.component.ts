@@ -46,6 +46,15 @@ export class HomeComponent implements OnInit {
     if (this.isUserLoggedIn) {
       this.loadFavoriteRecipes(); // Primero cargamos los favoritos
       this.loadAllRecipes(); // Luego cargamos todas las recetas
+// Suscribirse a cambios en favoritos
+// Añadir suscripción a cambios en favoritos
+this.recipeService.favoriteRecipes$.subscribe(
+  favorites => {
+    if (favorites) {
+      this.favoriteRecipes = favorites;
+    }
+  }
+);
     } else {
       this.loadGroupedRecipes(); // Cargar las recetas precargadas desde el frontend
     }

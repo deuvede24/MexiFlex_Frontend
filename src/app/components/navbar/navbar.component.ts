@@ -37,7 +37,14 @@ export class NavbarComponent {
 
   ngOnInit(): void {
     this.loadTop3Favorites();
-
+   // Añadir suscripción a cambios
+   this.recipeService.top3Favorites$.subscribe(
+    favorites => {
+      if (favorites && favorites.length > 0) {
+        this.top3Favorites = favorites;
+      }
+    }
+  );
     
   }
 
