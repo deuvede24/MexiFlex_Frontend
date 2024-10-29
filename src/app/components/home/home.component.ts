@@ -1,5 +1,5 @@
 import { RecipeIngredient } from './../../interfaces/recipe.interface';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
@@ -8,6 +8,8 @@ import { Recipe } from '../../interfaces/recipe.interface';
 import { RecipeService } from '../../services/recipe.service';
 import { FormsModule } from '@angular/forms';
 import { HeaderComponent } from '../header/header.component';
+
+import { ModalService } from '../../services/modal.service';
 
 @Component({
   selector: 'app-home',
@@ -26,12 +28,18 @@ export class HomeComponent implements OnInit {
   averageRating: number = 0; // Calificación promedio
   favoriteRecipes: Set<number> = new Set<number>(); // Lista de favoritos con Set
   groupedRecipes: any[] = [];
+  isRecipeModalOpen: boolean = false;
+
+
 
   constructor(
     public authService: AuthService,
     private router: Router,
-    private recipeService: RecipeService
+    private recipeService: RecipeService,
+    private modalService: ModalService
   ) { }
+
+
 
   ngOnInit(): void {
     this.isUserLoggedIn = this.authService.isLoggedIn();
@@ -41,7 +49,23 @@ export class HomeComponent implements OnInit {
     } else {
       this.loadGroupedRecipes(); // Cargar las recetas precargadas desde el frontend
     }
+
+
+    // Suscripción al estado del modal de receta desde el servicio
+    this.modalService.recipeModalOpen$.subscribe(isOpen => {
+      this.isRecipeModalOpen = isOpen;  // Sincroniza la apertura del modal
+    });
+
+    // Suscribirse al estado del modal de `ModalService` para abrirlo cuando se seleccione una receta
+    this.modalService.selectedRecipe$.subscribe(recipe => {
+      if (recipe) {
+        this.selectedRecipe = recipe;
+      }
+    });
   }
+
+
+
 
   // Cargar recetas agrupadas desde el servicio (frontend)
   loadGroupedRecipes(): void {
@@ -278,6 +302,8 @@ export class HomeComponent implements OnInit {
     this.selectedRecipe = null;
     this.currentRating = 0;
     this.averageRating = 0;
+    this.isRecipeModalOpen = false;   // Cierra el modal en `HomeComponent`
+    this.modalService.closeRecipeModal();
   }
 
   // Navegar a inicio de sesión

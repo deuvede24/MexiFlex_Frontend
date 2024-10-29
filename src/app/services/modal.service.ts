@@ -9,6 +9,10 @@ import { environment } from '../../environments/environment'
 export class ModalService {
 
     private favoriteUrl = `${environment.apiUrl}/favorites`; // Endpoint de favoritos
+
+    private recipeModalOpen = new BehaviorSubject<boolean>(false);
+    recipeModalOpen$ = this.recipeModalOpen.asObservable();
+
     // Para el modal de receta específica
     private recipeSubject = new BehaviorSubject<Recipe | null>(null);
     selectedRecipe$ = this.recipeSubject.asObservable();
@@ -28,13 +32,14 @@ export class ModalService {
     // Métodos para el modal de receta específica
     openRecipeModal(recipe: Recipe): void {
         this.recipeSubject.next(recipe);
+        this.recipeModalOpen.next(true);
     }
 
     closeRecipeModal(): void {
         this.recipeSubject.next(null);
+        this.recipeModalOpen.next(false);
     }
 
-    // Métodos para el modal de Top 3
     openTop3Modal(): void {
         this.top3ModalOpen.next(true);
     }
@@ -42,6 +47,5 @@ export class ModalService {
     closeTop3Modal(): void {
         this.top3ModalOpen.next(false);
     }
-
 }
 

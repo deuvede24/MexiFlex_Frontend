@@ -73,18 +73,20 @@ export class NavbarComponent {
   }
 
   viewRecipeDetails(recipeId: number): void {
-    // Llama al servicio para obtener la receta completa usando recipe_id
     this.recipeService.getRecipeById(recipeId).subscribe({
       next: (response) => {
-        const recipe = response.data; // Aseguramos que `recipe_id` esté presente
-        this.modalService.openRecipeModal(recipe); // Enviar la receta completa al modal en HomeComponent
-        this.closeTop3Modal(); // Cerrar el modal Top 3
+        if (response && response.data) {
+          this.modalService.openRecipeModal(response.data); // Abre el modal de receta
+          this.modalService.closeTop3Modal();               // Cierra el modal Top 3
+        } else {
+          console.error('Formato de respuesta no válido:', response);
+        }
       },
-      error: (error) => {
-        console.error('Error al obtener la receta:', error);
-      }
+      error: (error) => console.error('Error al obtener la receta:', error)
     });
   }
+  
+  
 
 
   toggleMenu() {
