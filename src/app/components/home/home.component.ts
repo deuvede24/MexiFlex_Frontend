@@ -10,6 +10,7 @@ import { FormsModule } from '@angular/forms';
 import { HeaderComponent } from '../header/header.component';
 
 import { ModalService } from '../../services/modal.service';
+import { FavoriteRecipe } from '../../interfaces/favoriteRecipe.interface';
 
 @Component({
   selector: 'app-home',
@@ -29,6 +30,7 @@ export class HomeComponent implements OnInit {
   favoriteRecipes: Set<number> = new Set<number>(); // Lista de favoritos con Set
   groupedRecipes: any[] = [];
   isRecipeModalOpen: boolean = false;
+  top3Favorites: FavoriteRecipe[] = []; // Asegúrate de declarar `top3Favorites`
 
 
 
@@ -41,39 +43,94 @@ export class HomeComponent implements OnInit {
 
 
 
+  /* ngOnInit(): void {
+     this.isUserLoggedIn = this.authService.isLoggedIn();
+     if (this.isUserLoggedIn) {
+       this.loadFavoriteRecipes(); // Primero cargamos los favoritos
+       this.loadAllRecipes(); // Luego cargamos todas las recetas
+       // Suscribirse a cambios en favoritos
+       // Añadir suscripción a cambios en favoritos
+       this.recipeService.favoriteRecipes$.subscribe(
+         favorites => {
+           if (favorites) {
+             this.favoriteRecipes = favorites;
+           }
+         }
+       );
+     } else {
+       this.loadGroupedRecipes(); // Cargar las recetas precargadas desde el frontend
+     }
+ 
+     // Suscripción al estado del modal de receta desde el servicio
+     this.modalService.recipeModalOpen$.subscribe(isOpen => {
+       this.isRecipeModalOpen = isOpen;  // Sincroniza la apertura del modal
+     });
+ 
+    // Suscribirse a `selectedRecipe$` para recibir la receta y la categoría seleccionadas desde el Top 3
+   this.modalService.selectedRecipe$.subscribe(selectedRecipeData => {
+     if (selectedRecipeData) {
+       this.selectedRecipe = selectedRecipeData.recipe; // Asigna la receta seleccionada
+       this.selectedCategory = selectedRecipeData.category; // Asigna la categoría seleccionada
+       this.isRecipeModalOpen = true; // Abre el modal
+     }
+   });
+ 
+   }*/
+
   ngOnInit(): void {
     this.isUserLoggedIn = this.authService.isLoggedIn();
+
     if (this.isUserLoggedIn) {
-      this.loadFavoriteRecipes(); // Primero cargamos los favoritos
-      this.loadAllRecipes(); // Luego cargamos todas las recetas
-// Suscribirse a cambios en favoritos
-// Añadir suscripción a cambios en favoritos
-this.recipeService.favoriteRecipes$.subscribe(
-  favorites => {
-    if (favorites) {
-      this.favoriteRecipes = favorites;
-    }
-  }
-);
+      this.loadFavoriteRecipes();
+      this.loadAllRecipes();
+
+      this.recipeService.favoriteRecipes$.subscribe(favorites => {
+        this.favoriteRecipes = favorites;
+      });
+
+      this.recipeService.top3Favorites$.subscribe(top3 => {
+        this.top3Favorites = top3;
+      });
     } else {
-      this.loadGroupedRecipes(); // Cargar las recetas precargadas desde el frontend
+      this.loadGroupedRecipes();
     }
 
-
-    // Suscripción al estado del modal de receta desde el servicio
     this.modalService.recipeModalOpen$.subscribe(isOpen => {
-      this.isRecipeModalOpen = isOpen;  // Sincroniza la apertura del modal
+      this.isRecipeModalOpen = isOpen;
     });
 
-    // Suscribirse al estado del modal de `ModalService` para abrirlo cuando se seleccione una receta
-    this.modalService.selectedRecipe$.subscribe(recipe => {
-      if (recipe) {
-        this.selectedRecipe = recipe;
+    this.modalService.selectedRecipe$.subscribe(data => {
+      if (data) {
+        console.log("Receta seleccionada en home:", data.recipe);
+        console.log("Categoría seleccionada en home:", data.category);
+        this.selectedRecipe = data.recipe;
+        this.selectedCategory = data.category;
+        this.initializePortions();
+        console.log('Categoría seleccionada para el modal:', this.selectedCategory);
       }
     });
   }
 
+  initializePortions(): void {
+    if (this.selectedRecipe) {
+        console.log("Inicializando porciones para la receta:", this.selectedRecipe);
+        // Aquí inicializa las porciones según los valores de `selectedRecipe`
+        // o ajusta la lógica necesaria para establecer las porciones por defecto
+    }
+}
 
+  // Método para cargar una receta específica por su ID (lo usamos en caso de necesitar cargar por ID)
+  loadRecipeById(recipeId: number): void {
+    this.recipeService.getRecipeById(recipeId).subscribe({
+      next: response => {
+        if (response?.data) {
+          this.selectedRecipe = response.data;
+          this.isRecipeModalOpen = true;
+        }
+      },
+      error: error => console.error('Error al cargar la receta por ID:', error)
+    });
+  }
 
 
   // Cargar recetas agrupadas desde el servicio (frontend)
@@ -192,7 +249,7 @@ this.recipeService.favoriteRecipes$.subscribe(
       this.favoriteRecipes.delete(recipeId);
       this.recipeService.removeFavoriteRecipe(recipeId).subscribe({
         next: () => console.log('Receta eliminada de favoritos en backend'),
-        
+
         error: (error) => {
           console.error('Error al eliminar de favoritos', error);
           alert('Error al intentar eliminar de favoritos: ' + error.message);
@@ -252,7 +309,7 @@ this.recipeService.favoriteRecipes$.subscribe(
 
     console.log('Favoritos actuales:', Array.from(this.favoriteRecipes)); // Verifica favoritos antes de abrir
 
-    
+
 
     // Obtener todas las calificaciones y calcular el promedio
     this.recipeService.getRecipeRatings(recipe.id_recipe).subscribe({
@@ -316,6 +373,7 @@ this.recipeService.favoriteRecipes$.subscribe(
     this.averageRating = 0;
     this.isRecipeModalOpen = false;   // Cierra el modal en `HomeComponent`
     this.modalService.closeRecipeModal();
+
   }
 
   // Navegar a inicio de sesión

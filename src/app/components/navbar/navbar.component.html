@@ -77,11 +77,14 @@
   </div>
 
   <!-- Segundo Modal: Top 3 Recetas Favoritas -->
-<!-- Modal Top 3 Recetas Favoritas -->
+
 <!-- Modal Top 3 Recetas Favoritas -->
 <div class="modal favorites-modal" tabindex="-1" [ngClass]="{ 'show': (modalService.top3ModalOpen$ | async) }" (click)="modalService.closeTop3Modal()">
   <div class="modal-dialog" (click)="$event.stopPropagation()">
-    <div class="modal-content">
+    <div class="modal-content" [ngClass]="{
+      'modal-traditional': selectedCategory === 'Tradicional',
+      'modal-flexi': selectedCategory === 'Flexi'
+    }">
       <div class="modal-header">
         <h5 class="modal-title">Mis Top 3 Recetas Favoritas</h5>
         <button type="button" class="btn-close" (click)="modalService.closeTop3Modal()"></button>
@@ -95,7 +98,7 @@
                 <div class="recipe-details">
                   <h4>{{ recipe.title }}</h4>
                   <p>Tiempo de preparación: {{ recipe.preparation_time }} min</p>
-                  <button class="btn-ver-mas" (click)="viewRecipeDetails(recipe.recipe_id)">Ver más</button>
+                  <button class="btn-ver-mas"    [ngClass]="recipe.category === 'Tradicional' ? 'btn-tradicional' : 'btn-flexi'" (click)="viewRecipeDetails(recipe.recipe_id)">Ver más</button>
                 </div>
               </div>
             }

@@ -4,5 +4,6 @@ export interface FavoriteRecipe {
     description: string;
     preparation_time: number;
     image?: string;
+    category: string; // Añadir categoría aquí
   }
   

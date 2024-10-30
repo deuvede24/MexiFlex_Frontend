@@ -385,6 +385,7 @@
   flex-direction: column;
   gap: 15px;
   width: 100%;
+  
 
   // Diseño horizontal para pantallas grandes
   @media (min-width: 1024px) {
@@ -415,6 +416,19 @@
       margin-bottom: 0; // Elimina el margen inferior
       flex: 0 0 auto; // Evita que las cards se estiren
     }
+    .btn-tradicional {
+      background-color: orange;
+      color: white;
+    }
+    
+    .btn-flexi {
+      background-color: green;
+      color: white;
+    }
+    
+    .btn-ver-mas:hover {
+      opacity: 0.9;
+    }
   }
 }
 
@@ -425,4 +439,12 @@
   @media (min-width: 1024px) {
     overflow: hidden; // Evita doble scroll
   }
+}
+
+.modal-tradicional {
+  background-color: orange; // o el color que desees
+}
+
+.modal-flexi {
+  background-color: green; // o el color que desees
 }

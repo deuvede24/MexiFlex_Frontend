@@ -1,10 +1,10 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';  // Asegúrate de tener AuthService
 import { ModalService } from '../../services/modal.service';
 import { RecipeService } from '../../services/recipe.service';
-//import { Recipe } from '../../interfaces/recipe.interface';
+import { Recipe } from '../../interfaces/recipe.interface';
 import { FavoriteRecipe } from '../../interfaces/favoriteRecipe.interface';
 
 
@@ -16,13 +16,15 @@ import { FavoriteRecipe } from '../../interfaces/favoriteRecipe.interface';
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.scss']
 })
-export class NavbarComponent {
+export class NavbarComponent implements OnInit {
   isMenuOpen = false;
   isAuthModalOpen = false; // Controla la apertura del modal
   isAccountModalOpen = false;
   scrolled = false;
   isTop3ModalOpen = false; // Controla la visibilidad del segundo modal
   top3Favorites: FavoriteRecipe[] = [];// Almacena las recetas top 3 del usuario
+  selectedCategory: string = '';
+
   constructor(public authService: AuthService, private router: Router, public modalService: ModalService, private recipeService: RecipeService) { }
 
   // Escucha el evento de scroll de la ventana
@@ -35,18 +37,52 @@ export class NavbarComponent {
     });
   }
 
-  ngOnInit(): void {
-    this.loadTop3Favorites();
-   // Añadir suscripción a cambios
-   this.recipeService.top3Favorites$.subscribe(
-    favorites => {
-      if (favorites && favorites.length > 0) {
+  /* ngOnInit(): void {
+     this.loadTop3Favorites();
+     // Añadir suscripción a cambios
+     this.recipeService.top3Favorites$.subscribe(
+       favorites => {
+         if (favorites && favorites.length > 0) {
+           this.top3Favorites = favorites;
+         }
+       }
+     );
+   }*/
+  /*ngOnInit(): void {
+    // Suscribirse a cambios en top3Favorites$
+    this.recipeService.top3Favorites$.subscribe(
+      favorites => {
         this.top3Favorites = favorites;
+        console.log("Top 3 en Navbar:", this.top3Favorites); // Verificar aquí los valores de categoría y título
       }
-    }
-  );
-    
+    );
+  }*/
+
+ /* ngOnInit(): void {
+    this.recipeService.top3Favorites$.subscribe(top3 => {
+      console.log("Datos del Top 3 recibidos en Navbar:", top3);
+      this.top3Favorites = top3.map(recipe => ({
+        ...recipe,
+        colorClass: recipe.category === 'Tradicional' ? 'color-tradicional' : 'color-flexi'
+      }));
+    });
+  }*/
+
+  ngOnInit(): void {
+    // Llamada inicial para cargar los favoritos Top 3
+    this.recipeService.updateTop3Favorites();
+
+    // Suscripción a los cambios en top3Favorites$
+    this.recipeService.top3Favorites$.subscribe(top3 => {
+      this.top3Favorites = top3.map(recipe => ({
+        ...recipe,
+        colorClass: recipe.category === 'Tradicional' ? 'color-tradicional' : 'color-flexi'
+      }));
+      console.log("Datos del Top 3 recibidos en Navbar:", this.top3Favorites);
+    });
   }
+
+ 
 
   // navbar.component.ts
   loadTop3Favorites(): void {
@@ -59,7 +95,8 @@ export class NavbarComponent {
             title: fav.title,
             description: fav.description,
             preparation_time: fav.preparation_time,
-            image: fav.image
+            image: fav.image,
+            category: fav.category // Añadido para incluir la categoría
           } as FavoriteRecipe)); // Forzamos el tipo a FavoriteRecipe
           console.log("Top 3 favoritos cargados correctamente:", this.top3Favorites);
         } else {
@@ -82,20 +119,27 @@ export class NavbarComponent {
   }
 
   viewRecipeDetails(recipeId: number): void {
+    // Llamamos a `recipeService` para obtener la receta completa por `recipe_id`
     this.recipeService.getRecipeById(recipeId).subscribe({
-      next: (response) => {
-        if (response && response.data) {
-          this.modalService.openRecipeModal(response.data); // Abre el modal de receta
-          this.modalService.closeTop3Modal();               // Cierra el modal Top 3
-        } else {
-          console.error('Formato de respuesta no válido:', response);
+        next: (response) => {
+            if (response && response.data) {
+                const recipe = response.data;
+                console.log("Receta obtenida para el modal:", recipe);
+                console.log("Categoría seleccionada para el modal:", recipe.category);
+                // Abrimos el modal con la receta completa
+                this.modalService.openRecipeModal(recipe, recipe.category);
+                this.modalService.closeTop3Modal(); // Cierra el modal de Top 3
+            } else {
+                console.error('No se encontró la receta:', response);
+            }
+        },
+        error: (error) => {
+            console.error('Error al obtener la receta completa:', error);
         }
-      },
-      error: (error) => console.error('Error al obtener la receta:', error)
     });
-  }
-  
-  
+}
+
+
 
 
   toggleMenu() {
@@ -114,7 +158,9 @@ export class NavbarComponent {
   }
 
   openAccountModal(): void {
+    this.recipeService.updateTop3Favorites();
     this.isAccountModalOpen = true;
+    
   }
 
   closeAccountModal(): void {
