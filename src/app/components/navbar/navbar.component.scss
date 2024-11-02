@@ -1,3 +1,4 @@
+/* Estilos base de la navbar */
 .navbar {
   display: flex;
   justify-content: space-between;
@@ -12,8 +13,7 @@
   width: 100%;
   z-index: 1000;
   transition: all 0.3s ease;
-  margin-bottom: 50px; /* Añadido para dar margen al contenido debajo */
-
+  margin-bottom: 50px;
 
   &.scrolled {
     background: linear-gradient(to bottom, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.85));
@@ -127,64 +127,41 @@
   }
 }
 
-/* Dispositivos móviles */
-@media (max-width: 991px) {
-  .navbar {
-    .container-fluid {
-      padding: 0 15px;
-      position: relative;
-    }
-
-    .navbar-brand {
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
-      margin: 0;
-    }
-
-    .navbar-toggler {
-      position: relative;
-      margin-right: auto;
-    }
-
-    .nav-auth-buttons {
-      position: relative;
-      margin-left: auto;
-
-      .user-avatar {
-        width: 30px;
-        height: 30px;
-      }
-    }
-
-    .navbar-collapse {
-      position: absolute;
-      top: 100%;
-      left: 0;
-      right: 0;
-      background: white;
-      padding: 15px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-
-      .nav-link {
-        padding: 10px 0;
-        text-align: left;
-      }
-    }
-  }
-}
-
-/* Mantener los estilos de los modales igual que antes */
-
-
+/* Estilos de los modales */
 .modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1050;
+
   &.show {
     display: block;
   }
 
+  /* Z-index específicos para cada tipo de modal */
+  &.auth-modal {
+    z-index: 1040;
+  }
+
+  &.account-modal {
+    z-index: 1040;
+  }
+
+  &.favorites-modal {
+    z-index: 1050;
+  }
+
   .modal-dialog {
-    margin: 15vh auto; /* Centramos el modal */
-    max-width: 400px; /* Tamaño máximo */
+    margin: 15vh auto;
+    max-width: 400px;
+    
+    @media (max-width: 576px) {
+      margin: 10vh 15px;
+    }
   }
 
   .modal-content {
@@ -200,6 +177,13 @@
     justify-content: space-between;
     align-items: center;
     border-bottom: none;
+    padding-bottom: 15px;
+
+    .modal-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #333;
+    }
 
     .btn-close {
       background: none;
@@ -215,10 +199,8 @@
   }
 
   .modal-body {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-
+    padding: 20px 0;
+    
     .btn {
       background-color: #FF6200;
       color: #fff;
@@ -233,6 +215,17 @@
       &:hover {
         background-color: #038009;
       }
+
+      &.btn-outline-danger {
+        background-color: transparent;
+        border: 2px solid #dc3545;
+        color: #dc3545;
+
+        &:hover {
+          background-color: #dc3545;
+          color: #fff;
+        }
+      }
     }
 
     .register-legend {
@@ -244,158 +237,18 @@
   }
 }
 
-/* Fondo semi-transparente para el modal */
-.modal-backdrop {
-  background-color: rgba(0, 0, 0, 0.7);
-  z-index: 1040;
-}
-
-/* Mantener el scroll semi-transparente */
-.modal {
-  z-index: 1050;
-}
-
-/* Margen para que el contenido de login y register no se solape con la navbar */
-.app-content {
-  margin-top: 100px; /* Ajusta esto según lo que necesites */
-}
-
-
-
-//////////////// 
-.modal-top {
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-  text-align: center;
-  max-width: 300px;
-  position: absolute;
-  top: 50px; /* Ajusta según la posición del avatar */
-  right: 20px; /* Ajusta según la posición */
-  z-index: 1000;
-}
-
-.modal-header {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: #333;
-}
-
-.modal-body {
-  margin-top: 10px;
-  .favorites-section {
-    font-size: 1.2rem;
-    margin-bottom: 10px;
-    color: #FF6200;
-  }
-  .btn-close-session {
-    background-color: #FF6200;
-    color: #fff;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    font-size: 1rem;
-    cursor: pointer;
-    &:hover {
-      background-color: #D94C00;
-    }
-  }
-}
-
-// Estilos de la mini-card
-// Estilos de la mini-card
-.mini-card {
-  display: flex;
-  align-items: center;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 10px;
-  margin-bottom: 10px;
-  transition: box-shadow 0.3s ease;
-  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
-  width: 100%; // Asegura que ocupe todo el ancho disponible
-
-  &:hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  }
-
-  img {
-    width: 80px;
-    height: 80px;
-    border-radius: 6px;
-    object-fit: cover;
-    margin-right: 16px;
-  }
-
-  h4 {
-    font-size: 1.1rem;
-    margin: 0;
-    color: #333;
-  }
-
-  p {
-    font-size: 0.9rem;
-    color: #555;
-    margin: 0;
-  }
-
-  button {
-    margin-top: 8px;
-    padding: 6px 12px;
-    font-size: 0.85rem;
-    border-radius: 4px;
-    border: none;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    color: #fff;
-
-    &.btn-ver-mas {
-      background-color: #ff6600;
-    }
-
-    &:hover {
-      background-color: #e65c00;
-    }
-  }
-
-  // Diseño para pantallas pequeñas (vertical)
-  @media (max-width: 1023px) {
-    flex-direction: column;
-    align-items: flex-start;
-
-    img {
-      width: 100%;
-      margin-right: 0;
-      margin-bottom: 8px;
-    }
-
-    h4, p {
-      text-align: left;
-    }
-  }
-}
-
-// Contenedor de mini-cards
+/* Estilos para las mini-cards en el modal de favoritos */
 .mini-cards-container {
   display: flex;
-  flex-direction: column;
   gap: 15px;
-  width: 100%;
+  padding: 20px 0;
   
-
-  // Diseño horizontal para pantallas grandes
-  @media (min-width: 1024px) {
+  @media (min-width: 768px) {
     flex-direction: row;
     flex-wrap: nowrap;
     overflow-x: auto;
-    padding: 20px 0;
-    gap: 20px;
+    overflow-y: hidden;
     
-    // Scrollbar personalizado
     &::-webkit-scrollbar {
       height: 8px;
     }
@@ -409,42 +262,101 @@
       background: #888;
       border-radius: 4px;
     }
-
+    
     .mini-card {
-      min-width: 300px; // Ancho mínimo para cada card
-      max-width: 350px; // Ancho máximo para cada card
-      margin-bottom: 0; // Elimina el margen inferior
-      flex: 0 0 auto; // Evita que las cards se estiren
-    }
-    .btn-tradicional {
-      background-color: orange;
-      color: white;
-    }
-    
-    .btn-flexi {
-      background-color: green;
-      color: white;
-    }
-    
-    .btn-ver-mas:hover {
-      opacity: 0.9;
+      min-width: 300px;
+      flex: 0 0 auto;
     }
   }
-}
-
-// Ajustes del modal
-.modal-body {
-  padding: 0 20px;
   
-  @media (min-width: 1024px) {
-    overflow: hidden; // Evita doble scroll
+  @media (max-width: 767px) {
+    flex-direction: column;
   }
 }
 
-.modal-tradicional {
-  background-color: orange; // o el color que desees
+.mini-card {
+  display: flex;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  overflow: hidden;
+  
+  img {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+  }
+  
+  .recipe-details {
+    padding: 15px;
+    flex: 1;
+  }
+
+  .btn-ver-mas {
+    background-color: #FF6200;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+  }
 }
 
-.modal-flexi {
-  background-color: green; // o el color que desees
+/* Contenedor del modal de receta */
+.recipe-modal-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1060;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Responsive */
+@media (max-width: 991px) {
+  .navbar {
+    .container-fluid {
+      padding: 0 15px;
+    }
+
+    .navbar-brand {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .navbar-collapse {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: white;
+      padding: 15px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+      .nav-link {
+        padding: 10px 0;
+        text-align: center;
+      }
+    }
+  }
+
+  .mini-cards-container {
+    .mini-card {
+      flex-direction: column;
+
+      img {
+        width: 100%;
+        height: 200px;
+      }
+    }
+  }
+}
+
+/* Backdrop */
+.modal-backdrop {
+  z-index: 1040;
 }

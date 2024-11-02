@@ -1,0 +1,72 @@
+<div class="modal fade show" tabindex="-1" style="display: block;" aria-modal="true" role="dialog">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content"
+        [ngClass]="{'modal-traditional': category === 'Tradicional', 'modal-flexi': category === 'Flexi'}">
+        <div class="modal-header">
+          <h5 class="modal-title">{{ recipe?.title }} ({{ category }})</h5>
+  
+          <!-- Ícono de favorito -->
+          <span class="favorite-icon" (click)="toggleFavorite()"
+            [ngClass]="{'active': isFavorite(recipe?.id_recipe || 0)}">
+            <i class="fas fa-heart"></i> <!-- Ícono de corazón -->
+          </span>
+  
+          <button type="button" class="close" aria-label="Close" (click)="closeModal()">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        
+        <div class="modal-body">
+          <p>{{ recipe?.description }}</p>
+          <p>Categoría: {{ recipe?.category }}</p>
+          <p>Porciones: {{ recipe?.serving_size }}</p>
+          <p>Tiempo de preparación: {{ recipe?.preparation_time }} minutos</p>
+  
+          <!-- Selector de porciones -->
+          <div class="porciones-selector mb-3">
+            <label for="porciones">Porciones:</label>
+            <select id="porciones" [(ngModel)]="portions" (change)="updateIngredients(portions)">
+              <option [value]="1">1 porción</option>
+              <option [value]="2">2 porciones</option>
+              <option [value]="3">3 porciones</option>
+            </select>
+          </div>
+  
+          <!-- Ingredientes de la receta -->
+          <h5>Ingredientes:</h5>
+          <ul>
+            @for (ingredient of recipe?.RecipeIngredients; track $index) {
+              <li>{{ ingredient.quantity }} de {{ ingredient.ingredient_name }}</li>
+            }
+          </ul>
+  
+          <!-- Pasos de la receta -->
+          <h5>Pasos:</h5>
+          <p>{{ recipe?.steps }}</p>
+  
+          <!-- Ranking de la receta -->
+          <div class="recipe-rating">
+            <h5>Valora esta receta:</h5>
+            <div class="stars">
+              @for (star of [1, 2, 3, 4, 5]; track $index) {
+                <span (click)="setRating(star)" [ngClass]="{
+                  'filled-star': star <= currentRating,
+                  'average-star': star <= averageRating && star > currentRating
+                }">&#9733;</span>
+              }
+            </div>
+            @if (averageRating) {
+              <p>Promedio de calificación: {{ averageRating | number:'1.1-1' }} estrellas</p>
+            }
+          </div>
+  
+        </div>
+        
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="closeModal()">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  

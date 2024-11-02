@@ -1,0 +1,70 @@
+/* recipe-modal.component.scss */
+
+/* Estilos generales del modal */
+.modal-content {
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease;
+ 
+  
+    /* Para asegurarnos de que los colores del modal se apliquen */
+    &.modal-traditional {
+      background-color: #f06306; /* Naranja para tradicional */
+      color: white;
+  
+      .favorite-icon {
+        color: gray; // Corazón sin color por defecto
+        &.active {
+          color: red; // Corazón en rojo cuando es favorito
+        }
+      }
+    }
+  
+    &.modal-flexi {
+      background-color: #038009; /* Verde para flexi */
+      color: white;
+  
+      .favorite-icon {
+        color: gray; // Corazón sin color por defecto
+        &.active {
+          color: red; // Corazón en rojo cuando es favorito
+        }
+      }
+    }
+  }
+  
+  /* Estilos de las estrellas para el rating */
+  .recipe-rating {
+    .stars {
+      font-size: 1.5rem;
+  
+      .filled-star {
+        color: gold; /* Color para estrellas llenas */
+      }
+  
+      .average-star {
+        color: orange; /* Color para estrellas de promedio */
+      }
+  
+      .star {
+        cursor: pointer;
+        color: lightgray; /* Color para estrellas vacías */
+      }
+    }
+  }
+  
+  /* Otros estilos para los elementos del modal */
+  .modal-header {
+    background-color: #f7f7f7;
+    border-bottom: 1px solid #dee2e6;
+    color: #333;
+  
+    .close {
+      color: #000; /* Color del botón de cerrar */
+    }
+  }
+  
+  .modal-footer {
+    background-color: #f7f7f7;
+  }
+  

@@ -1,9 +1,12 @@
+
+
 export interface FavoriteRecipe {
-    recipe_id: number;
-    title: string;
-    description: string;
-    preparation_time: number;
-    image?: string;
-    category: string; // Añadir categoría aquí
-  }
-  
+  recipe_id: number;   // Mantenemos este como estaba
+  id_recipe?: number;  // Añadimos el alias
+  title: string;
+  description: string;
+  category: string;
+  preparation_time: number;
+  image?: string;
+  serving_size: number;
+}

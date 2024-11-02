@@ -1,5 +1,5 @@
 import { RecipeIngredient } from './../../interfaces/recipe.interface';
-import { Component, OnInit, AfterViewInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
@@ -8,14 +8,13 @@ import { Recipe } from '../../interfaces/recipe.interface';
 import { RecipeService } from '../../services/recipe.service';
 import { FormsModule } from '@angular/forms';
 import { HeaderComponent } from '../header/header.component';
-
-import { ModalService } from '../../services/modal.service';
 import { FavoriteRecipe } from '../../interfaces/favoriteRecipe.interface';
+import { RecipeModalComponent } from '../recipe-modal/recipe-modal.component';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule, HeaderComponent],
+  imports: [CommonModule, RouterModule, FormsModule, HeaderComponent, RecipeModalComponent],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
@@ -25,57 +24,17 @@ export class HomeComponent implements OnInit {
   selectedCategory: string = '';
   selectedPortions: number = 1;
   originalIngredients: RecipeIngredient[] = [];
-  currentRating: number = 0; // Calificación actual
-  averageRating: number = 0; // Calificación promedio
-  favoriteRecipes: Set<number> = new Set<number>(); // Lista de favoritos con Set
+  currentRating: number = 0;
+  averageRating: number = 0;
+  favoriteRecipes: Set<number> = new Set<number>();
   groupedRecipes: any[] = [];
-  isRecipeModalOpen: boolean = false;
-  top3Favorites: FavoriteRecipe[] = []; // Asegúrate de declarar `top3Favorites`
-
-
+  top3Favorites: FavoriteRecipe[] = [];
 
   constructor(
     public authService: AuthService,
     private router: Router,
-    private recipeService: RecipeService,
-    private modalService: ModalService
+    private recipeService: RecipeService
   ) { }
-
-
-
-  /* ngOnInit(): void {
-     this.isUserLoggedIn = this.authService.isLoggedIn();
-     if (this.isUserLoggedIn) {
-       this.loadFavoriteRecipes(); // Primero cargamos los favoritos
-       this.loadAllRecipes(); // Luego cargamos todas las recetas
-       // Suscribirse a cambios en favoritos
-       // Añadir suscripción a cambios en favoritos
-       this.recipeService.favoriteRecipes$.subscribe(
-         favorites => {
-           if (favorites) {
-             this.favoriteRecipes = favorites;
-           }
-         }
-       );
-     } else {
-       this.loadGroupedRecipes(); // Cargar las recetas precargadas desde el frontend
-     }
- 
-     // Suscripción al estado del modal de receta desde el servicio
-     this.modalService.recipeModalOpen$.subscribe(isOpen => {
-       this.isRecipeModalOpen = isOpen;  // Sincroniza la apertura del modal
-     });
- 
-    // Suscribirse a `selectedRecipe$` para recibir la receta y la categoría seleccionadas desde el Top 3
-   this.modalService.selectedRecipe$.subscribe(selectedRecipeData => {
-     if (selectedRecipeData) {
-       this.selectedRecipe = selectedRecipeData.recipe; // Asigna la receta seleccionada
-       this.selectedCategory = selectedRecipeData.category; // Asigna la categoría seleccionada
-       this.isRecipeModalOpen = true; // Abre el modal
-     }
-   });
- 
-   }*/
 
   ngOnInit(): void {
     this.isUserLoggedIn = this.authService.isLoggedIn();
@@ -83,75 +42,53 @@ export class HomeComponent implements OnInit {
     if (this.isUserLoggedIn) {
       this.loadFavoriteRecipes();
       this.loadAllRecipes();
-
       this.recipeService.favoriteRecipes$.subscribe(favorites => {
         this.favoriteRecipes = favorites;
       });
-
       this.recipeService.top3Favorites$.subscribe(top3 => {
         this.top3Favorites = top3;
       });
     } else {
       this.loadGroupedRecipes();
     }
-
-    this.modalService.recipeModalOpen$.subscribe(isOpen => {
-      this.isRecipeModalOpen = isOpen;
-    });
-
-    this.modalService.selectedRecipe$.subscribe(data => {
-      if (data) {
-        console.log("Receta seleccionada en home:", data.recipe);
-        console.log("Categoría seleccionada en home:", data.category);
-        this.selectedRecipe = data.recipe;
-        this.selectedCategory = data.category;
-        this.initializePortions();
-        console.log('Categoría seleccionada para el modal:', this.selectedCategory);
-      }
-    });
   }
+
+  
 
   initializePortions(): void {
     if (this.selectedRecipe) {
-        console.log("Inicializando porciones para la receta:", this.selectedRecipe);
-        // Aquí inicializa las porciones según los valores de `selectedRecipe`
-        // o ajusta la lógica necesaria para establecer las porciones por defecto
+      this.selectedPortions = this.selectedRecipe.serving_size || 1;
     }
-}
-
-  // Método para cargar una receta específica por su ID (lo usamos en caso de necesitar cargar por ID)
-  loadRecipeById(recipeId: number): void {
-    this.recipeService.getRecipeById(recipeId).subscribe({
-      next: response => {
-        if (response?.data) {
-          this.selectedRecipe = response.data;
-          this.isRecipeModalOpen = true;
-        }
-      },
-      error: error => console.error('Error al cargar la receta por ID:', error)
-    });
   }
 
+  initializeRating(): void {
+    if (this.selectedRecipe) {
+      this.recipeService.getRecipeRatings(this.selectedRecipe.id_recipe).subscribe({
+        next: (response) => {
+          const ratings = response.ratings;
+          this.averageRating = ratings.length > 0 
+            ? ratings.reduce((acc, rating) => acc + rating, 0) / ratings.length 
+            : 0;
+        },
+        error: (error) => console.error('Error al obtener calificación promedio', error)
+      });
+    }
+  }
 
-  // Cargar recetas agrupadas desde el servicio (frontend)
   loadGroupedRecipes(): void {
     const recipes = this.recipeService.getInitialRecipes();
     this.groupedRecipes = this.recipeService.groupRecipes(recipes);
-
-    // Separar versiones Tradicional y Flexi
     this.groupedRecipes.forEach((group: any) => {
       group.traditionalVersion = group.versions.find((v: Recipe) => v.category === 'Tradicional');
       group.flexiVersion = group.versions.find((v: Recipe) => v.category === 'Flexi');
     });
   }
 
-  // Cargar recetas desde el backend si el usuario está logueado
   loadAllRecipes(): void {
     this.recipeService.getRecipes().subscribe({
       next: (response) => {
         const recipes = response.data;
         this.groupedRecipes = this.recipeService.groupRecipes(recipes);
-
         this.groupedRecipes.forEach((group: any) => {
           group.traditionalVersion = group.versions.find((v: Recipe) => v.category === 'tradicional');
           group.flexiVersion = group.versions.find((v: Recipe) => v.category === 'flexi');
@@ -161,30 +98,16 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  // Cargar recetas favoritas del usuario
   loadFavoriteRecipes(): void {
-    console.log("Iniciando carga de favoritos...");
-
     this.recipeService.getFavoriteRecipes().subscribe({
       next: (response) => {
-        console.log('Respuesta completa del backend para favoritos:', response);
-
         if (response && response.data && Array.isArray(response.data)) {
-          console.log('Formato de datos es correcto. Procediendo a cargar favoritos.');
-
           this.favoriteRecipes.clear();
-
           response.data.forEach(recipe => {
-            console.log('Contenido de receta favorita recibido:', recipe);
-            if (recipe.recipe_id !== undefined) {  // Asegúrate de usar `recipe_id` aquí
-              console.log(`Añadiendo recipe id: ${recipe.recipe_id} a favoritos`);
-              this.favoriteRecipes.add(recipe.recipe_id);  // Aquí también usamos `recipe_id`
-            } else {
-              console.error('Propiedad `recipe_id` no encontrada en el objeto:', recipe);
+            if (recipe.recipe_id !== undefined) {
+              this.favoriteRecipes.add(recipe.recipe_id);
             }
           });
-
-          console.log("Favoritos cargados correctamente:", Array.from(this.favoriteRecipes));
         } else {
           console.error('Formato de datos incorrecto o `response.data` no es un array:', response.data);
         }
@@ -195,109 +118,14 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  //BV
-  /* toggleFavorite(recipeId: number): void {
-     if (!this.isUserLoggedIn) {
-       alert("Debes iniciar sesión para añadir a favoritos.");
-       return;
-     }
-   
-     console.log("Favoritos actuales:", Array.from(this.favoriteRecipes)); // Confirmar favoritos actuales
-   
-     if (this.favoriteRecipes.has(recipeId)) {
-       // Si la receta ya está en favoritos, elimínala
-       this.favoriteRecipes.delete(recipeId);
-       this.recipeService.removeFavoriteRecipe(recipeId).subscribe({
-         next: () => console.log('Receta eliminada de favoritos en backend'),
-         error: (error) => {
-           console.error('Error al eliminar de favoritos', error);
-           this.favoriteRecipes.add(recipeId); // Revertir eliminación en caso de error
-         }
-       });
-     } else {
-       // Verificar si el usuario ya tiene 3 favoritos
-       if (this.favoriteRecipes.size >= 3) {
-         alert("Has alcanzado el límite de 3 recetas favoritas. Por favor, elimina una para añadir una nueva.");
-         return;
-       }
-   
-       // Añadir a favoritos si no ha alcanzado el límite
-       this.addNewFavorite(recipeId);
-     }
-   }
-   
-   private addNewFavorite(recipeId: number): void {
-     this.favoriteRecipes.add(recipeId);
-     this.recipeService.addFavoriteRecipe(recipeId).subscribe({
-       next: () => console.log('Receta añadida a favoritos en backend'),
-       error: (error) => {
-         console.error('Error al agregar a favoritos', error);
-         this.favoriteRecipes.delete(recipeId); // Revertir adición en caso de error
-       }
-     });
-   }*/
-
-  toggleFavorite(recipeId: number): void {
-    if (!this.isUserLoggedIn) {
-      alert("Debes iniciar sesión para añadir a favoritos.");
-      return;
-    }
-
-    console.log("Favoritos actuales:", Array.from(this.favoriteRecipes)); // Confirmar favoritos actuales
-
-    if (this.favoriteRecipes.has(recipeId)) {
-      this.favoriteRecipes.delete(recipeId);
-      this.recipeService.removeFavoriteRecipe(recipeId).subscribe({
-        next: () => console.log('Receta eliminada de favoritos en backend'),
-
-        error: (error) => {
-          console.error('Error al eliminar de favoritos', error);
-          alert('Error al intentar eliminar de favoritos: ' + error.message);
-          this.favoriteRecipes.add(recipeId); // Revertir eliminación en caso de error
-        }
-      });
-    } else {
-      if (this.favoriteRecipes.size >= 3) {
-        alert("Has alcanzado el límite de 3 recetas favoritas. Por favor, elimina una para añadir una nueva.");
-        return;
-      }
-
-      this.addNewFavorite(recipeId);
-    }
-  }
-
-  private addNewFavorite(recipeId: number): void {
-    this.favoriteRecipes.add(recipeId);
-    this.recipeService.addFavoriteRecipe(recipeId).subscribe({
-      next: () => console.log('Receta añadida a favoritos en backend'),
-      error: (error) => {
-        console.error('Error al agregar a favoritos', error);
-        alert('Error al intentar agregar a favoritos: ' + error.message); // Mensaje de error más descriptivo
-        this.favoriteRecipes.delete(recipeId); // Revertir adición en caso de error
-      }
-    });
-  }
-
-
-  // Comprobar si la receta está en favoritos
-  /* isFavorite(recipeId: number): boolean {
-     console.log("¿Es favorito?", recipeId, this.favoriteRecipes.has(recipeId)); // Debug
-     return this.favoriteRecipes.has(recipeId);
-   }*/
   isFavorite(recipeId: number): boolean {
-    const isFav = this.favoriteRecipes.has(recipeId);
-    console.log(`¿Es favorito el ID ${recipeId}?`, isFav);
-    return isFav;
+    return this.favoriteRecipes.has(recipeId);
   }
 
-
-
-  // Abrir modal de receta y cargar calificación promedio
   openRecipeModal(recipe: Recipe, category: string): void {
-    console.log('Receta seleccionada:', recipe); // Añade esta línea para depurar
     if (!recipe || !recipe.RecipeIngredients) {
       console.error('La receta o los ingredientes no están definidos:', recipe);
-      return;  // Salir si no hay receta o no tiene ingredientes
+      return; 
     }
     this.selectedRecipe = recipe;
     this.selectedCategory = category;
@@ -306,102 +134,23 @@ export class HomeComponent implements OnInit {
       ...ingredient,
       quantity: ingredient.quantity
     }));
-
-    console.log('Favoritos actuales:', Array.from(this.favoriteRecipes)); // Verifica favoritos antes de abrir
-
-
-
-    // Obtener todas las calificaciones y calcular el promedio
-    this.recipeService.getRecipeRatings(recipe.id_recipe).subscribe({
-      next: (response) => {
-        console.log('Calificaciones recibidas:', response.ratings); // Verificar las calificaciones recibidas
-        const ratings = response.ratings;
-        if (ratings.length > 0) {
-          this.averageRating = ratings.reduce((acc, rating) => acc + rating, 0) / ratings.length;
-        } else {
-          this.averageRating = 0; // No hay calificaciones aún
-        }
-      },
-      error: (error) => console.error('Error al obtener calificaciones', error)
-    });
+    this.initializeRating();
   }
 
-  // Actualizar cantidad de ingredientes según porciones
-  updateIngredients(portions: number): void {
-    if (this.selectedRecipe && this.originalIngredients.length) {
-      this.selectedRecipe.RecipeIngredients = this.originalIngredients.map((ingredient) => {
-        const originalQuantity = parseFloat(ingredient.quantity);
-        if (!isNaN(originalQuantity)) {
-          return {
-            ...ingredient,
-            quantity: (originalQuantity * portions).toString()
-          };
-        }
-        return ingredient;
-      });
-    }
-  }
-
-  // Configurar calificación
-  setRating(rating: number): void {
-    console.log('Star clicked', rating); // Confirmar clic
-    if (!this.isUserLoggedIn) {
-      alert("Debes iniciar sesión para calificar recetas.");
-      console.error("Usuario no autenticado. Inicia sesión para calificar.");
-      return;
-    }
-
-    if (this.selectedRecipe) {
-      this.recipeService.rateRecipe(this.selectedRecipe.id_recipe, rating).subscribe({
-        next: () => {
-          this.currentRating = rating;
-          console.log('Calificación actualizada a:', this.currentRating); // Verificar calificación actualizada
-          // Solo llama a openRecipeModal si selectedRecipe no es null
-          if (this.selectedRecipe) {
-            this.openRecipeModal(this.selectedRecipe, this.selectedCategory);
-          }
-        },
-        error: (error) => console.error('Error al calificar receta', error)
-      });
-    }
-  }
-
-  // Cerrar modal
   closeRecipeModal(): void {
     this.selectedRecipe = null;
     this.currentRating = 0;
     this.averageRating = 0;
-    this.isRecipeModalOpen = false;   // Cierra el modal en `HomeComponent`
-    this.modalService.closeRecipeModal();
-
   }
 
-  // Navegar a inicio de sesión
-  navigateToLogin(): void {
-    this.router.navigate(['/login']);
-  }
-
-  // Navegar a registro
-  navigateToRegister(): void {
-    this.router.navigate(['/register']);
-  }
-
-  // Obtener nombre del usuario o mostrar "Invitado"
   getUsername(): string {
     return this.authService.currentUser?.username || 'Invitado';
   }
 
-  // Obtener URL de la imagen
   getImageUrl(imagePath: string): string {
     if (!imagePath) {
       return '/assets/images/default.jpg';
     }
-    if (imagePath.startsWith('/images/')) {
-      return imagePath;
-    } else {
-      return `http://localhost:3001/uploads/${imagePath}`;
-    }
+    return imagePath.startsWith('/images/') ? imagePath : `http://localhost:3001/uploads/${imagePath}`;
   }
 }
-
-

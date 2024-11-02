@@ -5,14 +5,11 @@
       <span class="logo-text">MexiFlex</span>
     </a>
 
-    <!-- Botón de menú hamburguesa -->
-    <button class="navbar-toggler" type="button" (click)="toggleMenu()" [attr.aria-expanded]="isMenuOpen"
-      aria-controls="navbarNav">
+    <button class="navbar-toggler" type="button" (click)="toggleMenu()" [attr.aria-expanded]="isMenuOpen">
       <i class="fa-solid fa-bars navbar-toggler-icon" [class.d-none]="isMenuOpen"></i>
       <i class="fa-solid fa-x close-icon" [class.d-none]="!isMenuOpen"></i>
     </button>
 
-    <!-- Menú de navegación -->
     <div class="collapse navbar-collapse" id="navbarNav" [class.show]="isMenuOpen" (click)="closeMenu()">
       <ul class="navbar-nav mx-auto">
         <li class="nav-item">
@@ -27,20 +24,17 @@
       </ul>
     </div>
 
-    <!-- Sección de login/register o avatar y cerrar sesión -->
     <div class="nav-auth-buttons">
       @if (authService.isLoggedIn()) {
-      <!-- Avatar con click para abrir modal -->
-      <img [src]="getAvatarUrl()" alt="avatar" class="user-avatar" (click)="openAccountModal()">
+        <img [src]="getAvatarUrl()" alt="avatar" class="user-avatar" (click)="openAccountModal()">
       } @else {
-      <!-- Ícono de persona para abrir modal de login/register si no está logueado -->
-      <i class="fa fa-user" (click)="openAuthModal()"></i>
+        <i class="fa fa-user" (click)="openAuthModal()"></i>
       }
     </div>
   </div>
 
-  <!-- Modal de autenticación para login/register -->
-  <div class="modal" tabindex="-1" [ngClass]="{ 'show': isAuthModalOpen }" (click)="closeAuthModal()">
+  <!-- Modal de autenticación -->
+  <div class="modal auth-modal" tabindex="-1" [ngClass]="{ 'show': isAuthModalOpen }" (click)="closeAuthModal()">
     <div class="modal-dialog" (click)="$event.stopPropagation()">
       <div class="modal-content">
         <div class="modal-header">
@@ -50,55 +44,49 @@
         <div class="modal-body">
           <button routerLink="/login" class="btn w-100 mb-2" (click)="closeAuthModal()">Iniciar sesión</button>
           <button routerLink="/register" class="btn w-100" (click)="closeAuthModal()">Registrarse</button>
-          <!-- Leyenda para incentivar el registro -->
-          <p class="register-legend">Al registrarte, podrás disfrutar de beneficios como guardar recetas, recibir
-            recomendaciones personalizadas y más.</p>
+          <p class="register-legend">Al registrarte, podrás disfrutar de beneficios como guardar recetas, recibir recomendaciones personalizadas y más.</p>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Modal de gestión de cuenta -->
-  <div class="modal" tabindex="-1" [ngClass]="{ 'show': isAccountModalOpen }" (click)="closeAccountModal()">
+  <!-- Modal de cuenta -->
+  <div class="modal account-modal" tabindex="-1" [ngClass]="{ 'show': isAccountModalOpen }" (click)="closeAccountModal()">
     <div class="modal-dialog" (click)="$event.stopPropagation()">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title">Tu cuenta</h5>
-          <button type="button" class="btn-close" (click)="closeAccountModal()"></button> <!-- Botón para cerrar -->
+          <button type="button" class="btn-close" (click)="closeAccountModal()"></button>
         </div>
         <div class="modal-body">
           <h5>Hola, {{ getUsername() }}!</h5>
           <button class="btn btn-link" (click)="goToTop3()">Tus recetas Top 3</button>
-          <!-- Hacemos clickable este botón -->
           <button class="btn btn-outline-danger" (click)="logout()">Cerrar sesión</button>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Segundo Modal: Top 3 Recetas Favoritas -->
-
 <!-- Modal Top 3 Recetas Favoritas -->
-<div class="modal favorites-modal" tabindex="-1" [ngClass]="{ 'show': (modalService.top3ModalOpen$ | async) }" (click)="modalService.closeTop3Modal()">
+<!-- Modal Top 3 Recetas Favoritas -->
+<div class="modal favorites-modal" tabindex="-1" [ngClass]="{ 'show': isTop3ModalOpen }" (click)="closeTop3Modal()">
   <div class="modal-dialog" (click)="$event.stopPropagation()">
-    <div class="modal-content" [ngClass]="{
-      'modal-traditional': selectedCategory === 'Tradicional',
-      'modal-flexi': selectedCategory === 'Flexi'
-    }">
-      <div class="modal-header">
-        <h5 class="modal-title">Mis Top 3 Recetas Favoritas</h5>
-        <button type="button" class="btn-close" (click)="modalService.closeTop3Modal()"></button>
-      </div>
+    <div class="modal-content">
+      <!-- ... header ... -->
       <div class="modal-body">
         <div class="mini-cards-container">
           @if (top3Favorites.length > 0) {
             @for (recipe of top3Favorites; track $index) {
               <div class="mini-card">
-                <img [src]="modalService.getImageUrl(recipe.image || '')" alt="{{ recipe.title }}" class="recipe-img"/>
+                <img [src]="getImageUrl(recipe.image || '')" 
+                     alt="{{ recipe.title }}" 
+                     class="recipe-img"/>
                 <div class="recipe-details">
                   <h4>{{ recipe.title }}</h4>
                   <p>Tiempo de preparación: {{ recipe.preparation_time }} min</p>
-                  <button class="btn-ver-mas"    [ngClass]="recipe.category === 'Tradicional' ? 'btn-tradicional' : 'btn-flexi'" (click)="viewRecipeDetails(recipe.recipe_id)">Ver más</button>
+                  <button class="btn-ver-mas" (click)="openRecipeModal(recipe)">
+                    Ver más
+                  </button>
                 </div>
               </div>
             }
@@ -111,5 +99,14 @@
   </div>
 </div>
 
-
+<!-- Recipe Modal -->
+@if (selectedRecipe) {
+  <app-recipe-modal 
+    [recipe]="selectedRecipe" 
+    [category]="selectedCategory" 
+    [portions]="selectedPortions" 
+    [isUserLoggedIn]="authService.isLoggedIn()" 
+    (closeModalEvent)="closeRecipeModal()">
+  </app-recipe-modal>
+}
 </nav>
