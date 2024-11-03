@@ -6,6 +6,7 @@ import { Recipe } from '../interfaces/recipe.interface.js';
 import { FavoriteRecipe } from '../interfaces/favoriteRecipe.interface';
 import { BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import { AuthService } from './auth.service'; // Import AuthService
 
 
 @Injectable({
@@ -25,7 +26,7 @@ export class RecipeService {
 
 
 
-  constructor(private http: HttpClient) { this.loadFavoriteRecipes(); }
+  constructor(private http: HttpClient, private authService: AuthService) { this.loadFavoriteRecipes(); }
 
 
   // Método para cargar los favoritos al iniciar el servicio
@@ -36,6 +37,8 @@ export class RecipeService {
       this.updateTop3Favorites(); // Actualizar el Top 3 en la carga inicial
     });
   }
+
+  
   // Añadir método para actualizar el Top 3
  /* private updateTop3Favorites(): void {
     this.getTop3FavoriteRecipes().subscribe({
@@ -143,7 +146,9 @@ export class RecipeService {
       is_premium: false,
       serving_size: 2,
       created_at: new Date(),
-      steps: 'Paso 1: Hacer esto. Paso 2: Hacer aquello.'
+      steps: 'Paso 1: Hacer esto. Paso 2: Hacer aquello.',
+      averageRating: undefined,
+      initialAverageRating: 4.5
     },
     {
       id_recipe: 2,
@@ -159,7 +164,9 @@ export class RecipeService {
       is_premium: true,
       serving_size: 1,
       created_at: new Date(),
-      steps: 'Paso 1: Marinar el tofu. Paso 2: Cocinar a la plancha.'
+      steps: 'Paso 1: Marinar el tofu. Paso 2: Cocinar a la plancha.',
+      averageRating: undefined,
+      initialAverageRating: 4.5
     },
     {
       id_recipe: 3,
@@ -175,7 +182,9 @@ export class RecipeService {
       is_premium: false,
       serving_size: 2,
       created_at: new Date(),
-      steps: 'Paso 1: Freír el chicharrón. Paso 2: Servir con salsa.'
+      steps: 'Paso 1: Freír el chicharrón. Paso 2: Servir con salsa.',
+      averageRating: undefined,
+      initialAverageRating: 4.5
     },
     {
       id_recipe: 4,
@@ -191,7 +200,9 @@ export class RecipeService {
       is_premium: false,
       serving_size: 2,
       created_at: new Date(),
-      steps: 'Paso 1: Cocinar el chicharrón vegano. Paso 2: Servir con salsa verde.'
+      steps: 'Paso 1: Cocinar el chicharrón vegano. Paso 2: Servir con salsa verde.',
+      averageRating: undefined,
+      initialAverageRating: 4.5
     },
 
   ];

@@ -29,6 +29,8 @@ export class HomeComponent implements OnInit {
   favoriteRecipes: Set<number> = new Set<number>();
   groupedRecipes: any[] = [];
   top3Favorites: FavoriteRecipe[] = [];
+  isLoadingRating: boolean = false;
+  ratingErrorMessage: string = '';
 
   constructor(
     public authService: AuthService,
@@ -53,7 +55,7 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  
+
 
   initializePortions(): void {
     if (this.selectedRecipe) {
@@ -66,8 +68,8 @@ export class HomeComponent implements OnInit {
       this.recipeService.getRecipeRatings(this.selectedRecipe.id_recipe).subscribe({
         next: (response) => {
           const ratings = response.ratings;
-          this.averageRating = ratings.length > 0 
-            ? ratings.reduce((acc, rating) => acc + rating, 0) / ratings.length 
+          this.averageRating = ratings.length > 0
+            ? ratings.reduce((acc, rating) => acc + rating, 0) / ratings.length
             : 0;
         },
         error: (error) => console.error('Error al obtener calificación promedio', error)
@@ -122,11 +124,12 @@ export class HomeComponent implements OnInit {
     return this.favoriteRecipes.has(recipeId);
   }
 
-  openRecipeModal(recipe: Recipe, category: string): void {
-    if (!recipe || !recipe.RecipeIngredients) {
+  openRecipeModal(recipe: Recipe | null, category: string): void {
+    if (!recipe || !recipe.RecipeIngredients || recipe.RecipeIngredients.length === 0) {
       console.error('La receta o los ingredientes no están definidos:', recipe);
-      return; 
+      return;
     }
+  
     this.selectedRecipe = recipe;
     this.selectedCategory = category;
     this.selectedPortions = 1;

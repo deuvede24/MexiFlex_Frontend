@@ -3,6 +3,7 @@ import { Recipe, RecipeIngredient } from '../../interfaces/recipe.interface';
 import { RecipeService } from '../../services/recipe.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { AuthService } from '../../services/auth.service'; // Import AuthService
 
 @Component({
   selector: 'app-recipe-modal',
@@ -23,8 +24,10 @@ export class RecipeModalComponent implements OnInit {
   averageRating: number = 0;
   //portions: number = 1;
   favoriteRecipes = new Set<number>(); // Local set for favorite recipes
+  isLoadingRating: boolean = false;
+  ratingErrorMessage: string = '';
 
-  constructor(private recipeService: RecipeService) {}
+  constructor(private recipeService: RecipeService,  private authService: AuthService) { }
 
   ngOnInit(): void {
     if (this.recipe) {
@@ -50,21 +53,28 @@ export class RecipeModalComponent implements OnInit {
     })) || [];
     this.updateIngredients(this.portions);
   }
-
   private initializeRating(): void {
-    if (this.recipe) {
+    if (this.isUserLoggedIn && this.recipe) {
       this.recipeService.getRecipeRatings(this.recipe.id_recipe).subscribe({
         next: (response) => {
           const ratings = response.ratings;
-          this.averageRating = ratings.length > 0 
-            ? ratings.reduce((acc, rating) => acc + rating, 0) / ratings.length 
-            : 0;
+          this.averageRating = ratings.length > 0
+            ? ratings.reduce((acc, rating) => acc + rating, 0) / ratings.length
+            : this.recipe?.initialAverageRating || 0;
         },
-        error: (error) => console.error('Error al obtener calificación promedio', error)
+        error: (error) => {
+          console.error('Error al obtener calificación promedio', error);
+          this.averageRating = this.recipe?.initialAverageRating || 0;
+        }
       });
+    } else if (this.recipe) {
+      this.averageRating = this.recipe.initialAverageRating || 0;
+    } else {
+      this.averageRating = 0;
     }
   }
   
+
 
   updateIngredients(newPortions: number): void {
     this.portions = newPortions;
@@ -141,8 +151,8 @@ export class RecipeModalComponent implements OnInit {
     }
     return imagePath.startsWith('/images/') ? imagePath : `http://localhost:3001/uploads/${imagePath}`;
   }
-  
-  
+
+
 
   isFavorite(recipeId: number): boolean {
     return this.favoriteRecipes.has(recipeId);

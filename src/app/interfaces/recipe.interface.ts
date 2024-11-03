@@ -17,6 +17,7 @@ export interface RecipeIngredient {
     RecipeIngredients: RecipeIngredient[];  // Array de ingredientes
     steps: string;  // Ahora steps es un string, no un array
     averageRating?: number; // Añadimos esto
+    initialAverageRating: number;
   }
   
   
