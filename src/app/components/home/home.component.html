@@ -1,3 +1,4 @@
+<!-- home.component.html -->
 <app-header></app-header>
 
 <div class="container mt-2">
@@ -7,19 +8,34 @@
         <div class="carousel-item" [class.active]="$index === 0">
           <div class="row justify-content-center">
             <div class="col-md-8">
-              <div class="card">
-                <img [src]="getImageUrl(group.versions[0]?.image)" class="card-img-top lazyload" [alt]="group.title">
+              <div class="recipe-card">
+                <div class="recipe-image">
+                  <img [src]="getImageUrl(group.versions[0]?.image)" [alt]="group.title">
+                  <div class="recipe-overlay"></div>
+                </div>
                 
-                <div class="card-body">
-                  <h5 class="card-title">{{ group.title }}</h5>
-                  <p class="card-text">{{ group.generalDescription }}</p>
-                  <p class="card-text">
-                    <small class="text-muted">Tiempo promedio de preparación: {{ group.averagePreparationTime }} minutos</small>
-                  </p>
+                <div class="recipe-content">
+                  <div class="recipe-header">
+                    <h3 class="recipe-title">{{ group.title }}</h3>
+                    <div class="recipe-time">
+                      <i class="fas fa-clock"></i>
+                      <span>{{ group.averagePreparationTime }} min</span>
+                    </div>
+                  </div>
 
-                  <div class="d-flex justify-content-between">
-                    <button (click)="openRecipeModal(group.traditionalVersion, 'Tradicional')" class="btn btn-traditional">Tradicional</button>
-                    <button (click)="openRecipeModal(group.flexiVersion, 'Flexi')" class="btn btn-flexi">Flexi</button>
+                  <p class="recipe-description">{{ group.generalDescription }}</p>
+
+                  <div class="recipe-actions">
+                    <button (click)="openRecipeModal(group.traditionalVersion, 'Tradicional')" 
+                            class="btn-version btn-traditional">
+                      <span>Tradicional</span>
+                      <i class="fas fa-arrow-right"></i>
+                    </button>
+                    <button (click)="openRecipeModal(group.flexiVersion, 'Flexi')" 
+                            class="btn-version btn-flexi">
+                      <span>Flexi</span>
+                      <i class="fas fa-arrow-right"></i>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -29,6 +45,7 @@
       }
     </div>
 
+    <!-- Mantenemos los controles del carrusel -->
     <a class="carousel-control-prev" href="#recipeCarousel" role="button" data-bs-slide="prev">
       <span class="carousel-control-prev-icon" aria-hidden="true"></span>
       <span class="visually-hidden">Anterior</span>
@@ -40,12 +57,13 @@
   </div>
 </div>
 
+<!-- Mantenemos el modal -->
 @if (selectedRecipe) {
-  <app-recipe-modal 
-    [recipe]="selectedRecipe" 
-    [category]="selectedCategory" 
-    [portions]="selectedPortions" 
-    [isUserLoggedIn]="isUserLoggedIn" 
+  <app-recipe-modal
+    [recipe]="selectedRecipe"
+    [category]="selectedCategory"
+    [portions]="selectedPortions"
+    [isUserLoggedIn]="isUserLoggedIn"
     (closeModalEvent)="closeRecipeModal()">
   </app-recipe-modal>
 }

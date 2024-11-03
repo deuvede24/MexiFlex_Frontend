@@ -68,11 +68,13 @@
   </div>
 
 <!-- Modal Top 3 Recetas Favoritas -->
-<!-- Modal Top 3 Recetas Favoritas -->
 <div class="modal favorites-modal" tabindex="-1" [ngClass]="{ 'show': isTop3ModalOpen }" (click)="closeTop3Modal()">
   <div class="modal-dialog" (click)="$event.stopPropagation()">
     <div class="modal-content">
-      <!-- ... header ... -->
+      <div class="modal-header">
+        <h5 class="modal-title">Tus Top 3 Recetas</h5>
+        <button type="button" class="btn-close" (click)="closeTop3Modal()"></button>
+      </div>
       <div class="modal-body">
         <div class="mini-cards-container">
           @if (top3Favorites.length > 0) {
@@ -98,7 +100,6 @@
     </div>
   </div>
 </div>
-
 <!-- Recipe Modal -->
 @if (selectedRecipe) {
   <app-recipe-modal 

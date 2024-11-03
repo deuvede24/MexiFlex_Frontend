@@ -1,4 +1,10 @@
-/* home.scss */
+// Variables de color
+$color-traditional: #f06306;
+$color-flexi: #038009;
+$color-dark: #1a1a1a;
+$color-gray-dark: #333333;
+$color-gray-medium: #666666;
+$color-gray-light: #f5f5f5;
 
 /* Contenedor general del carrusel */
 .carousel-container {
@@ -8,10 +14,177 @@
   flex-direction: column;
   scroll-snap-type: y mandatory;
   padding: 20px;
-
 }
 
-/* Carrusel en móviles */
+.recipe-card {
+  background: white;
+  border-radius: 1.5rem;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  margin-bottom: 20px;
+  border: none;
+  
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+  }
+
+  // Contenedor de la imagen
+  .recipe-image {
+    position: relative;
+    height: 300px;
+    overflow: hidden;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+
+    .recipe-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 50%;
+      background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 100%);
+    }
+  }
+
+  // Contenido de la receta
+  .recipe-content {
+    padding: 2rem;
+  }
+
+  // Cabecera con título y tiempo
+  .recipe-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+
+    .recipe-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin: 0;
+      color: $color-dark;
+    }
+
+    .recipe-time {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: $color-gray-medium;
+
+      i {
+        color: $color-traditional;
+      }
+    }
+  }
+
+  // Descripción
+  .recipe-description {
+    color: $color-gray-medium;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+  }
+
+  // Botones de versiones
+  .recipe-actions {
+    display: flex;
+    gap: 1rem;
+
+    .btn-version {
+      flex: 1;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: white;
+      font-weight: 500;
+      transition: all 0.3s ease;
+
+      i {
+        opacity: 0;
+        transform: translateX(-10px);
+        transition: all 0.3s ease;
+      }
+
+      &:hover {
+        transform: translateY(-2px);
+        
+        i {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+    }
+
+    .btn-traditional {
+      background-color: $color-traditional;
+      
+      &:hover {
+        background-color: darken($color-traditional, 5%);
+      }
+    }
+
+    .btn-flexi {
+      background-color: $color-flexi;
+      
+      &:hover {
+        background-color: darken($color-flexi, 5%);
+      }
+    }
+  }
+}
+
+// Controles del carrusel
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 30%;
+}
+
+.carousel-control-prev-icon {
+  background-color: $color-traditional;
+}
+
+.carousel-control-next-icon {
+  background-color: $color-flexi;
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .recipe-card {
+    .recipe-image {
+      height: 200px;
+    }
+
+    .recipe-content {
+      padding: 1.5rem;
+    }
+
+    .recipe-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+
+    .recipe-actions {
+      flex-direction: column;
+    }
+  }
+
+  .modal-dialog {
+    margin: 0.5rem;
+  }
+}
+
 @media (max-width: 576px) {
   .carousel-inner {
     display: flex;
@@ -19,203 +192,49 @@
   }
 
   .carousel-item {
-    scroll-snap-align: start;
     margin-bottom: 20px;
   }
 
-  .card {
-    display: block;
+  .btn-version {
     width: 100%;
-    margin-bottom: 20px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-    border-radius: 10px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
-
-  .card:hover {
-    transform: translateX(10px);
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
-  }
-
-  .card img {
-    width: 100%;
-    height: auto;
-    object-fit: cover;
-  }
-
-  /* Ajustamos los botones */
-  .btn-traditional,
-  .btn-flexi {
-    width: 48%;
-    /* Separar más los botones */
-    margin-top: 10px;
-    font-size: 12px;
-    padding: 8px;
-    white-space: nowrap;
-  }
-
-  /* Añadimos más separación entre los botones */
-  .btn-traditional,
-  .btn-flexi {
-    margin-right: 10px;
-  }
-}
-
-/* Carrusel en pantallas más grandes */
-@media (min-width: 577px) {
-  .carousel-container {
-    overflow-x: auto;
-    overflow-y: hidden;
-    flex-direction: row;
-    scroll-snap-type: x mandatory;
-  }
-
-  .carousel-inner {
-    display: flex;
-    flex-direction: row;
-  }
-
-  .carousel-item {
-    scroll-snap-align: start;
-    flex: 0 0 auto;
-    margin-right: 20px;
-    width: 100%;
-  }
-
-  .card {
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    max-width: 600px;
-    height: auto;
-    margin-bottom: 20px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-    border-radius: 10px;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
-
-  .card:hover {
-    transform: translateX(10px);
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
-  }
-
-  .card img {
-    width: 45%;
-    height: auto;
-    object-fit: cover;
-    border-radius: 10px;
-  }
-
-  .card-body {
-    padding: 20px;
-    width: 55%;
-  }
-
-  .btn-traditional,
-  .btn-flexi {
-    width: 48%;
-    margin-top: 10px;
+    margin-bottom: 0.5rem;
   }
 }
 
 /* Para pantallas extra grandes */
 @media (min-width: 992px) {
-  .card {
-    width: 80%;
+  .recipe-card {
     max-width: 800px;
+    margin: 0 auto;
   }
 }
 
-/* Estilos de los botones */
-.btn-traditional {
-  background-color: #f06306;
-  color: white;
-  transition: transform 0.2s ease;
-}
-
-.btn-traditional:hover {
-  transform: translateY(-5px);
-  /* Hover que eleva el botón */
-}
-
-.btn-flexi {
-  background-color: #038009;
-  color: white;
-  transition: transform 0.2s ease;
-}
-
-.btn-flexi:hover {
-  transform: translateY(-5px);
-  /* Hover que eleva el botón */
-}
-
-/* Modal para recetas */
-.modal-traditional {
-  background-color: #f06306;
-  color: white;
-}
-
-.modal-flexi {
-  background-color: #038009;
-  color: white;
-}
-
-/* Controles del carrusel */
-.carousel-control-prev-icon,
-.carousel-control-next-icon {
-  background-color: #f06306;
-  width: 40px;
-  height: 40px;
-  border-radius: 30%;
-}
-
-.carousel-control-prev-icon {
-  background-color: #f06306;
-}
-
-.carousel-control-next-icon {
-  background-color: #038009;
-}
-
-/* Ajustes para sombras y bordes */
-.card {
-  border: none;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.card:hover {
-  transform: translateX(5px);
-  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
-}
-
-
+// Star ratings y favoritos
 .active-star {
-  color: #ffc107; // Color para estrellas llenas
+  color: #ffc107;
 }
 
 .star {
   font-size: 1.5rem;
   cursor: pointer;
-  color: lightgray; /* Estrella vacía */
+  color: lightgray;
 }
 
 .filled-star {
-  color: gold; /* Estrella llena según calificación del usuario */
+  color: gold;
   cursor: pointer;
 }
 
 .average-star {
-  color: orange; /* Estrella llena para promedio de calificación */
+  color: orange;
 }
 
 .favorite-icon {
   font-size: 24px;
-  color: gray; // Corazón sin color
+  color: gray;
   cursor: pointer;
+  
+  &.active {
+    color: red;
+  }
 }
-
-.favorite-icon.active {
-  color: red; // Corazón con color cuando es favorito
-}
-

@@ -216,13 +216,23 @@
         background-color: #038009;
       }
 
-      &.btn-outline-danger {
+     /* &.btn-outline-danger {
         background-color: transparent;
         border: 2px solid #dc3545;
         color: #dc3545;
 
         &:hover {
           background-color: #dc3545;
+          color: #fff;
+        }
+      }*/
+      &.btn-outline-danger {
+        background-color: transparent;
+        border: 2px solid #FF6200;
+        color: #FF6200;
+
+        &:hover {
+          background-color: #038009;
           color: #fff;
         }
       }

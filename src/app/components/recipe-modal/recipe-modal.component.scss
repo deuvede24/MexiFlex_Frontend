@@ -1,70 +1,289 @@
-/* recipe-modal.component.scss */
+// Variables de color
+$color-traditional: #f06306;
+$color-flexi: #038009;
+$color-dark: #1a1a1a;
+$color-gray-dark: #333333;
+$color-gray-medium: #666666;
+$color-gray-light: #f5f5f5;
 
-/* Estilos generales del modal */
+// Modal base
+.modal-dialog {
+  max-width: 800px;
+  margin: 1.75rem auto;
+  
+  @media (max-width: 768px) {
+    margin: 0.5rem;
+    max-width: 100%;
+  }
+}
+
 .modal-content {
-    border-radius: 0.5rem;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-    transition: background-color 0.3s ease;
- 
-  
-    /* Para asegurarnos de que los colores del modal se apliquen */
-    &.modal-traditional {
-      background-color: #f06306; /* Naranja para tradicional */
-      color: white;
-  
-      .favorite-icon {
-        color: gray; // Corazón sin color por defecto
-        &.active {
-          color: red; // Corazón en rojo cuando es favorito
-        }
-      }
+  border: none;
+  border-radius: 1.5rem;
+  background-color: white;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  position: relative;
+
+  &.modal-traditional {
+    .recipe-title, .section-title {
+      color: $color-dark;
+      border-left: 4px solid $color-traditional;
+      padding-left: 1rem;
     }
-  
-    &.modal-flexi {
-      background-color: #038009; /* Verde para flexi */
-      color: white;
-  
-      .favorite-icon {
-        color: gray; // Corazón sin color por defecto
-        &.active {
-          color: red; // Corazón en rojo cuando es favorito
-        }
-      }
+    .recipe-category {
+      background-color: $color-traditional;
     }
   }
+
+  &.modal-flexi {
+    .recipe-title, .section-title {
+      color: $color-dark;
+      border-left: 4px solid $color-flexi;
+      padding-left: 1rem;
+    }
+    .recipe-category {
+      background-color: $color-flexi;
+    }
+  }
+}
+
+// Botón de cierre superior
+.btn-close-top {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: white;
+  border: none;
+  border-radius: 50%;
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease;
+
+  i {
+    font-size: 1.2rem;
+    color: $color-gray-dark;
+  }
+
+  &:hover {
+    transform: scale(1.1);
+  }
+}
+
+// Header y contenido principal
+.recipe-hero {
+  padding: 2rem;
+  background-color: $color-gray-light;
+}
+
+.recipe-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  letter-spacing: -0.5px;
+}
+
+.recipe-meta {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+  color: $color-gray-medium;
+  font-size: 1rem;
+
+  span {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .recipe-category {
+    padding: 0.5rem 1rem;
+    border-radius: 2rem;
+    color: white;
+    font-weight: 500;
+  }
+}
+
+// Selector de porciones
+.portions-select {
+  background-color: transparent;
+  border: 1px solid $color-gray-medium;
+  border-radius: 1rem;
+  padding: 0.3rem 1rem;
+  color: $color-gray-medium;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover, &:focus {
+    border-color: $color-dark;
+    outline: none;
+  }
+
+  option {
+    background-color: white;
+    color: $color-dark;
+  }
+}
+
+// Imagen y acciones
+.recipe-image-wrapper {
+  position: relative;
+  height: 300px;
+  overflow: hidden;
+
+  @media (max-width: 768px) {
+    height: 200px;
+  }
+}
+
+.recipe-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.recipe-actions {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+
+  .favorite-icon {
+    background-color: white;
+    padding: 0.75rem;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease;
+
+    &:hover {
+      transform: scale(1.1);
+    }
+
+    &.active i {
+      color: red;
+    }
+  }
+}
+
+// Cuerpo del modal
+.modal-body {
+  padding: 2rem;
+  background-color: white;
+}
+
+.recipe-description {
+  font-size: 1.1rem;
+  color: $color-gray-medium;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+}
+
+.recipe-section {
+  margin-bottom: 3rem;
+
+  .section-title {
+    font-size: 1.75rem;
+    margin-bottom: 1.5rem;
+  }
+}
+
+.ingredients-list {
+  list-style: none;
+  padding: 0;
   
-  /* Estilos de las estrellas para el rating */
-  .recipe-rating {
-    .stars {
+  li {
+    padding: 0.75rem 0;
+    border-bottom: 1px solid $color-gray-light;
+    color: $color-gray-dark;
+  }
+}
+
+.steps-content {
+  color: $color-gray-dark;
+  line-height: 1.8;
+}
+
+// Rating
+.recipe-rating {
+  .stars {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    
+    span {
       font-size: 1.5rem;
-  
-      .filled-star {
-        color: gold; /* Color para estrellas llenas */
+      cursor: pointer;
+      color: #ddd;
+      transition: color 0.3s ease;
+
+      &.filled-star {
+        color: gold;
       }
-  
-      .average-star {
-        color: orange; /* Color para estrellas de promedio */
-      }
-  
-      .star {
-        cursor: pointer;
-        color: lightgray; /* Color para estrellas vacías */
+
+      &.average-star {
+        color: goldenrod;
       }
     }
   }
-  
-  /* Otros estilos para los elementos del modal */
-  .modal-header {
-    background-color: #f7f7f7;
-    border-bottom: 1px solid #dee2e6;
-    color: #333;
-  
-    .close {
-      color: #000; /* Color del botón de cerrar */
+
+  .rating-average {
+    color: $color-gray-medium;
+    font-size: 0.9rem;
+  }
+}
+
+// Footer
+.modal-footer {
+  border-top: 1px solid $color-gray-light;
+  padding: 1.5rem;
+
+  .btn-close-custom {
+    background-color: $color-dark;
+    color: white;
+    padding: 0.75rem 2rem;
+    border-radius: 2rem;
+    border: none;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background-color: $color-gray-dark;
+      transform: translateY(-2px);
     }
   }
-  
-  .modal-footer {
-    background-color: #f7f7f7;
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .modal-content {
+    border-radius: 0;
   }
-  
+
+  .recipe-title {
+    font-size: 2rem;
+  }
+
+  .recipe-meta {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .portions-select {
+    width: 100%;
+    margin-top: 0.5rem;
+  }
+
+  .modal-body {
+    padding: 1.5rem;
+  }
+
+  .section-title {
+    font-size: 1.5rem !important;
+  }
+}

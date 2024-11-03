@@ -135,6 +135,14 @@ export class RecipeModalComponent implements OnInit {
       }
     });
   }
+  getImageUrl(imagePath: string): string {
+    if (!imagePath) {
+      return '/assets/images/default.jpg';
+    }
+    return imagePath.startsWith('/images/') ? imagePath : `http://localhost:3001/uploads/${imagePath}`;
+  }
+  
+  
 
   isFavorite(recipeId: number): boolean {
     return this.favoriteRecipes.has(recipeId);
