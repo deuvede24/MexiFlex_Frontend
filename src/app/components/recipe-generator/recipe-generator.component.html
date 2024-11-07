@@ -1,0 +1,187 @@
+<div class="recipe-wizard-container">
+  <!-- Indicador de pasos -->
+  <div class="steps-indicator">
+    <div class="step" [class.active]="(currentStep$ | async) === 1">
+      <span class="step-number">1</span>
+      <span class="step-text">Tipo de plato</span>
+    </div>
+    <div class="step" [class.active]="(currentStep$ | async) === 2">
+      <span class="step-number">2</span>
+      <span class="step-text">Ingredientes</span>
+    </div>
+  </div>
+
+  <!-- Contenido según el paso -->
+  <div class="step-content" [ngSwitch]="currentStep$ | async">
+    
+    <!-- Paso 1: Tipo de receta -->
+    @if ((currentStep$ | async) === 1) {
+      <div class="step-content fade-in">
+        <h2>¿Qué te gustaría cocinar?</h2>
+        <div class="recipe-types">
+          @for (type of recipeTypes; track type.id) {
+            <button 
+              type="button"
+              class="recipe-type-button"
+              [class.selected]="recipeForm.get('recipeType')?.value === type.id"
+              (click)="recipeForm.get('recipeType')?.setValue(type.id)"
+            >
+              <i [class]="type.icon"></i>
+              <span>{{ type.label }}</span>
+            </button>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- Paso 2: Ingredientes -->
+    @if ((currentStep$ | async) === 2) {
+      <div class="step-content fade-in">
+        <h2>¿Qué ingredientes tienes?</h2>
+        
+        @for (category of ingredientCategories; track category.name) {
+          <div class="ingredient-category">
+            <h3>
+              <i [class]="category.icon"></i>
+              {{ category.name }}
+            </h3>
+            <div class="ingredients-grid">
+              @for (ingredient of category.ingredients; track ingredient) {
+                <button 
+                  type="button"
+                  class="ingredient-chip"
+                  [class.selected]="isIngredientSelected(ingredient)"
+                  (click)="toggleIngredient(ingredient)"
+                >
+                  <i [class]="isIngredientSelected(ingredient) ? 'fas fa-check' : 'fas fa-plus'"></i>
+                  {{ ingredient }}
+                </button>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </div>
+
+  <!-- Navegación entre pasos -->
+  <div class="navigation-buttons">
+    @if ((currentStep$ | async)! > 1) {
+      <button 
+        type="button" 
+        class="nav-button back"
+        (click)="previousStep()"
+      >
+        <i class="fas fa-arrow-left"></i>
+        Anterior
+      </button>
+    }
+
+    @if ((currentStep$ | async)! < 2) {
+      <button 
+        type="button" 
+        class="nav-button next"
+        [disabled]="!canProceed()"
+        (click)="nextStep()"
+      >
+        Siguiente
+        <i class="fas fa-arrow-right"></i>
+      </button>
+    } @else {
+      <button 
+        type="button" 
+        class="nav-button generate"
+        [disabled]="!canProceed() || (loading$ | async)"
+        (click)="generateRecipe()"
+      >
+        @if (loading$ | async) {
+          <span class="loader"></span>
+          Generando...
+        } @else {
+          <i class="fas fa-wand-magic-sparkles"></i>
+          Generar Receta
+        }
+      </button>
+    }
+  </div>
+
+  <!-- Resultado de la receta generada -->
+  @if (generatedRecipe$ | async; as recipe) {
+    <div class="recipe-result fade-in">
+      <h2>{{ recipe.title }}</h2>
+      <p class="description">{{ recipe.description }}</p>
+      
+      <div class="recipe-details">
+        <span><i class="fas fa-clock"></i> {{ recipe.preparation_time }} min</span>
+        <span><i class="fas fa-user-friends"></i> {{ recipe.serving_size }} porciones</span>
+      </div>
+
+      <div class="recipe-content">
+        <div class="ingredients-list">
+          <h3>Ingredientes</h3>
+          <ul>
+            @for (ingredient of recipe.RecipeIngredients; track ingredient.ingredient_name) {
+              <li>
+                <span class="ingredient">{{ ingredient.ingredient_name }}</span>
+                <span class="quantity">{{ ingredient.quantity }}</span>
+              </li>
+            }
+          </ul>
+        </div>
+
+        <div class="steps-list">
+          <h3>Preparación</h3>
+          @for (step of recipe.steps; track step; let i = $index) {
+            <p class="step">
+              <span class="step-number">{{ i + 1 }}.</span>
+              {{ step }}
+            </p>
+          }
+        </div>
+      </div>
+
+      <!-- Paso extra: Consejos y sugerencias -->
+     <!-- En lugar de la estructura compleja con toggles -->
+<div class="recipe-tips mt-6">
+  <!-- Tips Flexi -->
+  <div class="tip-section bg-green-50 rounded-lg p-4 mb-4 border-l-4 border-green-500">
+    <div class="tip-header flex items-center gap-2 mb-3">
+      <i class="fas fa-leaf text-green-500"></i>
+      <h3 class="font-bold">Sugerencias Flexi</h3>
+    </div>
+    <ul>
+      @for (option of recipe.tips.flexiOptions.proteins; track option.alternative) {
+        <li class="flex items-center gap-2 py-1">
+          <span>{{ option.original }}</span>
+          <i class="fas fa-arrow-right text-gray-400 text-sm"></i>
+          <span class="text-green-600">{{ option.alternative }}</span>
+        </li>
+      }
+      @for (tip of recipe.tips.flexiOptions.tips; track tip) {
+        <li class="py-1">{{ tip }}</li>
+      }
+    </ul>
+  </div>
+
+  <!-- Tips Rápidos -->
+  <div class="tip-section bg-orange-50 rounded-lg p-4 border-l-4 border-orange-500">
+    <div class="tip-header flex items-center gap-2 mb-3">
+      <i class="fas fa-clock text-orange-500"></i>
+      <h3 class="font-bold">Consejos para ahorrar tiempo</h3>
+    </div>
+    <ul>
+      @for (option of recipe.tips.quickOptions.ingredients; track option.quick) {
+        <li class="flex items-center gap-2 py-1">
+          <span>{{ option.original }}</span>
+          <i class="fas fa-arrow-right text-gray-400 text-sm"></i>
+          <span class="text-orange-600">{{ option.quick }}</span>
+        </li>
+      }
+      @for (tip of recipe.tips.quickOptions.timeSavingTips; track tip) {
+        <li class="py-1">{{ tip }}</li>
+      }
+    </ul>
+  </div>
+</div>
+    </div>
+}

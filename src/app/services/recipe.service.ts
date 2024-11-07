@@ -7,6 +7,7 @@ import { FavoriteRecipe } from '../interfaces/favoriteRecipe.interface';
 import { BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { AuthService } from './auth.service'; // Import AuthService
+import { GenerateRecipeRequest, GenerateRecipeResponse } from '../interfaces/recipe-generator.interface.ts';
 
 
 @Injectable({
@@ -296,6 +297,21 @@ export class RecipeService {
     return this.http.get<{ data: FavoriteRecipe[] }>(`${this.favoriteUrl}/top3`, { withCredentials: true });
   }
 
-
+// Añadir al RecipeService actual
+/*generateRecipe(data: any): Observable<any> {
+  return this.http.post<any>(`${this.apiUrl}/generate`, data, {
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    withCredentials: true // Si necesitas cookies/sesión
+  });
+}*/
+generateRecipe(data: GenerateRecipeRequest): Observable<GenerateRecipeResponse> {
+  return this.http.post<GenerateRecipeResponse>(
+    `${this.apiUrl}/generate`, 
+    data,
+    { withCredentials: true }
+  );
+}
 
 }

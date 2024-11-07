@@ -136,7 +136,7 @@
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
-  z-index: 1050;
+  z-index: 1060;
 
   &.show {
     display: block;
@@ -156,6 +156,7 @@
   }
 
   .modal-dialog {
+    
     margin: 15vh auto;
     max-width: 400px;
     
@@ -211,9 +212,15 @@
       margin-bottom: 15px;
       text-align: center;
       transition: background-color 0.3s ease;
+      overflow-y: auto;
+      max-height: 70vh;
 
       &:hover {
         background-color: #038009;
+      }
+
+      body.modal-open {
+        overflow: hidden;
       }
 
      /* &.btn-outline-danger {
@@ -252,6 +259,7 @@
   display: flex;
   gap: 15px;
   padding: 20px 0;
+
   
   @media (min-width: 768px) {
     flex-direction: row;
@@ -350,7 +358,14 @@
       .nav-link {
         padding: 10px 0;
         text-align: center;
+        &:active,
+        &:focus {
+          color: #FF6200;
+          border-bottom: 2px solid #FF6200;
+        }
       }
+      
+      
     }
   }
 

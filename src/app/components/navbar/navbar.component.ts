@@ -112,11 +112,13 @@ export class NavbarComponent implements OnInit {
   openAccountModal(): void {
     if (this.authService.isLoggedIn()) {
       this.isAccountModalOpen = true;
+      document.body.style.overflow = 'hidden';
     }
   }
 
   closeAccountModal(): void {
     this.isAccountModalOpen = false;
+    document.body.style.overflow = 'auto';
   }
 
   getAvatarUrl(): string {
@@ -139,12 +141,14 @@ export class NavbarComponent implements OnInit {
     this.isTop3ModalOpen = true;
     this.selectedRecipe = null;
     console.log('Modal Top 3 abierto');
+    document.body.style.overflow = 'hidden';
   }
 
   closeTop3Modal(): void {
     this.isTop3ModalOpen = false;
     this.selectedRecipe = null;
     console.log('Modal Top 3 cerrado');
+    document.body.style.overflow = 'auto'; 
   }
 
   logout(): void {

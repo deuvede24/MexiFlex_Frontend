@@ -9,17 +9,22 @@
       <i class="fa-solid fa-bars navbar-toggler-icon" [class.d-none]="isMenuOpen"></i>
       <i class="fa-solid fa-x close-icon" [class.d-none]="!isMenuOpen"></i>
     </button>
-
     <div class="collapse navbar-collapse" id="navbarNav" [class.show]="isMenuOpen" (click)="closeMenu()">
       <ul class="navbar-nav mx-auto">
         <li class="nav-item">
-          <a class="nav-link" routerLink="/recetas-ia" (click)="closeMenu()">Recetas IA</a>
+          <a class="nav-link" routerLink="/recetas-ia" (click)="closeMenu()">
+            <i class="fas fa-robot"></i> Recetas IA
+          </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" routerLink="/eventos" (click)="closeMenu()">Novedades</a>
+          <a class="nav-link" routerLink="/eventos" (click)="closeMenu()">
+            <i class="fas fa-star"></i> Novedades
+          </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" routerLink="/mapa" (click)="closeMenu()">Restaurantes & Productos</a>
+          <a class="nav-link" routerLink="/mapa" (click)="closeMenu()">
+            <i class="fas fa-map-marker-alt"></i> Restaurantes & Productos
+          </a>
         </li>
       </ul>
     </div>
@@ -56,7 +61,9 @@
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title">Tu cuenta</h5>
-          <button type="button" class="btn-close" (click)="closeAccountModal()"></button>
+          <button type="button" class="btn-close" (click)="closeAccountModal()">
+            <i class="fas fa-times"></i>
+          </button>
         </div>
         <div class="modal-body">
           <h5>Hola, {{ getUsername() }}!</h5>
@@ -73,7 +80,9 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">Tus Top 3 Recetas</h5>
-        <button type="button" class="btn-close" (click)="closeTop3Modal()"></button>
+        <button type="button" class="btn-close" (click)="closeTop3Modal()">
+          <i class="fas fa-times"></i>
+        </button>
       </div>
       <div class="modal-body">
         <div class="mini-cards-container">

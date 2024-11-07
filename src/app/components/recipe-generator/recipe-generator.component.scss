@@ -1,0 +1,449 @@
+// recipe-generator.component.scss
+
+// recipe-generator.component.scss
+
+// Variables de marca
+$mexi-orange: #FF6B00;
+$mexi-green: #00B232;
+$mexi-black: #000000;
+$mexi-gray: #F5F5F5;
+
+:host {
+ display: block;
+ max-width: 1200px;
+ margin: 0 auto;
+ padding: 2rem;
+}
+
+.recipe-wizard-container {
+ background: white;
+ border-radius: 12px;
+ padding: 2rem;
+ box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+
+ // Indicador de pasos
+ .steps-indicator {
+   display: flex;
+   justify-content: space-between;
+   margin-bottom: 3rem;
+   padding: 0 2rem;
+
+   .step {
+     flex: 1;
+     text-align: center;
+     position: relative;
+
+     &:not(:last-child)::after {
+       content: '';
+       position: absolute;
+       top: 15px;
+       left: calc(50% + 20px);
+       width: calc(100% - 40px);
+       height: 2px;
+       background: #ddd;
+       transition: background 0.3s ease;
+     }
+
+     &.active {
+       .step-number {
+         background: $mexi-orange;
+         color: white;
+       }
+
+       .step-text {
+         color: $mexi-orange;
+         font-weight: 500;
+       }
+
+       &:not(:last-child)::after {
+         background: $mexi-orange;
+       }
+     }
+
+     .step-number {
+       width: 30px;
+       height: 30px;
+       border-radius: 50%;
+       background: $mexi-gray;
+       display: inline-flex;
+       align-items: center;
+       justify-content: center;
+       margin-bottom: 0.5rem;
+       transition: all 0.3s ease;
+     }
+
+     .step-text {
+       font-size: 0.9rem;
+       color: #666;
+     }
+   }
+ }
+
+ // Contenido de los pasos
+ .step-content {
+   margin-bottom: 2rem;
+   min-height: 300px;
+
+   h2 {
+     text-align: center;
+     margin-bottom: 2rem;
+     color: $mexi-black;
+     font-size: 1.8rem;
+     font-weight: 600;
+   }
+
+   // Tipos de receta (Paso 1)
+// Ajuste para los botones de tipo de receta (Paso 1)
+.recipe-types {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  
+  .recipe-type-button {
+    padding: 1.5rem;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    background: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: $mexi-black;
+
+    i {
+      font-size: 2rem;
+      color: $mexi-orange; // Color naranja por defecto
+      margin-bottom: 0.5rem;
+      opacity: 1; // Aseguramos que sea visible siempre
+    }
+
+    &:hover {
+      border-color: $mexi-orange;
+      transform: translateY(-2px);
+    }
+
+    &.selected {
+      background: $mexi-orange;
+      color: white;
+      border-color: $mexi-orange;
+
+      i {
+        color: white; // El icono se vuelve blanco al seleccionar
+        opacity: 1; // Mantenemos la opacidad completa
+      }
+    }
+
+    span {
+      font-size: 1.1rem;
+      font-weight: 500;
+      color: inherit;
+    }
+  }
+}
+   // Ingredientes (Paso 2)
+  // Ingredientes (Paso 2)
+.ingredient-category {
+  margin-bottom: 2rem;
+
+  h3 {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: $mexi-black;
+    margin-bottom: 1rem;
+
+    i {
+      color: $mexi-orange;
+    }
+  }
+
+  .ingredients-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 1rem;
+
+    .ingredient-chip {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      background: white;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      color: $mexi-black; // Color por defecto del texto
+
+      &:hover {
+        border-color: $mexi-orange;
+        transform: translateY(-2px);
+      }
+
+      &.selected {
+        background: $mexi-orange;
+        color: white;
+        border-color: $mexi-orange;
+
+        i {
+          color: white; // Icono blanco cuando está seleccionado
+        }
+      }
+
+      i {
+        color: $mexi-orange; // Color del icono por defecto
+        font-size: 0.9rem;
+      }
+
+      // El texto del ingrediente
+      span {
+        color: inherit; // Heredará el color (negro por defecto, blanco cuando seleccionado)
+      }
+    }
+  }
+}
+   // Preferencias (Paso 3)
+   .preference-options {
+     display: grid;
+     grid-template-columns: repeat(2, 1fr);
+     gap: 2rem;
+     padding: 1rem;
+
+     @media (max-width: 768px) {
+       grid-template-columns: 1fr;
+     }
+
+     .preference-button {
+       padding: 2rem;
+       border: 2px solid $mexi-gray;
+       border-radius: 12px;
+       background: white;
+       text-align: center;
+       cursor: pointer;
+       transition: all 0.3s ease;
+
+       &:hover {
+         transform: translateY(-2px);
+       }
+
+       &.tradicional {
+         &:hover, &.selected {
+           border-color: $mexi-orange;
+         }
+         &.selected {
+           background: rgba($mexi-orange, 0.1);
+           i { color: $mexi-orange; }
+         }
+       }
+
+       &.flexi {
+         &:hover, &.selected {
+           border-color: $mexi-green;
+         }
+         &.selected {
+           background: rgba($mexi-green, 0.1);
+           i { color: $mexi-green; }
+         }
+       }
+
+       i {
+         font-size: 2rem;
+         margin-bottom: 1rem;
+         color: #666;
+       }
+
+       h3 {
+         margin: 0.5rem 0;
+         color: $mexi-black;
+       }
+
+       p {
+         font-size: 0.9rem;
+         color: #666;
+         margin: 0;
+       }
+     }
+   }
+ }
+
+ // Receta generada
+ .recipe-result {
+   margin-top: 3rem;
+   padding-top: 2rem;
+   border-top: 1px solid $mexi-gray;
+
+   h2 {
+     color: $mexi-black;
+     font-size: 2rem;
+     margin-bottom: 1rem;
+   }
+
+   .description {
+     color: #666;
+     margin-bottom: 2rem;
+   }
+
+   .recipe-details {
+     display: flex;
+     gap: 2rem;
+     margin-bottom: 2rem;
+
+     span {
+       display: flex;
+       align-items: center;
+       gap: 0.5rem;
+       color: #666;
+
+       i {
+         color: $mexi-orange;
+       }
+     }
+   }
+
+   .recipe-content {
+     display: grid;
+     grid-template-columns: 1fr 2fr;
+     gap: 2rem;
+
+     @media (max-width: 768px) {
+       grid-template-columns: 1fr;
+     }
+
+     h3 {
+       color: $mexi-black;
+       margin-bottom: 1rem;
+       font-size: 1.3rem;
+     }
+
+     .ingredients-list {
+       ul {
+         list-style: none;
+         padding: 0;
+
+         li {
+           display: flex;
+           justify-content: space-between;
+           padding: 0.75rem 0;
+           border-bottom: 1px solid $mexi-gray;
+
+           &:last-child {
+             border-bottom: none;
+           }
+
+           .quantity {
+             color: #666;
+             font-size: 0.9rem;
+           }
+         }
+       }
+     }
+
+     .steps-list {
+      counter-reset: step-counter;
+      
+      .step {
+        position: relative;
+        padding-left: 2.5rem;
+        margin-bottom: 1rem;
+    
+        &::before {
+          counter-increment: step-counter;
+          content: counter(step-counter);
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 1.75rem;
+          height: 1.75rem;
+          background: #FF6B00;  // Color naranja de MexiFlex
+          color: white;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 0.9rem;
+          font-weight: 500;
+        }
+      }
+    }
+   }
+ }
+
+ // Navegación
+ .navigation-buttons {
+   display: flex;
+   justify-content: space-between;
+   gap: 1rem;
+   margin-top: 2rem;
+   padding: 0 1rem;
+
+   .nav-button {
+     padding: 0.75rem 1.5rem;
+     border-radius: 8px;
+     border: none;
+     cursor: pointer;
+     display: flex;
+     align-items: center;
+     gap: 0.5rem;
+     font-size: 1rem;
+     transition: all 0.3s ease;
+
+     &.back {
+       background: $mexi-gray;
+       color: #666;
+
+       &:hover {
+         background: darken($mexi-gray, 5%);
+       }
+     }
+
+     &.next, &.generate {
+       background: $mexi-orange;
+       color: white;
+
+       &:hover:not(:disabled) {
+         background: darken($mexi-orange, 10%);
+       }
+
+       &:disabled {
+         background: #ccc;
+         cursor: not-allowed;
+         opacity: 0.7;
+       }
+     }
+   }
+ }
+}
+
+// Animaciones
+.fade-in {
+ animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+ from {
+   opacity: 0;
+   transform: translateY(10px);
+ }
+ to {
+   opacity: 1;
+   transform: translateY(0);
+ }
+}
+
+// Loader
+.loader {
+ display: inline-block;
+ width: 20px;
+ height: 20px;
+ border: 2px solid white;
+ border-radius: 50%;
+ border-top-color: transparent;
+ animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+ to {
+   transform: rotate(360deg);
+ }
+}
