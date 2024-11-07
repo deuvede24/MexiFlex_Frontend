@@ -37,6 +37,6 @@ export interface GeneratedRecipe {
     ingredient_name: string;
     quantity: string;
   }>;
-  steps: string;
+  steps: string[]; // Cambiado de string a string[]
   tips: RecipeTips; // Agrega esta línea
 }
