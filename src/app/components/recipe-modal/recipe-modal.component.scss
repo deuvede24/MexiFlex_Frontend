@@ -258,32 +258,3 @@ $color-gray-light: #f5f5f5;
   }
 }
 
-// Responsive
-@media (max-width: 768px) {
-  .modal-content {
-    border-radius: 0;
-  }
-
-  .recipe-title {
-    font-size: 2rem;
-  }
-
-  .recipe-meta {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1rem;
-  }
-
-  .portions-select {
-    width: 100%;
-    margin-top: 0.5rem;
-  }
-
-  .modal-body {
-    padding: 1.5rem;
-  }
-
-  .section-title {
-    font-size: 1.5rem !important;
-  }
-}

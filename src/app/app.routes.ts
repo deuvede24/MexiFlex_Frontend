@@ -4,6 +4,7 @@ import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { RecipeGeneratorComponent } from './components/recipe-generator/recipe-generator.component';
 import { AuthGuard } from './guards/auth.guard'; // Asumiendo que tienes un AuthGuard
+import { MapComponent } from './components/map/map.component'; // Importa tu MapComponent
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },  // Ruta por defecto que carga HomeComponent
@@ -12,7 +13,8 @@ export const routes: Routes = [
   { path: 'register', component: RegisterComponent },
 
   // Aquí puedes añadir más rutas si tienes otros componentes
-  { path: 'recetas-ia', component: RecipeGeneratorComponent }
+  { path: 'recetas-ia', component: RecipeGeneratorComponent },
+  { path: 'mapa', component: MapComponent }  // Ruta para el mapa
 
   
 ];

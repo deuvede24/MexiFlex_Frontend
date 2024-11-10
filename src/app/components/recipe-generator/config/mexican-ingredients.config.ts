@@ -4,14 +4,14 @@ export const MEXICAN_INGREDIENTS = {
       'Res',
       'Cerdo',
       'Pescado',
-      'Frijoles',
       'Chorizo',
       'Camarón',
       'Huevo',
       'Carne Molida',
       'Atún',
-      'Pulpo',
-      'Lengua'
+      'Seitán',
+      'Tofu',
+      'Heura',
     ],
     vegetables: [
       'Cebolla',

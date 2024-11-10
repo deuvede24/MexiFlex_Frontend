@@ -1,1 +1,19 @@
-<p>map works!</p>
+<div class="map-container">
+    <!-- Contenedor del mapa -->
+    <div id="map" class="map"></div>
+  
+    <!-- Opciones de filtrado -->
+    <div class="filter-options">
+      <button 
+        (click)="applyFilter('Restaurante')" 
+        [class.active]="selectedCategories.has('Restaurante')">
+        Restaurantes & Bares
+      </button>
+      <button 
+        (click)="applyFilter('Tienda')" 
+        [class.active]="selectedCategories.has('Tienda')">
+        Tiendas de Productos
+      </button>
+    </div>
+  </div>
+  

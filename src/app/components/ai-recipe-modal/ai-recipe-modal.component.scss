@@ -1,0 +1,299 @@
+// ai-recipe-modal.component.scss
+
+// Para el scroll del modal (añadir al principio)
+.modal.fade.show {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1050;
+  overflow-y: auto;
+
+  & ~ * {
+    filter: blur(2px);
+  }
+
+  body {
+    overflow: hidden;
+  }
+}
+
+.modal-dialog {
+  margin: 2rem auto;
+  max-height: calc(100vh - 4rem);
+}
+//////////////////////////////
+// Variables
+$color-ai: #f06306;
+$color-flexi: #038009;
+$color-dark: #1a1a1a;
+$color-gray-dark: #333333;
+$color-gray-medium: #666666;
+$color-gray-light: #f5f5f5;
+
+// Modal base
+.modal-dialog {
+  max-width: 800px;
+  margin: 1.75rem auto;
+  
+  @media (max-width: 768px) {
+    margin: 0.5rem;
+    max-width: 100%;
+  }
+}
+
+.modal-content {
+  border: none;
+  border-radius: 1.5rem;
+  background-color: white;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  position: relative;
+}
+
+// Header y contenido
+.recipe-title {
+  color: $color-dark;
+  border-left: 4px solid $color-ai;
+  padding-left: 1rem;
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+}
+
+.recipe-meta {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+  margin-bottom: 1rem;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+}
+
+.ai-badge {
+  background: linear-gradient(135deg, $color-ai, darken($color-ai, 10%));
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+// Grid de contenido
+.recipe-content-grid {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 2rem;
+  margin: 2rem 0;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+// Ingredientes
+.ingredients-list {
+  list-style: none;
+  padding: 0;
+  
+  li {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.75rem;
+    border-bottom: 1px solid $color-gray-light;
+    
+    &:hover {
+      background-color: $color-gray-light;
+    }
+  }
+}
+
+// Pasos
+.steps-list {
+  list-style: none;
+  padding: 0;
+  counter-reset: step-counter;
+
+  li {
+    position: relative;
+    padding: 1rem 1rem 1rem 3rem;
+    margin-bottom: 1rem;
+    background: $color-gray-light;
+    border-radius: 0.5rem;
+
+    &::before {
+      counter-increment: step-counter;
+      content: counter(step-counter);
+      position: absolute;
+      left: 0.5rem;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 2rem;
+      height: 2rem;
+      background: $color-ai;
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+}
+
+// Tips boxes
+.tips-section {
+  margin-top: 2rem;
+  display: grid;
+  gap: 1rem;
+
+  .tip-box {
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    background: $color-gray-light;
+
+    h4 {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      
+      i {
+        color: $color-ai;
+      }
+    }
+
+    &.flexi-tips {
+      border-left: 4px solid $color-flexi;
+    }
+
+    &.time-tips {
+      border-left: 4px solid $color-ai;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+
+      li {
+        padding: 0.5rem 0;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+
+        &::before {
+          content: "•";
+          color: $color-ai;
+          font-weight: bold;
+        }
+      }
+    }
+  }
+  // Para el icono flexi verde
+.tip-box {
+  &.flexi-tips {
+    border-left: 4px solid $color-flexi;
+    
+    h4 i {
+      color: $color-flexi !important; // Sobreescribir el color naranja
+    }
+    ul li {
+      &::before {
+        color: $color-flexi !important; // Cambiar el color del bullet
+      }
+    }
+  }}
+}
+
+// Botones
+.btn-close-top {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  border-radius: 50%;
+  width: 2.5rem;
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease;
+  i {
+    font-size: 1.2rem;
+    color: $color-gray-dark;
+  }
+
+  &:hover {
+    transform: scale(1.1);
+    background: rgba(255, 255, 255, 1);
+  }
+}
+
+.btn-close-custom {
+  background-color: $color-dark;
+  color: white;
+  padding: 0.75rem 2rem;
+  border-radius: 2rem;
+  border: none;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: $color-gray-dark;
+    transform: translateY(-2px);
+  }
+
+  .ai-badge {
+    &.ai-badge-flexi {
+      background: linear-gradient(135deg, #038009, darken(#038009, 10%));
+    }
+  }
+
+
+  .ingredients-section {
+  background: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+
+  .ingredients-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    .ingredient-item {
+      padding: 0.75rem 0;
+      border-bottom: 1px solid rgba(0,0,0,0.1);
+      
+      &:last-child {
+        border-bottom: none;
+      }
+
+      .ingredient-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        
+        .ingredient-name {
+          font-weight: 500;
+          color: #333;
+        }
+
+        .ingredient-quantity {
+          color: #666;
+          font-size: 0.9rem;
+        }
+      }
+    }
+  }
+}
+}

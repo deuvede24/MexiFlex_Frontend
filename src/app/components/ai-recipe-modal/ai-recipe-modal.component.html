@@ -1,0 +1,107 @@
+@if (recipe) {
+    <div class="modal fade show" tabindex="-1" style="display: block;" aria-modal="true" role="dialog">
+      <div class="modal-dialog">
+        <div class="modal-content modal-ai">
+          <!-- Botón de cierre superior -->
+          <button type="button" class="btn-close-top" aria-label="Close" (click)="closeModal()">
+            <i class="fas fa-times"></i>
+          </button>
+  
+          <!-- Header moderno -->
+          <div class="modal-header border-0">
+            <div class="recipe-hero">
+              <h2 class="recipe-title">{{ recipe.title }}</h2>
+              <div class="recipe-meta">
+                <span class="recipe-time">
+                  <i class="fas fa-clock"></i> {{ recipe.preparation_time }} min
+                </span>
+                <span class="recipe-servings">
+                  <i class="fas fa-users"></i> {{ recipe.serving_size }} porciones
+                </span>
+                <span class="recipe-category ai-badge" [ngClass]="{'ai-badge-flexi': isVegetarianRecipe}">
+                  <i class="fas" [ngClass]="isVegetarianRecipe ? 'fa-leaf' : 'fa-robot'"></i>
+                  {{ isVegetarianRecipe ? 'Receta IA Flexi' : 'Receta IA' }}
+                </span>
+              </div>
+            </div>
+          </div>
+  
+          <div class="modal-body">
+            <p class="recipe-description">{{ recipe.description }}</p>
+  
+            <!-- Grid de contenido -->
+            <div class="recipe-content-grid">
+              <!-- Ingredientes -->
+              <div class="recipe-section ingredients-section">
+                <h3 class="section-title">
+                  <i class="fas fa-mortar-pestle"></i>
+                  Ingredientes
+                </h3>
+                <ul class="ingredients-list">
+                  @for (ingredient of recipe.RecipeIngredients; track ingredient.ingredient_name) {
+                    <li>
+                      <span class="ingredient-name">{{ ingredient.ingredient_name }}</span>
+                      <span class="ingredient-quantity">{{ ingredient.quantity }}</span>
+                    </li>
+                  }
+                </ul>
+              </div>
+  
+              <!-- Preparación -->
+              <div class="recipe-section steps-section">
+                <h3 class="section-title">
+                  <i class="fas fa-list-ol"></i>
+                  Preparación
+                </h3>
+                <ol class="steps-list">
+                  @for (step of recipe.steps; track step) {
+                    <li>{{ step }}</li>
+                  }
+                </ol>
+              </div>
+            </div>
+  
+            <!-- Sugerencias y Tips -->
+            <div class="tips-section">
+              <!-- Sugerencias Flexi -->
+              @if (hasFlexiTips) {
+                <div class="tip-box flexi-tips">
+                  <h4>
+                    <i class="fas fa-leaf"></i>
+                    Sugerencias Flexi
+                  </h4>
+                  <ul>
+                    @for (tip of recipe.tips.flexiOptions.tips; track tip) {
+                      <li>{{ tip }}</li>
+                    }
+                  </ul>
+                </div>
+              }
+  
+              <!-- Tips de Tiempo -->
+              @if (hasTimeSavingTips) {
+                <div class="tip-box time-tips">
+                  <h4>
+                    <i class="fas fa-clock"></i>
+                    Consejos para ahorrar tiempo
+                  </h4>
+                  <ul>
+                    @for (tip of recipe.tips.quickOptions.timeSavingTips; track tip) {
+                      <li>{{ tip }}</li>
+                    }
+                  </ul>
+                </div>
+              }
+            </div>
+          </div>
+  
+          <div class="modal-footer">
+            <button type="button" class="btn btn-close-custom" (click)="closeModal()">
+              <i class="fas fa-times"></i>
+              Cerrar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
