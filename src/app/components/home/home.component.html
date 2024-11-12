@@ -22,16 +22,16 @@
                       <span>{{ group.averagePreparationTime }} min</span>
                     </div>
                   </div>
-
+                  
                   <p class="recipe-description">{{ group.generalDescription }}</p>
-
+                  
                   <div class="recipe-actions">
-                    <button (click)="openRecipeModal(group.traditionalVersion, 'Tradicional')" 
+                    <button (click)="openRecipeModal(group.traditionalVersion, 'Tradicional')"
                             class="btn-version btn-traditional">
                       <span>Tradicional</span>
                       <i class="fas fa-arrow-right"></i>
                     </button>
-                    <button (click)="openRecipeModal(group.flexiVersion, 'Flexi')" 
+                    <button (click)="openRecipeModal(group.flexiVersion, 'Flexi')"
                             class="btn-version btn-flexi">
                       <span>Flexi</span>
                       <i class="fas fa-arrow-right"></i>
@@ -44,8 +44,8 @@
         </div>
       }
     </div>
-
-    <!-- Mantenemos los controles del carrusel -->
+    
+    <!-- Controles del carrusel -->
     <a class="carousel-control-prev" href="#recipeCarousel" role="button" data-bs-slide="prev">
       <span class="carousel-control-prev-icon" aria-hidden="true"></span>
       <span class="visually-hidden">Anterior</span>
@@ -55,9 +55,37 @@
       <span class="visually-hidden">Siguiente</span>
     </a>
   </div>
+
+  <!-- Nuevo CTA -->
+ <!-- En el CTA, modificamos los badges -->
+<div class="recipes-cta">
+  <h2>¡Descubre nuestra colección completa!</h2>
+  <p>Explora más recetas mexicanas con sus versiones tradicionales y plant-based</p>
+  <div class="cta-badges">
+    <div class="cta-badge">
+      <i class="fas fa-utensils"></i>
+      <span>8 recetas únicas</span>
+    </div>
+    <div class="cta-badge">
+      <i class="fas fa-leaf"></i>
+      <span>Versión plant-based</span>
+    </div>
+    <div class="cta-badge">
+      <i class="fas fa-heart"></i>
+      <span>Guarda favoritos</span>
+    </div>
+    <div class="cta-badge">
+      <i class="fas fa-star"></i>
+      <span>Valora recetas</span>
+    </div>
+  </div>
+  <button class="cta-button" (click)="redirectToLogin()">
+    Únete gratis a MexiFlex
+    <i class="fas fa-arrow-right"></i>
+  </button>
 </div>
 
-<!-- Mantenemos el modal -->
+<!-- Modal -->
 @if (selectedRecipe) {
   <app-recipe-modal
     [recipe]="selectedRecipe"

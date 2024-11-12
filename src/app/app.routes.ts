@@ -13,8 +13,16 @@ export const routes: Routes = [
   { path: 'register', component: RegisterComponent },
 
   // Aquí puedes añadir más rutas si tienes otros componentes
-  { path: 'recetas-ia', component: RecipeGeneratorComponent },
-  { path: 'mapa', component: MapComponent }  // Ruta para el mapa
+  { 
+    path: 'recetas-ia', 
+    component: RecipeGeneratorComponent,
+    canActivate: [AuthGuard]  // Añadido aquí
+  },
+  { 
+    path: 'mapa', 
+    component: MapComponent,
+    canActivate: [AuthGuard]  // Añadido aquí
+  }
 
   
 ];

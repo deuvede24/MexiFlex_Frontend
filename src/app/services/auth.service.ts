@@ -50,20 +50,20 @@ export class AuthService {
 
  
   // Iniciar sesión del usuario
-  login(user: Login): Observable<AuthResponse> {
-    return this.httpClient.post<AuthResponse>(`${this.apiUrl}/auth/login`, user, { withCredentials: true }).pipe(
-      tap((response: AuthResponse) => {
-       // console.log('Usuario logueado:', this.currentUser); 
+// Iniciar sesión del usuario
+login(user: Login): Observable<AuthResponse> {
+  return this.httpClient.post<AuthResponse>(`${this.apiUrl}/auth/login`, user, { withCredentials: true }).pipe(
+    tap((response: AuthResponse) => {
+      console.log('AuthService - Usuario logueado:', response.user); // Debug para usuario logueado
 
-         // Generar avatar con iniciales si es null
-         if (!response.user.avatar && response.user.username) {
-          response.user.avatar = this.getAvatarUrl(response.user.username);
-        }
-        this.currentUser = response.user;  // Almacenar el usuario actual en memoria
-        console.log('Usuario logueado:', this.currentUser); 
-      })
-    );
-  }
+      if (!response.user.avatar && response.user.username) {
+        response.user.avatar = this.getAvatarUrl(response.user.username);
+      }
+      this.currentUser = response.user;  // Almacenar el usuario actual en memoria
+      console.log('AuthService - Usuario actual guardado en memoria:', this.currentUser); // Debug
+    })
+  );
+}
 
   // Simula que el usuario está logueado
   isLoggedIn(): boolean {

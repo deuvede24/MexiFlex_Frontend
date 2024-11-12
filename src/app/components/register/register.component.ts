@@ -155,40 +155,40 @@ export class RegisterComponent implements OnInit {
           this.markAllFieldsAsTouched();
           return;
         }
-        
-        console.log('Register - Starting registration...');
+      
+        console.log('Registro - Iniciando registro...');
         const { username, email, password } = this.registerForm.value;
-        
+      
         this.authService.register({ username, email, password }).subscribe({
-          next: (response: AuthResponse) => {
-            console.log('Register - Registration successful, response:', response);
-            console.log('Register - Starting auto-login...');
-            
+          next: (response) => {
+            console.log('Registro - Registro exitoso, respuesta:', response);
+            console.log('Registro - Iniciando login automático...');
             this.authService.login({ email, password }).subscribe({
               next: () => {
-                console.log('Register - Auto-login successful');
-                
+                console.log('Registro - Login automático exitoso');
                 const lastAttemptedUrl = localStorage.getItem('lastAttemptedUrl');
-                console.log('Register - Retrieved URL from localStorage:', lastAttemptedUrl);
-                
+                console.log('Registro - URL recuperada en login automático:', lastAttemptedUrl);
+                console.log('Registro - Estado de localStorage completo:', JSON.stringify(localStorage));
+      
                 if (lastAttemptedUrl) {
+                  console.log('Registro - Redirigiendo a URL guardada:', lastAttemptedUrl);
                   this.router.navigate([lastAttemptedUrl]);
                   localStorage.removeItem('lastAttemptedUrl');
-                  console.log('Register - Redirected to stored URL and removed from localStorage.');
+                  console.log('Registro - localStorage después de limpiar:', JSON.stringify(localStorage));
                 } else {
+                  console.log('Registro - No hay URL guardada, redirigiendo a home');
                   this.router.navigate(['/']);
-                  console.log('Register - No stored URL, redirected to home.');
                 }
               },
               error: (err) => {
-                console.error('Register - Error during auto-login:', err);
+                console.error('Registro - Error en login automático:', err);
                 this.errorMessage = 'Registration successful, but login failed. Please try logging in manually.';
                 this.router.navigate(['/login']);
               }
             });
           },
           error: (err) => {
-            console.error('Register - Error during registration:', err);
+            console.error('Registro - Error en registro:', err);
             if (err.status === 400) {
               this.errorMessage = 'The user already exists. Please try with another email.';
             } else {
@@ -197,8 +197,7 @@ export class RegisterComponent implements OnInit {
           }
         });
       }
-    
-
+      
   markAllFieldsAsTouched() {
     Object.values(this.registerForm.controls).forEach(control => {
       control.markAsTouched();

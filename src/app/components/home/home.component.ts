@@ -156,4 +156,9 @@ export class HomeComponent implements OnInit {
     }
     return imagePath.startsWith('/images/') ? imagePath : `http://localhost:3001/uploads/${imagePath}`;
   }
+
+  // En el home.component.ts
+redirectToLogin(): void {
+  this.router.navigate(['/login']);
+}
 }
