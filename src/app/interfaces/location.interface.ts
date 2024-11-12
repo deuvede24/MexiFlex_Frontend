@@ -8,4 +8,5 @@ export interface Location {
     category: string;
     createdAt?: string;
     updatedAt?: string;
+    
 }

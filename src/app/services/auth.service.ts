@@ -100,6 +100,7 @@ export class AuthService {
     return `https://avatars.dicebear.com/api/initials/${initials}.svg`;
   }*/
 
+    
   getAvatarUrl(username: string): string {
     const initials = this.getInitials(username);
     const avatarUrl = `https://api.dicebear.com/6.x/initials/svg?seed=${initials}`;
@@ -119,6 +120,7 @@ export class AuthService {
     this.httpClient.get(`${this.apiUrl}/auth/logout`, { withCredentials: true }).subscribe({
       next: () => {
         this.currentUser = null;
+        localStorage.removeItem('lastAttemptedUrl');  // Limpia la URL de redirección al cerrar sesión
         this.router.navigate(['/']);
       },
       error: (err) => {

@@ -39,7 +39,7 @@ export class LoginComponent implements OnInit {
     return control ? control.invalid && (control.dirty || control.touched || this.submitted) : false;
   }
 
-  login(): void {
+  /*login(): void {
     this.submitted = true;
 
     if (this.loginForm.invalid) {
@@ -57,7 +57,40 @@ export class LoginComponent implements OnInit {
         this.errorMessage = err.error?.error || 'Credenciales inválidas';
       },
     });
-  }
+  }*/
+    // login.component.ts
+    login(): void {
+      this.submitted = true;
+      
+      if (this.loginForm.invalid) {
+        this.errorMessage = 'Por favor, rellena el formulario correctamente.';
+        this.markAllFieldsAsTouched();
+        return;
+      }
+      
+      console.log('Login - Starting login process...');
+      this.authService.login(this.loginForm.value).subscribe({
+        next: () => {
+          console.log('Login - Login successful');
+          
+          const lastAttemptedUrl = localStorage.getItem('lastAttemptedUrl');
+          console.log('Login - Retrieved URL from localStorage:', lastAttemptedUrl);
+          
+          if (lastAttemptedUrl) {
+            this.router.navigate([lastAttemptedUrl]);
+            localStorage.removeItem('lastAttemptedUrl');
+            console.log('Login - Redirected to stored URL and removed from localStorage.');
+          } else {
+            this.router.navigate(['/']);
+            console.log('Login - No stored URL, redirected to home.');
+          }
+        },
+        error: (err) => {
+          console.error('Login - Error during login:', err);
+          this.errorMessage = err.error?.error || 'Credenciales inválidas';
+        }
+      });
+    }
 
   markAllFieldsAsTouched() {
     Object.values(this.loginForm.controls).forEach(control => {

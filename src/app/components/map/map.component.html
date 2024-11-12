@@ -1,19 +1,18 @@
 <div class="map-container">
-    <!-- Contenedor del mapa -->
-    <div id="map" class="map"></div>
-  
-    <!-- Opciones de filtrado -->
-    <div class="filter-options">
-      <button 
-        (click)="applyFilter('Restaurante')" 
-        [class.active]="selectedCategories.has('Restaurante')">
-        Restaurantes & Bares
-      </button>
-      <button 
-        (click)="applyFilter('Tienda')" 
-        [class.active]="selectedCategories.has('Tienda')">
-        Tiendas de Productos
-      </button>
-    </div>
+  <div class="filter-panel">
+    <button
+      (click)="toggleCategory('Restaurante')"
+      [class.active-restaurant]="selectedCategories.has('Restaurante')"
+      [class.inactive]="!selectedCategories.has('Restaurante')">
+      Restaurantes & Bares
+    </button>
+    <button
+      (click)="toggleCategory('Tienda')"
+      [class.active-store]="selectedCategories.has('Tienda')"
+      [class.inactive]="!selectedCategories.has('Tienda')">
+      Tiendas de Productos
+    </button>
   </div>
-  
+
+  <div id="map" class="map"></div>
+</div>

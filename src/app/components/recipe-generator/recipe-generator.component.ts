@@ -3,7 +3,10 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, FormControl } from '@angular/forms';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { Router } from '@angular/router';
 import { RecipeService } from '../../services/recipe.service';
+import { AuthService } from '../../services/auth.service';
+import { NotificationService } from '../../services/notification.service';
 import { GeneratedRecipe, GenerateRecipeRequest, RecipeTips } from '../../interfaces/recipe-generator.interface.ts';
 import { MEXICAN_INGREDIENTS, RECIPE_CUSTOMIZATIONS } from './config';
 import { RecipeTypeCustomization } from './config/recipe-customizations.config';
@@ -24,7 +27,7 @@ interface IngredientCategory {
 })
 export class RecipeGeneratorComponent implements OnInit, OnDestroy {
  private destroy$ = new Subject<void>();
- private flexiSubstitutions: Record<string, string> = {
+ private readonly flexiSubstitutions: Record<string, string> = {
    'pollo': 'tofu',
    'res': 'seitán',
    'carne molida': 'carne picada de heura',
@@ -33,9 +36,9 @@ export class RecipeGeneratorComponent implements OnInit, OnDestroy {
    'camarón': 'corazones de palmito'
  };
 
- // Arrays de tipos de proteínas
- private vegetarianProteins = ['tofu', 'seitán', 'tempeh'];
- private animalProteins = ['pollo', 'res', 'cerdo', 'pescado', 'camarón'];
+ // Cache de valores frecuentes
+ private readonly vegetarianProteins = new Set(['tofu', 'seitán', 'tempeh']);
+ private readonly animalProteins = new Set(['pollo', 'res', 'cerdo', 'pescado', 'camarón']);
 
  // Observables
  currentStep$ = new BehaviorSubject<number>(1);
@@ -43,6 +46,7 @@ export class RecipeGeneratorComponent implements OnInit, OnDestroy {
  selectedIngredients$ = new BehaviorSubject<Set<string>>(new Set());
  generatedRecipe$ = new BehaviorSubject<GeneratedRecipe | null>(null);
  loadingMessage$ = new BehaviorSubject<string>('Estamos preparando tu receta');
+ validationMessages$ = new BehaviorSubject<{[key: string]: string}>({});
 
  // Formulario
  recipeForm: FormGroup;
@@ -81,11 +85,22 @@ export class RecipeGeneratorComponent implements OnInit, OnDestroy {
 
  constructor(
    private fb: FormBuilder,
-   private recipeService: RecipeService
+   private recipeService: RecipeService,
+   private authService: AuthService,
+   private notificationService: NotificationService,
+   private router: Router
  ) {
    this.recipeForm = this.fb.group({
      recipeType: ['', Validators.required]
    });
+
+   // Verificar autenticación al inicio
+   if (!this.authService.isLoggedIn()) {
+     this.notificationService.showError(
+       'Para generar recetas necesitas iniciar sesión o registrarte'
+     );
+     this.router.navigate(['/login']);
+   }
  }
 
  ngOnInit(): void {}
@@ -94,25 +109,29 @@ export class RecipeGeneratorComponent implements OnInit, OnDestroy {
  nextStep(): void {
    if (this.canProceed()) {
      this.currentStep$.next(this.currentStep$.value + 1);
+     this.validationMessages$.next({});
    }
  }
 
  previousStep(): void {
    if (this.currentStep$.value > 1) {
      this.currentStep$.next(this.currentStep$.value - 1);
+     this.validationMessages$.next({});
    }
  }
 
- // Manejo de ingredientes mejorado
+ // Manejo de ingredientes
  toggleIngredient(ingredient: string): void {
    const currentIngredients = this.selectedIngredients$.value;
-   const isVegetarianProtein = this.vegetarianProteins.includes(ingredient.toLowerCase());
-   const isAnimalProtein = this.animalProteins.includes(ingredient.toLowerCase());
+   const ingredientLower = ingredient.toLowerCase();
+   const isVegetarianProtein = this.vegetarianProteins.has(ingredientLower);
+   const isAnimalProtein = this.animalProteins.has(ingredientLower);
 
-   // Si intenta seleccionar proteína vegetal cuando ya hay animal o viceversa
    if ((isVegetarianProtein && this.hasAnimalProtein()) || 
        (isAnimalProtein && this.hasVegetarianProtein())) {
-     // TODO: Aquí podrías mostrar un mensaje al usuario
+     this.validationMessages$.next({
+       'protein': 'No se pueden combinar proteínas animales y vegetales'
+     });
      return;
    }
 
@@ -121,14 +140,16 @@ export class RecipeGeneratorComponent implements OnInit, OnDestroy {
    } else {
      currentIngredients.add(ingredient);
    }
+   
    this.selectedIngredients$.next(new Set(currentIngredients));
+   this.validationMessages$.next({});
  }
 
  isIngredientSelected(ingredient: string): boolean {
    return this.selectedIngredients$.value.has(ingredient);
  }
 
- // Validaciones mejoradas
+ // Validaciones
  canProceed(): boolean {
    switch (this.currentStep$.value) {
      case 1:
@@ -142,33 +163,46 @@ export class RecipeGeneratorComponent implements OnInit, OnDestroy {
 
  private validateIngredientSelection(): boolean {
    const selectedIngredients = Array.from(this.selectedIngredients$.value);
-   
-   // Requerir al menos una proteína
+   const messages: {[key: string]: string} = {};
+
    const hasProtein = selectedIngredients.some(ing => 
      MEXICAN_INGREDIENTS.proteins.includes(ing)
    );
-
-   // Requerir al menos un vegetal
    const hasVegetable = selectedIngredients.some(ing => 
      MEXICAN_INGREDIENTS.vegetables.includes(ing)
    );
 
+   if (!hasProtein) {
+     messages['protein'] = 'Selecciona al menos una proteína';
+   }
+   if (!hasVegetable) {
+     messages['vegetable'] = 'Selecciona al menos un vegetal';
+   }
+
+   this.validationMessages$.next(messages);
    return hasProtein && hasVegetable;
  }
 
- // Métodos auxiliares para verificación de proteínas
  private hasVegetarianProtein(): boolean {
    return Array.from(this.selectedIngredients$.value)
-     .some(ing => this.vegetarianProteins.includes(ing.toLowerCase()));
+     .some(ing => this.vegetarianProteins.has(ing.toLowerCase()));
  }
 
  private hasAnimalProtein(): boolean {
    return Array.from(this.selectedIngredients$.value)
-     .some(ing => this.animalProteins.includes(ing.toLowerCase()));
+     .some(ing => this.animalProteins.has(ing.toLowerCase()));
  }
 
  // Generar receta
  generateRecipe(): void {
+   if (!this.authService.isLoggedIn()) {
+     this.notificationService.showError(
+       'Para generar recetas necesitas iniciar sesión o registrarte'
+     );
+     this.router.navigate(['/login']);
+     return;
+   }
+
    if (!this.canProceed()) return;
 
    this.loading$.next(true);
@@ -178,14 +212,18 @@ export class RecipeGeneratorComponent implements OnInit, OnDestroy {
    const payload: GenerateRecipeRequest = {
      recipeType,
      ingredients: {
-       proteins: selectedIngredientsArray
-         .filter(ing => MEXICAN_INGREDIENTS.proteins.includes(ing)),
-       vegetables: selectedIngredientsArray
-         .filter(ing => MEXICAN_INGREDIENTS.vegetables.includes(ing)),
-       carbs: selectedIngredientsArray
-         .filter(ing => MEXICAN_INGREDIENTS.carbohidratos.includes(ing)),
-       fats: selectedIngredientsArray
-         .filter(ing => MEXICAN_INGREDIENTS.condimentos.includes(ing))
+       proteins: selectedIngredientsArray.filter(ing => 
+         MEXICAN_INGREDIENTS.proteins.includes(ing)
+       ),
+       vegetables: selectedIngredientsArray.filter(ing => 
+         MEXICAN_INGREDIENTS.vegetables.includes(ing)
+       ),
+       carbs: selectedIngredientsArray.filter(ing => 
+         MEXICAN_INGREDIENTS.carbohidratos.includes(ing)
+       ),
+       fats: selectedIngredientsArray.filter(ing => 
+         MEXICAN_INGREDIENTS.condimentos.includes(ing)
+       )
      }
    };
 
@@ -218,22 +256,64 @@ export class RecipeGeneratorComponent implements OnInit, OnDestroy {
  }
 
  private enrichStepsWithCustomization(
-   originalSteps: string[],
+   steps: string[],
    customization: RecipeTypeCustomization | undefined,
    ingredients: { ingredient_name: string }[]
  ): string[] {
-   if (!customization) return originalSteps;
+   if (!customization) return steps;
 
-   return originalSteps.map(step => {
-     if (step.toLowerCase().includes('preparar pollo')) {
-       return 'Preparar Pollo: cocer en agua con ajo y cebolla, desmenuzar finamente después de cocinar, luego dorar con especias';
+   let vegetablesProcessed = false;
+
+   return steps.map(step => {
+     const stepLower = step.toLowerCase();
+     
+     for (const [protein, method] of Object.entries(customization.proteins)) {
+       if (stepLower.includes(`preparar ${protein.toLowerCase()}`)) {
+         let customStep = `Preparar ${protein}:`;
+         if (method.prep) customStep += ` ${method.prep},`;
+         customStep += ` ${method.cooking}`;
+         if (method.serving) customStep += `, ${method.serving}`;
+         return customStep;
+       }
      }
+
+     if (!vegetablesProcessed && stepLower.includes('preparar') && 
+         ingredients.some(ing => MEXICAN_INGREDIENTS.vegetables.includes(ing.ingredient_name))) {
+       
+       vegetablesProcessed = true;
+       
+       const vegetableSteps = ingredients
+         .filter(ing => MEXICAN_INGREDIENTS.vegetables.includes(ing.ingredient_name))
+         .map(ing => {
+           const customMethod = customization.vegetables?.[ing.ingredient_name.toLowerCase()];
+           
+           if (customMethod) {
+             return `Preparar ${ing.ingredient_name}: ${
+               typeof customMethod === 'string' ? 
+                 customMethod : 
+                 customMethod.cooking
+             }`;
+           } else {
+             return `Preparar ${ing.ingredient_name}: ${
+               customization.vegetables?.default || 
+               'preparar según indicado'
+             }`;
+           }
+         });
+
+       return vegetableSteps.join('. ');
+     }
+
+     if (vegetablesProcessed && stepLower.includes('preparar') && 
+         ingredients.some(ing => MEXICAN_INGREDIENTS.vegetables.includes(ing.ingredient_name))) {
+       return step;
+     }
+
      return step;
    });
  }
 
  private generateEnhancedRecipeTips(recipe: GeneratedRecipe, recipeType: string): RecipeTips {
-   // Si ya eligió proteína vegetal, no mostramos tips de sustitución
    if (this.hasVegetarianProtein()) {
      return {
        flexiOptions: {
@@ -255,33 +335,13 @@ export class RecipeGeneratorComponent implements OnInit, OnDestroy {
      };
    }
 
-   // Solo mostrar sustituciones para proteínas animales
-   const flexiProteinOptions = recipe.RecipeIngredients
-     .filter(ing => this.animalProteins
-       .some(p => ing.ingredient_name.toLowerCase().includes(p.toLowerCase())))
-     .map(ing => {
-       const originalProtein = this.animalProteins
-         .find(p => ing.ingredient_name.toLowerCase().includes(p.toLowerCase()));
-
-       if (originalProtein) {
-         return {
-           original: ing.ingredient_name,
-           alternative: this.flexiSubstitutions[originalProtein.toLowerCase()] || 'proteína vegetal'
-         };
-       }
-       return null;
-     })
-     .filter((option): option is { original: string; alternative: string } => option !== null);
-
-   const proteinSuggestions = flexiProteinOptions.map(option =>
-     `${option.original} por ${option.alternative}`
-   ).join(', ');
+   const proteinSuggestions = this.getProteinSuggestions(recipe.RecipeIngredients);
 
    return {
      flexiOptions: {
        proteins: [],
-       tips: proteinSuggestions ? [
-         `Puedes hacer esta receta vegetariana sustituyendo: ${proteinSuggestions}`,
+       tips: proteinSuggestions.length ? [
+         `Puedes hacer esta receta vegetariana sustituyendo: ${proteinSuggestions.join(', ')}`,
          'Experimenta con diferentes especias y hierbas para darle tu toque personal.'
        ] : ['Experimenta con diferentes especias y hierbas para darle tu toque personal.']
      },
@@ -300,8 +360,27 @@ export class RecipeGeneratorComponent implements OnInit, OnDestroy {
    };
  }
 
+ private getProteinSuggestions(ingredients: { ingredient_name: string }[]): string[] {
+   const suggestions: string[] = [];
+   const processedProteins = new Set();
+
+   for (const ing of ingredients) {
+     const ingLower = ing.ingredient_name.toLowerCase();
+     for (const [animal, veggie] of Object.entries(this.flexiSubstitutions)) {
+       if (ingLower.includes(animal) && !processedProteins.has(animal)) {
+         suggestions.push(`${ing.ingredient_name} por ${veggie}`);
+         processedProteins.add(animal);
+         break;
+       }
+     }
+   }
+
+   return suggestions;
+ }
+
  closeModal(): void {
    this.generatedRecipe$.next(null);
+   this.validationMessages$.next({});
  }
 
  ngOnDestroy(): void {

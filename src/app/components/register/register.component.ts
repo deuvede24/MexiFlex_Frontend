@@ -57,7 +57,7 @@ export class RegisterComponent implements OnInit {
     return control ? control.invalid && (control.dirty || control.touched || this.submitted) : false;
   }
 
-  register(): void {
+ /* register(): void {
     this.submitted = true;
     if (this.registerForm.invalid) {
       this.errorMessage = 'Please fill out the form correctly.';
@@ -68,10 +68,9 @@ export class RegisterComponent implements OnInit {
 
     const { username, email, password } = this.registerForm.value;
 
-    this.authService.register({username, email, password }).subscribe({
+    this.authService.register({ username, email, password }).subscribe({
       next: (response: AuthResponse) => {  //AuthResponse correctamente definido
         if (response && response.user) {
-
           this.authService.login({ email, password }).subscribe({
             next: () => {
               //this.router.navigate(['/recipes']);
@@ -94,8 +93,111 @@ export class RegisterComponent implements OnInit {
         }
       }
     });
-  }
-
+  }*/
+   /* register(): void {
+      this.submitted = true;
+      if (this.registerForm.invalid) {
+        this.errorMessage = 'Please fill out the form correctly.';
+        this.markAllFieldsAsTouched();
+        return;
+      }
+    
+      const { username, email, password } = this.registerForm.value;
+      console.log('Iniciando registro...'); // Debug
+    
+      this.authService.register({username, email, password }).subscribe({
+        next: (response: AuthResponse) => {
+          console.log('Registro exitoso, respuesta:', response); // Debug
+          if (response && response.user) {
+            console.log('Iniciando login automático...'); // Debug
+            this.authService.login({ email, password }).subscribe({
+              next: () => {
+                const lastAttemptedUrl = localStorage.getItem('lastAttemptedUrl');
+                console.log('URL recuperada del localStorage:', lastAttemptedUrl); // Debug
+                console.log('Estado del localStorage:', localStorage); // Debug
+    
+                if (lastAttemptedUrl && 
+                    ['/recetas-ia', '/mapa', '/restaurantes'].includes(lastAttemptedUrl)) {
+                  console.log('Redirigiendo a URL guardada:', lastAttemptedUrl); // Debug
+                  this.router.navigate([lastAttemptedUrl]);
+                  localStorage.removeItem('lastAttemptedUrl');
+                  console.log('localStorage después de limpiar:', localStorage); // Debug
+                } else {
+                  console.log('No hay URL guardada o no es válida, redirigiendo a home'); // Debug
+                  this.router.navigate(['/']);
+                }
+              },
+              error: (err) => {
+                console.log('Error en login automático:', err); // Debug
+                this.errorMessage = 'Registration successful, but login failed. Please try logging in manually.';
+                this.router.navigate(['/login']);
+              }
+            });
+          } else {
+            this.errorMessage = 'Registration failed. Please try again.';
+          }
+        },
+        error: (err) => {
+          console.log('Error en registro:', err); // Debug
+          if (err.status === 400) {
+            this.errorMessage = 'The user already exists. Please try with another email.';
+          } else {
+            this.errorMessage = 'An unknown error occurred. Please try again.';
+          }
+        }
+      });
+    }*/
+      // register.component.ts
+      register(): void {
+        this.submitted = true;
+        if (this.registerForm.invalid) {
+          this.errorMessage = 'Please fill out the form correctly.';
+          this.markAllFieldsAsTouched();
+          return;
+        }
+        
+        console.log('Register - Starting registration...');
+        const { username, email, password } = this.registerForm.value;
+        
+        this.authService.register({ username, email, password }).subscribe({
+          next: (response: AuthResponse) => {
+            console.log('Register - Registration successful, response:', response);
+            console.log('Register - Starting auto-login...');
+            
+            this.authService.login({ email, password }).subscribe({
+              next: () => {
+                console.log('Register - Auto-login successful');
+                
+                const lastAttemptedUrl = localStorage.getItem('lastAttemptedUrl');
+                console.log('Register - Retrieved URL from localStorage:', lastAttemptedUrl);
+                
+                if (lastAttemptedUrl) {
+                  this.router.navigate([lastAttemptedUrl]);
+                  localStorage.removeItem('lastAttemptedUrl');
+                  console.log('Register - Redirected to stored URL and removed from localStorage.');
+                } else {
+                  this.router.navigate(['/']);
+                  console.log('Register - No stored URL, redirected to home.');
+                }
+              },
+              error: (err) => {
+                console.error('Register - Error during auto-login:', err);
+                this.errorMessage = 'Registration successful, but login failed. Please try logging in manually.';
+                this.router.navigate(['/login']);
+              }
+            });
+          },
+          error: (err) => {
+            console.error('Register - Error during registration:', err);
+            if (err.status === 400) {
+              this.errorMessage = 'The user already exists. Please try with another email.';
+            } else {
+              this.errorMessage = 'An unknown error occurred. Please try again.';
+            }
+          }
+        });
+      }
+    
 
   markAllFieldsAsTouched() {
     Object.values(this.registerForm.controls).forEach(control => {

@@ -210,33 +210,32 @@ export class RecipeService {
 
   // Agrupar recetas por título y calcular tiempo promedio y descripción general
   groupRecipes(recipes: Recipe[]): any[] {
-    const grouped: { [key: string]: Recipe[] } = recipes.reduce((acc: { [key: string]: Recipe[] }, recipe) => {
+    const dishDescriptions: { [key: string]: string } = {
+      'Tacos de Picadillo': 'Sabrosos tacos tradicionales rellenos de carne molida sazonada con verduras, un platillo casero por excelencia servido con limón y salsas frescas',
+      'Flautas de Pollo': 'Crujientes tortillas de maíz enrolladas y doradas, servidas con lechuga, crema, queso y salsa. Un antojito mexicano que no puede faltar',
+      'Tacos de Chicharrón': 'Deliciosa combinación de chicharrón prensado en tortilla de maíz, acompañados de salsa verde y limón. Un clásico de la comida callejera mexicana',
+      'Pollo con Mole': 'El legendario mole, una salsa que combina el dulce del chocolate con el picante de los chiles. La joya de la gastronomía poblana servida con arroz',
+      'Tacos de Alambre': 'Exquisita mezcla de pimientos, cebolla y proteína sobre tortillas de maíz, inspirados en la cocina norteña. Servidos con limón y salsas',
+      'Cortadillo': 'Un platillo tradicional del norte de México preparado con verduras en salsa de tomate, acompañado de arroz. Perfecto para una comida reconfortante',
+      'Ensalada Caesar': 'La legendaria ensalada originaria de Tijuana, con lechuga romana fresca, aderezo Caesar casero y crutones crujientes',
+      'Tostadas de Maíz con Pollo': 'Crujientes tostadas de maíz montadas con lechuga, aguacate y crema. Un platillo fresco y delicioso de la cocina mexicana'
+    };
+  
+    const grouped = recipes.reduce((acc: { [key: string]: Recipe[] }, recipe) => {
       if (!acc[recipe.title]) {
         acc[recipe.title] = [];
       }
       acc[recipe.title].push(recipe);
       return acc;
     }, {});
-
-    return Object.keys(grouped).map(title => {
-      const versions = grouped[title];
-
-      // Calcular tiempo de preparación promedio
-      const totalPreparationTime = versions.reduce((acc, recipe) => acc + recipe.preparation_time, 0);
-      const averagePreparationTime = Math.round(totalPreparationTime / versions.length);
-
-      // Generar descripción general (se toma la descripción de la primera receta)
-      const generalDescription = versions[0].description;
-
-      return {
-        title,
-        versions,
-        averagePreparationTime,
-        generalDescription
-      };
-    });
+  
+    return Object.keys(grouped).map(title => ({
+      title,
+      versions: grouped[title],
+      averagePreparationTime: Math.round(grouped[title].reduce((acc, recipe) => acc + recipe.preparation_time, 0) / grouped[title].length),
+      generalDescription: dishDescriptions[title] || 'Delicioso platillo mexicano disponible en versión tradicional y flexi'
+    }));
   }
-
   getInitialRecipes(): Recipe[] {
     return this.recipes;
   }
