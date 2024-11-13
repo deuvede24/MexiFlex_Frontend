@@ -39,23 +39,25 @@ export class HomeComponent implements OnInit {
     private recipeService: RecipeService
   ) { }
 
-  ngOnInit(): void {
+ngOnInit(): void {
     this.isUserLoggedIn = this.authService.isLoggedIn();
 
     if (this.isUserLoggedIn) {
-      this.loadFavoriteRecipes();
-      this.loadAllRecipes();
-      this.recipeService.favoriteRecipes$.subscribe(favorites => {
-        this.favoriteRecipes = favorites;
-      });
-      this.recipeService.top3Favorites$.subscribe(top3 => {
-        this.top3Favorites = top3;
-      });
-    } else {
-      this.loadGroupedRecipes();
-    }
-  }
+        this.loadFavoriteRecipes();
+        this.loadAllRecipes();
 
+        // Solo suscribirse si el usuario está autenticado
+        this.recipeService.favoriteRecipes$.subscribe(favorites => {
+            this.favoriteRecipes = favorites;
+        });
+
+        this.recipeService.top3Favorites$.subscribe(top3 => {
+            this.top3Favorites = top3;
+        });
+    } else {
+        this.loadGroupedRecipes();
+    }
+}
 
 
   initializePortions(): void {

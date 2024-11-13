@@ -6,6 +6,7 @@ import { Recipe } from '../interfaces/recipe.interface.js';
 import { FavoriteRecipe } from '../interfaces/favoriteRecipe.interface';
 import { BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import { of } from 'rxjs';
 import { AuthService } from './auth.service'; // Import AuthService
 import { GenerateRecipeRequest, GenerateRecipeResponse } from '../interfaces/recipe-generator.interface.ts';
 
@@ -241,6 +242,10 @@ export class RecipeService {
   }
 
   getFavoriteRecipes(): Observable<{ data: { recipe_id: number }[] }> {
+    if (!this.authService.isLoggedIn()) {
+      // Si el usuario no está logueado, devuelve un observable vacío
+      return of({ data: [] });
+  }
     return this.http.get<{ data: { recipe_id: number }[] }>(`${this.favoriteUrl}`, { withCredentials: true });
   }
 
@@ -293,6 +298,10 @@ export class RecipeService {
 
   // Método para obtener el Top 3 de recetas favoritas
   getTop3FavoriteRecipes(): Observable<{ data: FavoriteRecipe[] }> {
+    if (!this.authService.isLoggedIn()) {
+      // Si el usuario no está logueado, devuelve un observable vacío
+      return of({ data: [] });
+  }
     return this.http.get<{ data: FavoriteRecipe[] }>(`${this.favoriteUrl}/top3`, { withCredentials: true });
   }
 

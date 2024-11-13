@@ -5,27 +5,15 @@ import { tap } from 'rxjs/operators';
 import { User, Login, AuthResponse } from '../interfaces/user';
 import { Router } from '@angular/router';
 
-
-/*@Injectable({
-  providedIn: 'root',
-})
-export class AuthService {
-  // Simula un usuario logueado
-  currentUser: User | null = {
-    id_user: 1,
-    email: 'test@example.com',
-    username: 'Test User',
-    avatar: 'assets/images/default-avatar.png',  // Ruta a un avatar de prueba
-  };
-
-  constructor(private router: Router) {}*/
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:3001';  // Cambiar si es necesario
+  private apiUrl = 'http://localhost:3001';
   private httpClient = inject(HttpClient);
   private router: Router;
+  private avatarUrl: string | null = null; // Aquí almacenamos la URL de avatar generada
+
   currentUser: User | null = null;
 
   constructor(router: Router) {
@@ -48,24 +36,20 @@ export class AuthService {
     );
   }
 
- 
-  // Iniciar sesión del usuario
-// Iniciar sesión del usuario
-login(user: Login): Observable<AuthResponse> {
-  return this.httpClient.post<AuthResponse>(`${this.apiUrl}/auth/login`, user, { withCredentials: true }).pipe(
-    tap((response: AuthResponse) => {
-      console.log('AuthService - Usuario logueado:', response.user); // Debug para usuario logueado
+  login(user: Login): Observable<AuthResponse> {
+    return this.httpClient.post<AuthResponse>(`${this.apiUrl}/auth/login`, user, { withCredentials: true }).pipe(
+      tap((response: AuthResponse) => {
+        console.log('AuthService - Usuario logueado:', response.user); // Debug para usuario logueado
 
-      if (!response.user.avatar && response.user.username) {
-        response.user.avatar = this.getAvatarUrl(response.user.username);
-      }
-      this.currentUser = response.user;  // Almacenar el usuario actual en memoria
-      console.log('AuthService - Usuario actual guardado en memoria:', this.currentUser); // Debug
-    })
-  );
-}
+        if (!response.user.avatar && response.user.username) {
+          response.user.avatar = this.getAvatarUrl(response.user.username);
+        }
+        this.currentUser = response.user;  // Almacenar el usuario actual en memoria
+        console.log('AuthService - Usuario actual guardado en memoria:', this.currentUser); // Debug
+      })
+    );
+  }
 
-  // Simula que el usuario está logueado
   isLoggedIn(): boolean {
     return !!this.currentUser;
   }
@@ -81,41 +65,22 @@ login(user: Login): Observable<AuthResponse> {
     const initials = names.map(name => name.charAt(0).toUpperCase()).join('');
     return initials.substring(0, 2);  // Limitar a las primeras dos letras
   }
-  // Generar URL de DiceBear en base a las iniciales del usuario
-  /*getAvatarUrl(): string {
-    if (this.currentUser && this.currentUser.username) {
-      const initials = this.getInitials(this.currentUser.username);
-      return `https://avatars.dicebear.com/api/initials/${initials}.svg`;
-    }
-    return '/images/default-avatar.png'; // Imagen predeterminada si no hay usuario
-  }*/
 
-  // Generar URL de DiceBear en base a las iniciales del usuario
- 
-
- /* getAvatarUrl(username: string): string {
-    console.log('Username para generar avatar:', username);  // Verificar si username llega correctamente
-    const initials = this.getInitials(username);
-    console.log('Iniciales generadas:', initials);  // Verificar si las iniciales se generan correctamente
-    return `https://avatars.dicebear.com/api/initials/${initials}.svg`;
-  }*/
-
-    
   getAvatarUrl(username: string): string {
-    const initials = this.getInitials(username);
-    const avatarUrl = `https://api.dicebear.com/6.x/initials/svg?seed=${initials}`;
-    console.log('Avatar URL generado:', avatarUrl);  // Verificar la URL completa
-    return avatarUrl;
+    // Si la URL ya fue generada previamente, la reutilizamos
+    if (!this.avatarUrl) {
+      const initials = this.getInitials(username);
+      this.avatarUrl = `https://api.dicebear.com/6.x/initials/svg?seed=${initials}`;
+      console.log('Avatar URL generado:', this.avatarUrl); // Solo se genera una vez
+    }
+    return this.avatarUrl;
   }
-  
-  
 
-  // Método de logout simulado
-  /*logout(): void {
-    this.currentUser = null;
-    this.router.navigate(['/']);
-  }*/
-  // Cerrar sesión
+  // Método auxiliar para resetear la URL en caso de logout o cambio de usuario
+  resetAvatarUrl(): void {
+    this.avatarUrl = null;
+  }
+
   logout(): void {
     this.httpClient.get(`${this.apiUrl}/auth/logout`, { withCredentials: true }).subscribe({
       next: () => {
