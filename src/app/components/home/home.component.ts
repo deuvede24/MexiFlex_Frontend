@@ -31,6 +31,7 @@ export class HomeComponent implements OnInit {
   top3Favorites: FavoriteRecipe[] = [];
   isLoadingRating: boolean = false;
   ratingErrorMessage: string = '';
+  showWelcomeToast: boolean = false;
 
   constructor(
     public authService: AuthService,
@@ -86,7 +87,7 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  loadAllRecipes(): void {
+  /*loadAllRecipes(): void {
     this.recipeService.getRecipes().subscribe({
       next: (response) => {
         const recipes = response.data;
@@ -98,7 +99,34 @@ export class HomeComponent implements OnInit {
       },
       error: (error) => console.error('Error al cargar recetas desde el backend', error)
     });
-  }
+  }*/
+    loadAllRecipes(): void {
+      this.recipeService.getRecipes().subscribe({
+        next: (response) => {
+          const recipes = response.data;
+          this.groupedRecipes = this.recipeService.groupRecipes(recipes);
+          this.groupedRecipes.forEach((group: any) => {
+            group.traditionalVersion = group.versions.find((v: Recipe) => v.category === 'tradicional');
+            group.flexiVersion = group.versions.find((v: Recipe) => v.category === 'flexi');
+          });
+          this.showWelcomeToast = true;
+          // Añadimos el scroll suave a las recetas
+          setTimeout(() => {
+            const recipesSection = document.getElementById('backend-recipes');
+            if (recipesSection) {
+              recipesSection.scrollIntoView({ 
+                behavior: 'smooth',
+                block: 'start'
+              });
+            }
+          }, 500); // Pequeño delay para asegurar que todo está renderizado
+          setTimeout(() => {
+            this.showWelcomeToast = false;
+          }, 3000);
+        },
+        error: (error) => console.error('Error al cargar recetas desde el backend', error)
+      });
+    }
 
   loadFavoriteRecipes(): void {
     this.recipeService.getFavoriteRecipes().subscribe({
