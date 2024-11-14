@@ -39,25 +39,25 @@ export class HomeComponent implements OnInit {
     private recipeService: RecipeService
   ) { }
 
-ngOnInit(): void {
+  ngOnInit(): void {
     this.isUserLoggedIn = this.authService.isLoggedIn();
 
     if (this.isUserLoggedIn) {
-        this.loadFavoriteRecipes();
-        this.loadAllRecipes();
+      this.loadFavoriteRecipes();
+      this.loadAllRecipes();
 
-        // Solo suscribirse si el usuario está autenticado
-        this.recipeService.favoriteRecipes$.subscribe(favorites => {
-            this.favoriteRecipes = favorites;
-        });
+      // Solo suscribirse si el usuario está autenticado
+      this.recipeService.favoriteRecipes$.subscribe(favorites => {
+        this.favoriteRecipes = favorites;
+      });
 
-        this.recipeService.top3Favorites$.subscribe(top3 => {
-            this.top3Favorites = top3;
-        });
+      this.recipeService.top3Favorites$.subscribe(top3 => {
+        this.top3Favorites = top3;
+      });
     } else {
-        this.loadGroupedRecipes();
+      this.loadGroupedRecipes();
     }
-}
+  }
 
 
   initializePortions(): void {
@@ -89,7 +89,7 @@ ngOnInit(): void {
     });
   }
 
-  /*loadAllRecipes(): void {
+  loadAllRecipes(): void {
     this.recipeService.getRecipes().subscribe({
       next: (response) => {
         const recipes = response.data;
@@ -98,37 +98,24 @@ ngOnInit(): void {
           group.traditionalVersion = group.versions.find((v: Recipe) => v.category === 'tradicional');
           group.flexiVersion = group.versions.find((v: Recipe) => v.category === 'flexi');
         });
+        this.showWelcomeToast = true;
+        // Añadimos el scroll suave a las recetas
+        setTimeout(() => {
+          const recipesSection = document.getElementById('backend-recipes');
+          if (recipesSection) {
+            recipesSection.scrollIntoView({
+              behavior: 'smooth',
+              block: 'start'
+            });
+          }
+        }, 500); // Pequeño delay para asegurar que todo está renderizado
+        setTimeout(() => {
+          this.showWelcomeToast = false;
+        }, 2000);
       },
       error: (error) => console.error('Error al cargar recetas desde el backend', error)
     });
-  }*/
-    loadAllRecipes(): void {
-      this.recipeService.getRecipes().subscribe({
-        next: (response) => {
-          const recipes = response.data;
-          this.groupedRecipes = this.recipeService.groupRecipes(recipes);
-          this.groupedRecipes.forEach((group: any) => {
-            group.traditionalVersion = group.versions.find((v: Recipe) => v.category === 'tradicional');
-            group.flexiVersion = group.versions.find((v: Recipe) => v.category === 'flexi');
-          });
-          this.showWelcomeToast = true;
-          // Añadimos el scroll suave a las recetas
-          setTimeout(() => {
-            const recipesSection = document.getElementById('backend-recipes');
-            if (recipesSection) {
-              recipesSection.scrollIntoView({ 
-                behavior: 'smooth',
-                block: 'start'
-              });
-            }
-          }, 500); // Pequeño delay para asegurar que todo está renderizado
-          setTimeout(() => {
-            this.showWelcomeToast = false;
-          }, 3000);
-        },
-        error: (error) => console.error('Error al cargar recetas desde el backend', error)
-      });
-    }
+  }
 
   loadFavoriteRecipes(): void {
     this.recipeService.getFavoriteRecipes().subscribe({
@@ -159,7 +146,7 @@ ngOnInit(): void {
       console.error('La receta o los ingredientes no están definidos:', recipe);
       return;
     }
-  
+
     this.selectedRecipe = recipe;
     this.selectedCategory = category;
     this.selectedPortions = 1;
@@ -168,12 +155,14 @@ ngOnInit(): void {
       quantity: ingredient.quantity
     }));
     this.initializeRating();
+    document.body.style.overflow = 'hidden'; // Desactiva scroll del fondo
   }
 
   closeRecipeModal(): void {
     this.selectedRecipe = null;
     this.currentRating = 0;
     this.averageRating = 0;
+    document.body.style.overflow = 'auto'; // Reactiva scroll del fondo
   }
 
   getUsername(): string {
@@ -188,7 +177,7 @@ ngOnInit(): void {
   }
 
   // En el home.component.ts
-redirectToLogin(): void {
-  this.router.navigate(['/login']);
-}
+  redirectToLogin(): void {
+    this.router.navigate(['/login']);
+  }
 }

@@ -35,6 +35,7 @@ export class RecipeGeneratorComponent implements OnInit, OnDestroy {
    'pescado': 'tofu marinado',
    'camarón': 'corazones de palmito'
  };
+ startedGenerator = false;
 
  // Cache de valores frecuentes
  private readonly vegetarianProteins = new Set(['tofu', 'seitán', 'tempeh']);
@@ -377,7 +378,9 @@ export class RecipeGeneratorComponent implements OnInit, OnDestroy {
 
    return suggestions;
  }
-
+ startGenerator() {
+  this.startedGenerator = true;
+}
  closeModal(): void {
    this.generatedRecipe$.next(null);
    this.validationMessages$.next({});

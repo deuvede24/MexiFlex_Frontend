@@ -39,7 +39,7 @@ export class LoginComponent implements OnInit {
     return control ? control.invalid && (control.dirty || control.touched || this.submitted) : false;
   }
 
-  /*login(): void {
+  login(): void {
     this.submitted = true;
 
     if (this.loginForm.invalid) {
@@ -48,51 +48,30 @@ export class LoginComponent implements OnInit {
       return;
     }
 
+    console.log('Login - Formulario válido, iniciando proceso de login...');
     this.authService.login(this.loginForm.value).subscribe({
       next: () => {
-        alert('Login successful');
-        this.router.navigate([this.returnUrl]);
+        console.log('Login - Login exitoso');
+        const lastAttemptedUrl = localStorage.getItem('lastAttemptedUrl');
+        console.log('Login - URL recuperada de localStorage:', lastAttemptedUrl);
+        console.log('Login - Estado de localStorage completo:', JSON.stringify(localStorage));
+
+        if (lastAttemptedUrl) {
+          console.log('Login - Redirigiendo a URL guardada:', lastAttemptedUrl);
+          this.router.navigate([lastAttemptedUrl]);
+          localStorage.removeItem('lastAttemptedUrl');
+          console.log('Login - localStorage después de limpiar:', JSON.stringify(localStorage));
+        } else {
+          console.log('Login - No hay URL guardada, redirigiendo a home');
+          this.router.navigate(['/']);
+        }
       },
       error: (err) => {
+        console.error('Login - Error en login:', err);
         this.errorMessage = err.error?.error || 'Credenciales inválidas';
       },
     });
-  }*/
-    // login.component.ts
-    login(): void {
-      this.submitted = true;
-    
-      if (this.loginForm.invalid) {
-        this.errorMessage = 'Por favor, rellena el formulario correctamente.';
-        this.markAllFieldsAsTouched();
-        return;
-      }
-    
-      console.log('Login - Formulario válido, iniciando proceso de login...');
-      this.authService.login(this.loginForm.value).subscribe({
-        next: () => {
-          console.log('Login - Login exitoso');
-          const lastAttemptedUrl = localStorage.getItem('lastAttemptedUrl');
-          console.log('Login - URL recuperada de localStorage:', lastAttemptedUrl);
-          console.log('Login - Estado de localStorage completo:', JSON.stringify(localStorage));
-    
-          if (lastAttemptedUrl) {
-            console.log('Login - Redirigiendo a URL guardada:', lastAttemptedUrl);
-            this.router.navigate([lastAttemptedUrl]);
-            localStorage.removeItem('lastAttemptedUrl');
-            console.log('Login - localStorage después de limpiar:', JSON.stringify(localStorage));
-          } else {
-            console.log('Login - No hay URL guardada, redirigiendo a home');
-            this.router.navigate(['/']);
-          }
-        },
-        error: (err) => {
-          console.error('Login - Error en login:', err);
-          this.errorMessage = err.error?.error || 'Credenciales inválidas';
-        },
-      });
-    }
-    
+  }
 
   markAllFieldsAsTouched() {
     Object.values(this.loginForm.controls).forEach(control => {

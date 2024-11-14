@@ -23,22 +23,22 @@ export class AIRecipeModalComponent {
   }
 
   // En ai-recipe-modal.component.ts
-get isVegetarianRecipe(): boolean {
-  const vegetarianProteins = ['tofu', 'seitán', 'heura', 'tempeh', 'proteína vegetal', 'brotes de soja'];
-  return !!this.recipe?.RecipeIngredients.some(ingredient => 
-    vegetarianProteins.some(vegProtein => 
-      ingredient.ingredient_name.toLowerCase().includes(vegProtein.toLowerCase())
-    )
-  );
-}
+  get isVegetarianRecipe(): boolean {
+    const vegetarianProteins = ['tofu', 'seitán', 'heura', 'tempeh', 'proteína vegetal', 'brotes de soja'];
+    return !!this.recipe?.RecipeIngredients.some(ingredient =>
+      vegetarianProteins.some(vegProtein =>
+        ingredient.ingredient_name.toLowerCase().includes(vegProtein.toLowerCase())
+      )
+    );
+  }
 
-get hasFlexiTips(): boolean {
-  return !!(this.recipe?.tips?.flexiOptions?.tips?.length);
-}
+  get hasFlexiTips(): boolean {
+    return !!(this.recipe?.tips?.flexiOptions?.tips?.length);
+  }
 
-get hasTimeSavingTips(): boolean {
-  return !!(this.recipe?.tips?.quickOptions?.timeSavingTips?.length);
-}
+  get hasTimeSavingTips(): boolean {
+    return !!(this.recipe?.tips?.quickOptions?.timeSavingTips?.length);
+  }
 
 
   closeModal(): void {

@@ -6,6 +6,7 @@ import { RecipeService } from '../../services/recipe.service';
 import { FavoriteRecipe } from '../../interfaces/favoriteRecipe.interface';
 import { Recipe, RecipeIngredient } from '../../interfaces/recipe.interface';
 import { RecipeModalComponent } from '../recipe-modal/recipe-modal.component';
+import { NotificationService } from '../../services/notification.service';
 
 @Component({
   selector: 'app-navbar',
@@ -29,8 +30,9 @@ export class NavbarComponent implements OnInit {
   constructor(
     public authService: AuthService,
     private router: Router,
-    public recipeService: RecipeService
-  ) {}
+    public recipeService: RecipeService,
+    private notificationService: NotificationService
+  ) { }
 
   @HostListener('window:scroll', [])
   onWindowScroll() {
@@ -52,11 +54,11 @@ export class NavbarComponent implements OnInit {
   }
   openRecipeModal(recipe: FavoriteRecipe): void {
     console.log('Iniciando apertura de receta:', recipe);
-    
+
     // Establecemos datos básicos que ya tenemos
     this.selectedCategory = recipe.category;
     this.selectedPortions = recipe.serving_size;
-    
+
     // Obtenemos datos completos
     this.recipeService.getRecipeById(recipe.recipe_id).subscribe({
       next: (response) => {
@@ -68,13 +70,13 @@ export class NavbarComponent implements OnInit {
             image: recipe.image,
             id_recipe: recipe.recipe_id
           };
-  
+
           // Guardamos los ingredientes originales
           this.originalIngredients = response.data.RecipeIngredients.map(ingredient => ({
             ...ingredient,
             quantity: ingredient.quantity
           }));
-  
+
           // Cerramos el modal de top3
           this.isTop3ModalOpen = false;
           console.log('Receta cargada completamente:', this.selectedRecipe);
@@ -148,7 +150,7 @@ export class NavbarComponent implements OnInit {
     this.isTop3ModalOpen = false;
     this.selectedRecipe = null;
     console.log('Modal Top 3 cerrado');
-    document.body.style.overflow = 'auto'; 
+    document.body.style.overflow = 'auto';
   }
 
   logout(): void {
@@ -165,8 +167,60 @@ export class NavbarComponent implements OnInit {
     if (!imagePath) {
       return '/assets/images/default.jpg';
     }
-    return imagePath.startsWith('/images/') 
-      ? imagePath 
+    return imagePath.startsWith('/images/')
+      ? imagePath
       : `http://localhost:3001/uploads/${imagePath}`;
   }
+
+  // En el componente Navbar o donde lo manejes
+  shareRecipe(recipe: FavoriteRecipe): void {
+    const recipeLink = `https://tu-sitio.com/recipe-summary/${recipe.recipe_id}`;
+    this.showShareLink(recipeLink);
+  }
+  showShareLink(recipeLink: string): void {
+    // Usamos un toast o una ventana emergente para mostrar el enlace de manera más elegante
+    alert(`Comparte este enlace con tus amigos: ${recipeLink}`);
+    // O bien, puedes mostrar un modal con el enlace para una mejor experiencia de usuario.
+  }
+
+  // En navbar.component.ts
+
+  // En navbar.component.ts
+  navigateToRecipesAndCloseMenu() {
+    // Primero cerramos el menú hamburguesa
+    this.closeMenu();
+
+    // Comprobamos si el usuario está logueado
+    if (!this.authService.isLoggedIn()) {
+      this.notificationService.showError(
+        'Para ver más recetas necesitas iniciar sesión o registrarte'
+      );
+      this.router.navigate(['/login']);
+      return;
+    }
+    // Solo si está logueado, navegamos a las recetas
+    if (this.router.url === '/') {
+      const recipesSection = document.getElementById('backend-recipes');
+      if (recipesSection) {
+        recipesSection.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }
+    } else {
+      this.router.navigate(['/'])
+        .then(() => {
+          setTimeout(() => {
+            const recipesSection = document.getElementById('backend-recipes');
+            if (recipesSection) {
+              recipesSection.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+              });
+            }
+          }, 100);
+        });
+    }
+  }
+
 }
