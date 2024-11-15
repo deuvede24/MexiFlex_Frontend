@@ -52,6 +52,7 @@ export class NavbarComponent implements OnInit {
     // Cargamos los favoritos inicialmente
     this.recipeService.updateTop3Favorites();
   }
+  
   openRecipeModal(recipe: FavoriteRecipe): void {
     console.log('Iniciando apertura de receta:', recipe);
 
