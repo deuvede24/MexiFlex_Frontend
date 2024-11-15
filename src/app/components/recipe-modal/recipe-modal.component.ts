@@ -27,7 +27,7 @@ export class RecipeModalComponent implements OnInit {
   isLoadingRating: boolean = false;
   ratingErrorMessage: string = '';
 
-  constructor(private recipeService: RecipeService, private authService: AuthService) { }
+  constructor(private recipeService: RecipeService,  private authService: AuthService) { }
 
   ngOnInit(): void {
     if (this.recipe) {
@@ -73,6 +73,8 @@ export class RecipeModalComponent implements OnInit {
       this.averageRating = 0;
     }
   }
+  
+
 
   updateIngredients(newPortions: number): void {
     this.portions = newPortions;
@@ -149,6 +151,8 @@ export class RecipeModalComponent implements OnInit {
     }
     return imagePath.startsWith('/images/') ? imagePath : `http://localhost:3001/uploads/${imagePath}`;
   }
+
+
 
   isFavorite(recipeId: number): boolean {
     return this.favoriteRecipes.has(recipeId);
