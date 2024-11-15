@@ -11,7 +11,7 @@ export const routes: Routes = [
   { path: 'home', component: HomeComponent },  // Ruta para el home
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
-  { path: 'recetas', component: HomeComponent },  // Agrega esta ruta
+  { path: 'recetas', component: HomeComponent },  // Ruta a home
 
   // Aquí puedes añadir más rutas si tienes otros componentes
   { 
