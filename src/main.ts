@@ -17,10 +17,7 @@ bootstrapApplication(AppComponent, {
     provideHttpClient(),
     ...appConfig.providers!,
     importProvidersFrom(BrowserAnimationsModule),  // Animaciones
-    provideToastr({
-      timeOut: 3000,
-      positionClass: 'toast-top-right',
-    }),
+ 
   ]
 });
 
