@@ -1,0 +1,13 @@
+{
+    "rewrites": [
+      {
+        "source": "/(.*)",
+        "destination": "/index.html"
+      }
+    ],
+    "build": {
+      "env": {
+        "NGX_TOASTR_EXTERNAL": "true"
+      }
+    }
+  }
