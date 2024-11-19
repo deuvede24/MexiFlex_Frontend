@@ -8,7 +8,7 @@ import { MapComponent } from './components/map/map.component'; // Importa tu Map
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },  // Ruta por defecto que carga HomeComponent
- // { path: '**', redirectTo: '' }, // Redirección por defecto
+
   { path: 'home', component: HomeComponent },  // Ruta para el home
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
@@ -24,7 +24,9 @@ export const routes: Routes = [
     path: 'mapa', 
     component: MapComponent,
     canActivate: [AuthGuard]  // Añadido aquí
-  }
+  },
+
+   // { path: '**', redirectTo: '' } // Redirección por defecto
 
   
 ];
