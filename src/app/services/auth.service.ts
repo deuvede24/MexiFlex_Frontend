@@ -1,15 +1,16 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { User, Login, AuthResponse } from '../interfaces/user';
 import { Router } from '@angular/router';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:3001';
+  private apiUrl = environment.apiUrl; 
   private httpClient = inject(HttpClient);
   private router: Router;
   private avatarUrl: string | null = null; // Aquí almacenamos la URL de avatar generada
@@ -19,6 +20,14 @@ export class AuthService {
   constructor(router: Router) {
     this.router = router;
   }
+
+  private httpOptions = {
+    withCredentials: true,
+    headers: new HttpHeaders({
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    })
+  };
 
   // Registrar un usuario (solo tipo "user")
   register(user: User): Observable<AuthResponse> {
