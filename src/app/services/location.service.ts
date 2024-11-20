@@ -4,12 +4,14 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Location } from '../interfaces/location.interface';
 import { map } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LocationService {
-  private apiUrl = 'http://localhost:3001/map';
+  //private apiUrl = 'http://localhost:3001/map';
+  private apiUrl = `${environment.apiUrl}/map`;
 
   constructor(private http: HttpClient) {}
 
