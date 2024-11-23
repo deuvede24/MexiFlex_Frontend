@@ -93,7 +93,7 @@
             @if (top3Favorites.length > 0) {
             @for (recipe of top3Favorites; track $index) {
             <div class="mini-card">
-              <img [src]="getImageUrl(recipe.image || '')" alt="{{ recipe.title }}" class="recipe-img" />
+              <img [src]="recipeService.getImageUrl(recipe.image || '')" alt="{{ recipe.title }}" class="recipe-img" />
               <div class="recipe-details">
                 <h4>{{ recipe.title }}</h4>
                 <p>Tiempo de preparación: {{ recipe.preparation_time }} min</p>

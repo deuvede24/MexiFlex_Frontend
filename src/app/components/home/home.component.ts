@@ -37,7 +37,7 @@ export class HomeComponent implements OnInit {
   constructor(
     public authService: AuthService,
     private router: Router,
-    private recipeService: RecipeService
+    public recipeService: RecipeService
   ) { }
 
   ngOnInit(): void {
@@ -170,12 +170,12 @@ export class HomeComponent implements OnInit {
     return this.authService.currentUser?.username || 'Invitado';
   }
 
-  getImageUrl(imagePath: string): string {
+  /*getImageUrl(imagePath: string): string {
     if (!imagePath) {
       return '/assets/images/default.jpg';
     }
     return imagePath.startsWith('/images/') ? imagePath : `http://localhost:3001/uploads/${imagePath}`;
-  }
+  }*/
 
   // En el home.component.ts
   redirectToLogin(): void {

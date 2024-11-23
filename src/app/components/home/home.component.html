@@ -11,7 +11,7 @@
               <div class="col-md-8">
                 <div class="recipe-card">
                   <div class="recipe-image">
-                    <img [src]="getImageUrl(group.versions[0]?.image)" [alt]="group.title">
+                    <img [src]="recipeService.getImageUrl(group.versions[0]?.image)" [alt]="group.title">
                     <div class="recipe-overlay"></div>
                   </div>
                   

@@ -249,18 +249,6 @@ export class RecipeService {
     return this.http.get<{ data: { recipe_id: number }[] }>(`${this.favoriteUrl}`, { withCredentials: true });
   }
 
-  // Agregar una receta a favoritos
-  /* addFavoriteRecipe(recipeId: number): Observable<{ message: string }> {
-     console.log('Agregando a favoritos:', recipeId); // Agrega este log para verificar
-     return this.http.post<{ message: string }>(this.favoriteUrl, { recipe_id: recipeId }, { withCredentials: true });
-   }
- 
-   // Eliminar una receta de favoritos
-   removeFavoriteRecipe(recipeId: number): Observable<{ message: string }> {
-     console.log('Eliminando de favoritos:', recipeId);
-     return this.http.delete<{ message: string }>(`${this.favoriteUrl}/${recipeId}`, { withCredentials: true });
-   }*/
-
   // Agregar una receta a favoritos y actualizar el BehaviorSubject
   // Modificar los métodos de añadir/eliminar favoritos
   addFavoriteRecipe(recipeId: number): Observable<{ message: string }> {
@@ -314,6 +302,26 @@ export class RecipeService {
     withCredentials: true // Si necesitas cookies/sesión
   });
 }*/
+getImageUrl(imagePath: string): string {
+  if (!imagePath) {
+    return '/assets/images/default.jpg'; // Imagen por defecto si no hay imagen
+  }
+
+  // Si la ruta ya es una URL completa (Cloudinary u otra), no la modifiques
+  if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+    return imagePath;
+  }
+
+  // Si es una imagen local (en /images/)
+  if (imagePath.startsWith('/images/')) {
+    return imagePath;
+  }
+
+  // Si es una ruta generada por el backend
+  return `http://localhost:3001/uploads/${imagePath}`;
+}
+
+
 generateRecipe(data: GenerateRecipeRequest): Observable<GenerateRecipeResponse> {
   return this.http.post<GenerateRecipeResponse>(
     `${this.apiUrl}/generate`, 

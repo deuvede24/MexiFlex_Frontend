@@ -32,7 +32,7 @@
 
       <!-- Imagen destacada -->
       <div class="recipe-image-wrapper">
-        <img [src]="getImageUrl(recipe?.image || '')" [alt]="recipe?.title" class="recipe-image">
+        <img [src]="recipeService.getImageUrl(recipe?.image || '')" [alt]="recipe?.title" class="recipe-image">
         <div class="recipe-actions">
           <span class="favorite-icon" (click)="toggleFavorite()"
                 [ngClass]="{'active': isFavorite(recipe?.id_recipe || 0)}">

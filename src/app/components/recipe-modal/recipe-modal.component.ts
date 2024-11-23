@@ -27,7 +27,7 @@ export class RecipeModalComponent implements OnInit {
   isLoadingRating: boolean = false;
   ratingErrorMessage: string = '';
 
-  constructor(private recipeService: RecipeService,  private authService: AuthService) { }
+  constructor(public recipeService: RecipeService,  private authService: AuthService) { }
 
   ngOnInit(): void {
     if (this.recipe) {
@@ -146,12 +146,12 @@ export class RecipeModalComponent implements OnInit {
     });
   }
   
-  getImageUrl(imagePath: string): string {
+  /*getImageUrl(imagePath: string): string {
     if (!imagePath) {
       return '/assets/images/default.jpg';
     }
     return imagePath.startsWith('/images/') ? imagePath : `http://localhost:3001/uploads/${imagePath}`;
-  }
+  }*/
 
 
 

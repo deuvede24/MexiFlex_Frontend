@@ -164,14 +164,14 @@ export class NavbarComponent implements OnInit {
   }
 
   // Método auxiliar para las imágenes
-  getImageUrl(imagePath: string): string {
+  /*getImageUrl(imagePath: string): string {
     if (!imagePath) {
       return '/assets/images/default.jpg';
     }
     return imagePath.startsWith('/images/')
       ? imagePath
       : `http://localhost:3001/uploads/${imagePath}`;
-  }
+  }*/
 
   // En el componente Navbar o donde lo manejes
   shareRecipe(recipe: FavoriteRecipe): void {
