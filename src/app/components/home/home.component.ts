@@ -10,6 +10,7 @@ import { FormsModule } from '@angular/forms';
 import { HeaderComponent } from '../header/header.component';
 import { FavoriteRecipe } from '../../interfaces/favoriteRecipe.interface';
 import { RecipeModalComponent } from '../recipe-modal/recipe-modal.component';
+import { environment } from '../../../environments/environment'
 
 @Component({
   selector: 'app-home',
@@ -169,12 +170,25 @@ export class HomeComponent implements OnInit {
     return this.authService.currentUser?.username || 'Invitado';
   }
 
-  getImageUrl(imagePath: string): string {
+ /* getImageUrl(imagePath: string): string {
     if (!imagePath) {
       return '/assets/images/default.jpg';
     }
     return imagePath.startsWith('/images/') ? imagePath : `http://localhost:3001/uploads/${imagePath}`;
-  }
+  }*/
+    getImageUrl(imagePath: string): string {
+      if (!imagePath) {
+        return '/assets/images/default.jpg';
+      }
+      // Si es una URL de desarrollo
+      if (!environment.production) {
+        return imagePath.startsWith('/images/') 
+          ? imagePath 
+          : `http://localhost:3001/uploads/${imagePath}`;
+      }
+      // Si es producción, usar Cloudinary
+      return `https://res.cloudinary.com/${environment.cloudinaryName}/image/upload/v1/${imagePath}`;
+    }
 
   // En el home.component.ts
   redirectToLogin(): void {
