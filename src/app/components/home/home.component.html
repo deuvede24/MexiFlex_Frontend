@@ -3,7 +3,7 @@
 
 <div class="container mt-2">
   <div id="backend-recipes">  <!-- Añadimos este id aquí -->
-    <div id="recipeCarousel" class="carousel slide" data-bs-ride="carousel">
+    <div id="recipeCarousel" class="carousel slide"  data-bs-interval="false"  data-bs-touch="true">
       <div class="carousel-inner">
         @for (group of groupedRecipes; track $index) {
           <div class="carousel-item" [class.active]="$index === 0">
@@ -47,14 +47,14 @@
       </div>
       
       <!-- Controles del carrusel -->
-      <a class="carousel-control-prev" href="#recipeCarousel" role="button" data-bs-slide="prev">
+      <button class="carousel-control-prev" type="button" data-bs-target="#recipeCarousel" data-bs-slide="prev">
         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
         <span class="visually-hidden">Anterior</span>
-      </a>
-      <a class="carousel-control-next" href="#recipeCarousel" role="button" data-bs-slide="next">
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#recipeCarousel" data-bs-slide="next">
         <span class="carousel-control-next-icon" aria-hidden="true"></span>
         <span class="visually-hidden">Siguiente</span>
-      </a>
+      </button>
     </div>
   </div>  <!-- Cierre del div backend-recipes -->
 

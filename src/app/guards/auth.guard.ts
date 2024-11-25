@@ -72,7 +72,7 @@ export class AuthGuard implements CanActivate {
     private notificationService: NotificationService
   ) {}
 
-  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
+ /* canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
     const isLoggedIn = this.authService.isLoggedIn();
 
     if (isLoggedIn) {
@@ -89,5 +89,33 @@ export class AuthGuard implements CanActivate {
       this.router.navigate(['/login']);
       return false;
     }
+  }*/
+    canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
+      const isLoggedIn = this.authService.isLoggedIn();
+  
+      if (isLoggedIn) {
+        return true; // Permitir el acceso si el usuario está logueado
+      } else {
+        const attemptedUrl = state.url; // Capturamos la URL que intentó acceder el usuario
+  
+        // Definir mensaje personalizado según la URL
+        let errorMessage = 'Debes iniciar sesión o registrarte para continuar.';
+        if (attemptedUrl.includes('recetas-ia')) {
+          errorMessage = 'Para generar recetas necesitas iniciar sesión o registrarte.';
+        
+        } else if (attemptedUrl.includes('mapa')) {
+          errorMessage = 'Para ver los puntos de interés necesitas iniciar sesión o registrarte.';
+        }
+  
+        // Guardar la última URL intentada para redirigir después del login (opcional)
+        localStorage.setItem('lastAttemptedUrl', attemptedUrl);
+  
+        // Mostrar el mensaje adecuado
+        this.notificationService.showError(errorMessage);
+  
+        // Redirigir al login
+        this.router.navigate(['/login']);
+        return false;
+      }
+    }
   }
-}
