@@ -8,28 +8,75 @@
     </a>
     <div class="footer__links">
       <ul>
-        <li><a href="/sobre-nosotros">SOBRE NOSOTROS</a></li>
-        <li><a href="/contactanos">CONTÁCTANOS</a></li>
-        <li><a href="/terminos-de-uso">TÉRMINOS DE USO</a></li>
-        <li><a href="/politica-de-privacidad">POLÍTICA DE PRIVACIDAD</a></li>
+        <li><a href="#" (click)="showModal('about', $event)">SOBRE NOSOTROS</a></li>
+        <li><a href="#" (click)="showModal('contact', $event)">CONTÁCTANOS</a></li>
+        <li><a href="#" (click)="showModal('terms', $event)">TÉRMINOS DE USO</a></li>
+        <li><a href="#" (click)="showModal('privacy', $event)">POLÍTICA DE PRIVACIDAD</a></li>
       </ul>
     </div>
     <div class="footer__social-media">
-      <a href="https://www.facebook.com/MexiFlex" target="_blank" rel="noopener noreferrer">
+      <a href="#" aria-label="Facebook">
         <i class="fab fa-facebook-f"></i>
       </a>
-      <a href="https://www.twitter.com/MexiFlex" target="_blank" rel="noopener noreferrer">
+      <a href="#" aria-label="Twitter">
         <i class="fab fa-twitter"></i>
       </a>
-      <a href="https://www.instagram.com/MexiFlex" target="_blank" rel="noopener noreferrer">
+      <a href="#" aria-label="Instagram">
         <i class="fab fa-instagram"></i>
       </a>
     </div>
   </div>
   <div class="footer__bottom">
     <div class="footer__copyright">
-      © 2023 MexiFlex. Todos los derechos reservados.
+      © 2024 MexiFlex. Todos los derechos reservados.
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="footer-modal" [class.is-active]="activeModal">
+    <div class="modal-overlay" (click)="closeModal()"></div>
+    <div class="modal-content">
+      <button class="modal-close" (click)="closeModal()">
+        <i class="fas fa-times"></i>
+      </button>
+      
+      <!-- Modal Content -->
+      <div class="modal-body">
+        @if (activeModal === 'about') {
+          <h2><i class="fas fa-utensils"></i> Sobre MexiFlex</h2>
+          <p>MexiFlex es tu destino para descubrir la auténtica cocina mexicana en dos versiones: tradicional y plant-based.</p>
+          <div class="modal-features">
+            <div class="feature">
+              <i class="fas fa-pepper-hot"></i>
+              <span>Recetas Tradicionales</span>
+            </div>
+            <div class="feature">
+              <i class="fas fa-leaf"></i>
+              <span>Versiones Plant-Based</span>
+            </div>
+          </div>
+        }
+
+        @if (activeModal === 'contact') {
+          <h2><i class="fas fa-envelope"></i> Contáctanos</h2>
+          <p>¡Síguenos en redes sociales y no te pierdas ninguna receta!</p>
+          <div class="modal-social">
+            <a href="#"><i class="fab fa-instagram"></i></a>
+            <a href="#"><i class="fab fa-facebook"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+          </div>
+        }
+
+        @if (activeModal === 'terms') {
+          <h2><i class="fas fa-file-alt"></i> Términos de Uso</h2>
+          <p>Términos y condiciones de uso de MexiFlex...</p>
+        }
+
+        @if (activeModal === 'privacy') {
+          <h2><i class="fas fa-shield-alt"></i> Política de Privacidad</h2>
+          <p>Política de privacidad de MexiFlex...</p>
+        }
+      </div>
     </div>
   </div>
 </footer>
-
