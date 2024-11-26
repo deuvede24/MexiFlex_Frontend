@@ -228,19 +228,6 @@ export class NavbarComponent implements OnInit {
       : `http://localhost:3001/uploads/${imagePath}`;
   }*/
 
-  // En el componente Navbar o donde lo manejes
-  shareRecipe(recipe: FavoriteRecipe): void {
-    const recipeLink = `https://tu-sitio.com/recipe-summary/${recipe.recipe_id}`;
-    this.showShareLink(recipeLink);
-  }
-  showShareLink(recipeLink: string): void {
-    // Usamos un toast o una ventana emergente para mostrar el enlace de manera más elegante
-    alert(`Comparte este enlace con tus amigos: ${recipeLink}`);
-    // O bien, puedes mostrar un modal con el enlace para una mejor experiencia de usuario.
-  }
-
-  // En navbar.component.ts
-
   // En navbar.component.ts
   navigateToRecipesAndCloseMenu() {
     // Primero cerramos el menú hamburguesa

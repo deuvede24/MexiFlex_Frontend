@@ -90,14 +90,22 @@
   
 
 <!-- Modal -->
+<!-- Modal -->
 @if (selectedRecipe) {
-  <app-recipe-modal
-    [recipe]="selectedRecipe"
-    [category]="selectedCategory"
-    [portions]="selectedPortions"
-    [isUserLoggedIn]="isUserLoggedIn"
-    (closeModalEvent)="closeRecipeModal()">
-  </app-recipe-modal>
+  @if (isUserLoggedIn) {
+    <app-recipe-modal 
+      [recipe]="selectedRecipe"
+      [category]="selectedCategory"
+      [portions]="selectedPortions"
+      [isUserLoggedIn]="isUserLoggedIn"
+      (closeModalEvent)="closeRecipeModal()"
+    ></app-recipe-modal>
+  } @else {
+    <app-recipe-preview 
+      [recipe]="selectedRecipe"
+      (closePreview)="closeRecipeModal()"
+    ></app-recipe-preview>
+  }
 }
 
 <div class="toast-container">
@@ -108,3 +116,4 @@
     </div>
   </div>
 </div>
+

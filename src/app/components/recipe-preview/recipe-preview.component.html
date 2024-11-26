@@ -1,0 +1,46 @@
+<div class="modal fade show preview-modal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content" [ngClass]="recipe.category === 'Tradicional' ? 'modal-traditional' : 'modal-flexi'">
+        <!-- Header -->
+        <div class="modal-header">
+          <h2 class="recipe-title">{{ recipe.title }}</h2>
+          <div class="recipe-meta">
+            <span class="recipe-time">
+              <i class="fas fa-clock"></i> {{ recipe.preparation_time }} min
+            </span>
+            <span class="recipe-category">{{ recipe.category }}</span>
+          </div>
+          <button type="button" class="btn-close" aria-label="Close" (click)="closeModal()"></button>
+        </div>
+  
+        <!-- Preview Content -->
+        <div class="preview-content">
+          <!-- Imagen y descripción básica -->
+          <img [src]="recipeService.getImageUrl(recipe.image || '')" [alt]="recipe.title">
+          <p class="description">{{ recipe.description }}</p>
+  
+          <!-- Preview de ingredientes -->
+          <div class="ingredients-preview">
+            <h3>Ingredientes principales</h3>
+            <ul>
+              @for (ingredient of recipe.RecipeIngredients.slice(0, 3); track ingredient) {
+                <li>{{ ingredient.ingredient_name }}</li>
+              }
+            </ul>
+            <div class="blur-overlay"></div>
+          </div>
+          
+  
+          <!-- CTA Section -->
+          <div class="cta-section">
+            <p>¿Quieres ver la receta completa?</p>
+            <div class="cta-buttons">
+              <button class="btn-register" routerLink="/register">Crear cuenta gratis</button>
+              <button class="btn-login" routerLink="/login">Ya tengo cuenta</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
