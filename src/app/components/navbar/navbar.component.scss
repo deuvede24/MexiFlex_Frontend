@@ -234,13 +234,24 @@
         }
       }*/
       &.btn-outline-danger {
-        background-color: transparent;
+       /* background-color: transparent;
         border: 2px solid #FF6200;
         color: #FF6200;
 
         &:hover {
           background-color: #038009;
           color: #fff;
+        }*/
+        background-color: #1a1a1a;
+        color: white;
+       // padding: 0.75rem 2rem;
+        border-radius: 2rem;
+        border: none;
+        transition: all 0.3s ease;
+      
+        &:hover {
+          background-color: #333333;;
+          transform: translateY(-2px);
         }
       }
     }

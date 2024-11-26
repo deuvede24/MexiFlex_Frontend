@@ -27,7 +27,7 @@ export class RecipeModalComponent implements OnInit {
   isLoadingRating: boolean = false;
   ratingErrorMessage: string = '';
 
-  constructor(public recipeService: RecipeService,  private authService: AuthService) { }
+  constructor(public recipeService: RecipeService, private authService: AuthService) { }
 
   ngOnInit(): void {
     if (this.recipe) {
@@ -73,7 +73,7 @@ export class RecipeModalComponent implements OnInit {
       this.averageRating = 0;
     }
   }
-  
+
 
 
   updateIngredients(newPortions: number): void {
@@ -145,7 +145,7 @@ export class RecipeModalComponent implements OnInit {
       }
     });
   }
-  
+
   /*getImageUrl(imagePath: string): string {
     if (!imagePath) {
       return '/assets/images/default.jpg';
@@ -162,4 +162,63 @@ export class RecipeModalComponent implements OnInit {
   closeModal(): void {
     this.closeModalEvent.emit();
   }
+
+async shareRecipe(): Promise<void> {
+  if (!this.recipe) return;
+
+  const shareUrl = `${window.location.origin}/recipes/${this.recipe.id_recipe}`;
+  const shareData = {
+    title: this.recipe.title,
+    text: `¡Mira esta receta de ${this.recipe.title}!`,
+    url: shareUrl
+  };
+  
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+  if (isMobile && navigator.share) {
+    try {
+      await navigator.share(shareData);
+      this.showShareToast('¡Compartido exitosamente!');
+    } catch (error) {
+      console.log('Error compartiendo:', error);
+      await navigator.clipboard.writeText(shareUrl);
+      this.showShareToast('¡Enlace copiado exitosamente!');
+    }
+  } else {
+    await navigator.clipboard.writeText(shareUrl);
+    this.showShareToast('¡Enlace copiado exitosamente!');
+  }
+}
+
+private showShareToast(message: string): void {
+  const toastContainer = document.querySelector('.toast-container') || document.createElement('div');
+  toastContainer.className = 'toast-container';
+
+  const toast = document.createElement('div');
+  toast.className = 'toast-notification';
+  toast.innerHTML = `
+    <div class="toast-content">
+      <i class="fas fa-check-circle"></i>
+      <span>${message}</span>
+    </div>
+  `;
+
+  if (!document.querySelector('.toast-container')) {
+    document.body.appendChild(toastContainer);
+  }
+  toastContainer.appendChild(toast);
+
+  setTimeout(() => {
+    toast.classList.add('show');
+    setTimeout(() => {
+      toast.classList.remove('show');
+      setTimeout(() => {
+        toastContainer.removeChild(toast);
+        if (toastContainer.children.length === 0) {
+          document.body.removeChild(toastContainer);
+        }
+      }, 300);
+    }, 2000);
+  }, 100);
+}
 }

@@ -11,6 +11,7 @@ import { HeaderComponent } from '../header/header.component';
 import { FavoriteRecipe } from '../../interfaces/favoriteRecipe.interface';
 import { RecipeModalComponent } from '../recipe-modal/recipe-modal.component';
 import { environment } from '../../../environments/environment'
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -37,7 +38,8 @@ export class HomeComponent implements OnInit {
   constructor(
     public authService: AuthService,
     private router: Router,
-    public recipeService: RecipeService
+    public recipeService: RecipeService,
+    private route: ActivatedRoute,
   ) { }
 
   ngOnInit(): void {
@@ -58,6 +60,36 @@ export class HomeComponent implements OnInit {
     } else {
       this.loadGroupedRecipes();
     }
+
+    // Añadir este nuevo código para manejar rutas
+    this.route.params.subscribe(params => {
+      if (params['id']) {
+        const recipeId = Number(params['id']);
+        console.log('Buscando receta con ID:', recipeId); // Para debugging
+
+        // Primero buscar en recetas harcodeadas
+        let foundRecipe = this.recipeService.getInitialRecipes()
+          .find(r => r.id_recipe === recipeId);
+
+        if (foundRecipe) {
+          console.log('Receta encontrada en hardcoded:', foundRecipe);
+          this.openRecipeModal(foundRecipe, foundRecipe.category);
+        } else if (this.isUserLoggedIn) {
+          // Si no está en harcodeadas y el usuario está logueado, buscar en backend
+          this.recipeService.getRecipeById(recipeId).subscribe({
+            next: (response) => {
+              if (response && response.data) {
+                console.log('Receta encontrada en backend:', response.data);
+                this.openRecipeModal(response.data, response.data.category);
+              }
+            },
+            error: (err) => {
+              console.error('Error al cargar la receta:', err);
+            }
+          });
+        }
+      }
+    });
   }
 
 
@@ -99,7 +131,19 @@ export class HomeComponent implements OnInit {
           group.traditionalVersion = group.versions.find((v: Recipe) => v.category === 'tradicional');
           group.flexiVersion = group.versions.find((v: Recipe) => v.category === 'flexi');
         });
-        this.showWelcomeToast = true;
+
+
+        //this.showWelcomeToast = true;
+
+        // Solo mostrar si no se ha mostrado antes en esta sesión
+        if (!this.authService.getHasShownWelcomeToast()) {
+          this.showWelcomeToast = true;
+          this.authService.setHasShownWelcomeToast();
+          setTimeout(() => {
+            this.showWelcomeToast = false;
+          }, 2000);
+        }
+
         // Añadimos el scroll suave a las recetas
         setTimeout(() => {
           const recipesSection = document.getElementById('backend-recipes');
@@ -117,6 +161,43 @@ export class HomeComponent implements OnInit {
       error: (error) => console.error('Error al cargar recetas desde el backend', error)
     });
   }
+  /* loadAllRecipes(): void {
+     this.recipeService.getRecipes().subscribe({
+       next: (response) => {
+         const recipes = response.data;
+         this.groupedRecipes = this.recipeService.groupRecipes(recipes);
+         this.groupedRecipes.forEach((group: any) => {
+           group.traditionalVersion = group.versions.find((v: Recipe) => v.category === 'tradicional');
+           group.flexiVersion = group.versions.find((v: Recipe) => v.category === 'flexi');
+         });
+ 
+          // Añadir console.log para debug
+       console.log('Welcome toast shown:', localStorage.getItem('welcomeToastShown'));
+ 
+ 
+         // Mostrar el toast solo si no se ha mostrado antes
+         if (!localStorage.getItem('welcomeToastShown')) {
+           this.showWelcomeToast = true;
+           localStorage.setItem('welcomeToastShown', 'true');
+           setTimeout(() => {
+             this.showWelcomeToast = false;
+           }, 2000);
+         }
+ 
+         // Añadimos el scroll suave a las recetas
+         setTimeout(() => {
+           const recipesSection = document.getElementById('backend-recipes');
+           if (recipesSection) {
+             recipesSection.scrollIntoView({
+               behavior: 'smooth',
+               block: 'start'
+             });
+           }
+         }, 500);
+       },
+       error: (error) => console.error('Error al cargar recetas desde el backend', error)
+     });
+   }*/
 
   loadFavoriteRecipes(): void {
     this.recipeService.getFavoriteRecipes().subscribe({
@@ -157,6 +238,11 @@ export class HomeComponent implements OnInit {
     }));
     this.initializeRating();
     document.body.style.overflow = 'hidden'; // Desactiva scroll del fondo
+    // Actualizar URL siempre que se abra el modal
+    this.router.navigate(['/recipes', recipe.id_recipe], {
+      replaceUrl: true
+    });
+
   }
 
   closeRecipeModal(): void {
@@ -164,6 +250,11 @@ export class HomeComponent implements OnInit {
     this.currentRating = 0;
     this.averageRating = 0;
     document.body.style.overflow = 'auto'; // Reactiva scroll del fondo
+
+    // Si llegamos aquí desde una URL directa, volver a home
+    if (this.route.snapshot.params['id']) {
+      this.router.navigate(['/']);
+    }
   }
 
   getUsername(): string {

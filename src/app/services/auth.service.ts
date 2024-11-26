@@ -10,10 +10,11 @@ import { environment } from '../../environments/environment';
   providedIn: 'root',
 })
 export class AuthService {
-  private apiUrl = environment.apiUrl; 
+  private apiUrl = environment.apiUrl;
   private httpClient = inject(HttpClient);
   private router: Router;
   private avatarUrl: string | null = null; // Aquí almacenamos la URL de avatar generada
+  private hasShownWelcomeToast = false;
 
   currentUser: User | null = null;
 
@@ -103,6 +104,13 @@ export class AuthService {
     });
   }
 
+  getHasShownWelcomeToast(): boolean {
+    return this.hasShownWelcomeToast;
+  }
+
+  setHasShownWelcomeToast(): void {
+    this.hasShownWelcomeToast = true;
+  }
 
 }
 

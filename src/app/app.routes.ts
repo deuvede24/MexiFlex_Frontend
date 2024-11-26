@@ -14,6 +14,7 @@ export const routes: Routes = [
   { path: 'register', component: RegisterComponent },
   { path: 'recetas', component: HomeComponent },  // Ruta a home
 
+
   // Aquí puedes añadir más rutas si tienes otros componentes
   { 
     path: 'recetas-ia', 
@@ -24,6 +25,10 @@ export const routes: Routes = [
     path: 'mapa', 
     component: MapComponent,
     canActivate: [AuthGuard]  // Añadido aquí
+  },
+  { 
+    path: 'recipes/:id', 
+    component: HomeComponent 
   },
 
    // { path: '**', redirectTo: '' } // Redirección por defecto
