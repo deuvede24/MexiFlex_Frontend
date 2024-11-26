@@ -228,9 +228,11 @@ export class HomeComponent implements OnInit {
       console.error('La receta o los ingredientes no están definidos:', recipe);
       return;
     }
+    // Normalizar la categoría
+    const normalizedCategory = category.charAt(0).toUpperCase() + category.slice(1).toLowerCase();
 
     this.selectedRecipe = recipe;
-    this.selectedCategory = category;
+    this.selectedCategory = normalizedCategory;
     this.selectedPortions = 1;
     this.originalIngredients = recipe.RecipeIngredients.map(ingredient => ({
       ...ingredient,

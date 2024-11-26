@@ -53,7 +53,7 @@ export class NavbarComponent implements OnInit {
     this.recipeService.updateTop3Favorites();
   }
   
-  openRecipeModal(recipe: FavoriteRecipe): void {
+  /*openRecipeModal(recipe: FavoriteRecipe): void {
     console.log('Iniciando apertura de receta:', recipe);
 
     // Establecemos datos básicos que ya tenemos
@@ -94,7 +94,62 @@ export class NavbarComponent implements OnInit {
   closeRecipeModal(): void {
     this.selectedRecipe = null;
     this.isTop3ModalOpen = true; // Volvemos a mostrar el modal de top3
-  }
+  }*/
+
+    openRecipeModal(recipe: FavoriteRecipe): void {
+      console.log('Iniciando apertura de receta:', recipe);
+    
+      // Establecemos datos básicos que ya tenemos
+      this.selectedCategory = recipe.category;
+      this.selectedPortions = recipe.serving_size;
+    
+      // Obtenemos datos completos
+      this.recipeService.getRecipeById(recipe.recipe_id).subscribe({
+        next: (response) => {
+          if (response && response.data) {
+            // Combinamos datos que ya teníamos con los nuevos
+            this.selectedRecipe = {
+              ...response.data,
+              category: recipe.category,
+              image: recipe.image,
+              id_recipe: recipe.recipe_id
+            };
+    
+            // Guardamos los ingredientes originales
+            this.originalIngredients = response.data.RecipeIngredients.map(ingredient => ({
+              ...ingredient,
+              quantity: ingredient.quantity
+            }));
+    
+            // Actualizar URL y estado del navegador
+            window.history.pushState(
+              { recipeId: recipe.recipe_id }, 
+              '', 
+              `/recipes/${recipe.recipe_id}`
+            );
+    
+            // Cerramos el modal de top3 y ajustamos scroll
+            this.isTop3ModalOpen = false;
+            document.body.style.overflow = 'hidden';
+            
+            console.log('Receta cargada completamente:', this.selectedRecipe);
+          }
+        },
+        error: (error) => {
+          console.error('Error al cargar la receta:', error);
+          alert('Error al cargar la receta. Por favor intenta de nuevo.');
+        }
+      });
+    }
+    
+    closeRecipeModal(): void {
+      this.selectedRecipe = null;
+      this.isTop3ModalOpen = true;
+      document.body.style.overflow = 'auto';
+      
+      // Restaurar URL original
+      window.history.pushState({}, '', '/');
+    }
 
   toggleMenu() {
     this.isMenuOpen = !this.isMenuOpen;
