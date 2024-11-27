@@ -67,3 +67,24 @@
     }
   }
   
+  .password-field {
+    position: relative;
+    
+    input {
+      padding-right: 40px;
+    }
+    
+    i {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: #666;
+      transition: color 0.3s ease;
+      
+      &:hover {
+        color: #333;
+      }
+    }
+  }

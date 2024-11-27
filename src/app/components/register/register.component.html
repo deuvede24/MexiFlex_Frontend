@@ -1,7 +1,7 @@
 <div class="container mt-3">
     <div class="border p-4 shadow form-custom">
       <form [formGroup]="registerForm" (ngSubmit)="register()">
-        <h2 class="text-center mb-4">REGISTER</h2>
+        <h2 class="text-center mb-4">REGISTRO</h2>
   
         <div class="form-group mb-3">
           <label for="username" class="form-label">Username:</label>
@@ -48,45 +48,41 @@
         </div>
   
         <div class="form-group mb-3">
-          <label for="password" class="form-label">Password:</label>
-          <input
-            type="password"
-            formControlName="password"
-            id="password"
-            class="form-control"
-            [ngClass]="{ 'is-invalid': isControlInvalid('password') }"
-            required
-          />
-          <div class="text-danger mt-1">
+          <div class="password-field">
+            <input 
+              [type]="showPassword ? 'text' : 'password'"
+              formControlName="password"
+              class="form-control"
+              [ngClass]="{ 'is-invalid': isControlInvalid('password') }"
+              placeholder="Contraseña">
+            <i 
+              class="fas" 
+              [class.fa-eye]="!showPassword" 
+              [class.fa-eye-slash]="showPassword"
+              (click)="togglePasswordVisibility()"
+            ></i>
             @if (isControlInvalid('password')) {
-              @if (registerForm.controls['password'].errors?.['required']) {
-                <small>Password is required</small>
-              }
-              @if (registerForm.controls['password'].errors?.['minlength']) {
-                <small>Password must be at least 6 characters</small>
-              }
+              <div class="invalid-feedback">La contraseña debe tener al menos 6 caracteres</div>
             }
           </div>
         </div>
   
         <div class="form-group mb-3">
-          <label for="confirmPassword" class="form-label">Confirm Password:</label>
-          <input
-            type="password"
-            formControlName="confirmPassword"
-            id="confirmPassword"
-            class="form-control"
-            [ngClass]="{ 'is-invalid': isControlInvalid('confirmPassword') || (submitted && registerForm.hasError('mismatch')) }"
-            required
-          />
-          <div class="text-danger mt-1">
-            @if (isControlInvalid('confirmPassword') || (submitted && registerForm.hasError('mismatch'))) {
-              @if (registerForm.controls['confirmPassword'].errors?.['required']) {
-                <small>Confirm Password is required</small>
-              }
-              @if (registerForm.controls['confirmPassword'].errors?.['mismatch']) {
-                <small>Passwords must match</small>
-              }
+          <div class="password-field">
+            <input 
+              [type]="showConfirmPassword ? 'text' : 'password'"
+              formControlName="confirmPassword"
+              class="form-control"
+              [ngClass]="{ 'is-invalid': isControlInvalid('confirmPassword') }"
+              placeholder="Confirmar contraseña">
+            <i 
+              class="fas" 
+              [class.fa-eye]="!showConfirmPassword" 
+              [class.fa-eye-slash]="showConfirmPassword"
+              (click)="toggleConfirmPasswordVisibility()"
+            ></i>
+            @if (isControlInvalid('confirmPassword')) {
+              <div class="invalid-feedback">Las contraseñas no coinciden</div>
             }
           </div>
         </div>

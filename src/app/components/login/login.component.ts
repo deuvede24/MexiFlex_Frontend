@@ -20,7 +20,8 @@ export class LoginComponent implements OnInit {
   errorMessage = '';
   submitted = false;
   returnUrl: string = '';
-  pendingRecipe: string | null = null;  // Nueva propiedad
+  pendingRecipe: string | null = null;  
+  showPassword: boolean = false;
 
   constructor(
     private authService: AuthService,
@@ -114,6 +115,10 @@ export class LoginComponent implements OnInit {
           this.errorMessage = err.error?.error || 'Credenciales inválidas';
         },
       });
+    }
+
+    togglePasswordVisibility(): void {
+      this.showPassword = !this.showPassword;
     }
  
   markAllFieldsAsTouched() {

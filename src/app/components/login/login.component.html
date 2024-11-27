@@ -1,7 +1,7 @@
 <div class="container mt-3">
   <div class="border p-4 shadow form-custom">
     <form [formGroup]="loginForm" (ngSubmit)="login()">
-      <h2 class="text-center mb-4">LOGIN</h2>
+      <h2 class="text-center mb-4">INICIO DE SESIÓN</h2>
 
       <div class="form-group mb-3">
         <label for="email" class="form-label">Email:</label>
@@ -20,17 +20,13 @@
       </div>
 
       <div class="form-group mb-3">
-        <label for="password" class="form-label">Password:</label>
-        <input type="password" formControlName="password" id="password" class="form-control"
-          [ngClass]="{ 'is-invalid': isControlInvalid('password') }" required />
-        <div class="text-danger mt-1">
+        <div class="password-field">
+          <input [type]="showPassword ? 'text' : 'password'" formControlName="password" class="form-control"
+            [ngClass]="{ 'is-invalid': isControlInvalid('password') }" placeholder="Contraseña">
+          <i class="fas" [class.fa-eye]="!showPassword" [class.fa-eye-slash]="showPassword"
+            (click)="togglePasswordVisibility()"></i>
           @if (isControlInvalid('password')) {
-          @if (loginForm.controls['password'].errors?.['required']) {
-          <small>Password is required</small>
-          }
-          @if (loginForm.controls['password'].errors?.['minlength']) {
-          <small>Password must be at least 6 characters</small>
-          }
+          <div class="invalid-feedback">La contraseña debe tener al menos 6 caracteres</div>
           }
         </div>
       </div>

@@ -18,6 +18,8 @@ export class RegisterComponent implements OnInit {
   registerForm: FormGroup;
   submitted = false;
   errorMessage = '';
+  showPassword: boolean = false; // Nueva propiedad
+  showConfirmPassword: boolean = false; // Nueva propiedad
 
   constructor(
     private formBuilder: FormBuilder,
@@ -264,5 +266,13 @@ export class RegisterComponent implements OnInit {
     Object.values(this.registerForm.controls).forEach(control => {
       control.markAsTouched();
     });
+  }
+  
+  togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
+  }
+
+  toggleConfirmPasswordVisibility(): void {
+    this.showConfirmPassword = !this.showConfirmPassword;
   }
 }
