@@ -10,16 +10,17 @@
         <div class="text-danger mt-1">
           @if (isControlInvalid('email')) {
           @if (loginForm.controls['email'].errors?.['required']) {
-          <small>Email is required</small>
+          <small>Se requiere un correo electrónico</small>
           }
           @if (loginForm.controls['email'].errors?.['email']) {
-          <small>Enter a valid email</small>
+          <small>Introduce un correo electrónico válido</small>
           }
           }
         </div>
       </div>
 
       <div class="form-group mb-3">
+        <label for="password" class="form-label">Contraseña:</label>
         <div class="password-field">
           <input [type]="showPassword ? 'text' : 'password'" formControlName="password" class="form-control"
             [ngClass]="{ 'is-invalid': isControlInvalid('password') }" placeholder="Contraseña">
@@ -31,7 +32,7 @@
         </div>
       </div>
 
-      <button type="submit" class="btn w-100">Login</button>
+      <button type="submit" class="btn w-100">Iniciar sesión</button>
       @if (errorMessage) {
       <div class="text-danger mt-2">
         {{ errorMessage }}
@@ -40,8 +41,8 @@
     </form>
 
     <div class="text-center mt-3">
-      If you don't have an account, register below
-      <button class="btn w-100" routerLink="/register">Register</button>
+      ¿No tienes cuenta? Regístrate aquí abajo.
+      <button class="btn w-100" routerLink="/register">Registrarse</button>
     </div>
   </div>
 </div>
