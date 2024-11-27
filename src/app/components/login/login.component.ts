@@ -20,6 +20,7 @@ export class LoginComponent implements OnInit {
   errorMessage = '';
   submitted = false;
   returnUrl: string = '';
+  pendingRecipe: string | null = null;  // Nueva propiedad
 
   constructor(
     private authService: AuthService,
@@ -33,15 +34,19 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.returnUrl = '/';  // Configura la URL a la que se redirigirá después del login
+    this.returnUrl = '/';
+    // Guardar la receta en una propiedad del componente
+    this.pendingRecipe = sessionStorage.getItem('lastViewedRecipe');
+    console.log('Login Init - Verificando receta pendiente:', this.pendingRecipe);
   }
+
 
   isControlInvalid(controlName: string): boolean {
     const control = this.loginForm.get(controlName);
     return control ? control.invalid && (control.dirty || control.touched || this.submitted) : false;
   }
 
-  login(): void {
+ /* login(): void {
     this.submitted = true;
 
     if (this.loginForm.invalid) {
@@ -73,8 +78,43 @@ export class LoginComponent implements OnInit {
         this.errorMessage = err.error?.error || 'Credenciales inválidas';
       },
     });
-  }
+  }*/
 
+    login(): void {
+      this.submitted = true;
+  
+      if (this.loginForm.invalid) {
+        this.errorMessage = 'Por favor, rellena el formulario correctamente.';
+        this.markAllFieldsAsTouched();
+        return;
+      }
+  
+      console.log('Login - Formulario válido, iniciando proceso de login...');
+      this.authService.login(this.loginForm.value).subscribe({
+        next: () => {
+          console.log('Login - Login exitoso');
+          
+          // Usar la receta guardada en el componente
+          if (this.pendingRecipe) {
+            console.log('Login - Redirigiendo a receta guardada:', this.pendingRecipe);
+            this.router.navigate(['/recipes', this.pendingRecipe]);
+            sessionStorage.removeItem('lastViewedRecipe');
+          } else {
+            const lastAttemptedUrl = localStorage.getItem('lastAttemptedUrl');
+            if (lastAttemptedUrl) {
+              this.router.navigate([lastAttemptedUrl]);
+              localStorage.removeItem('lastAttemptedUrl');
+            } else {
+              this.router.navigate(['/']);
+            }
+          }
+        },
+        error: (err) => {
+          console.error('Login - Error en login:', err);
+          this.errorMessage = err.error?.error || 'Credenciales inválidas';
+        },
+      });
+    }
  
   markAllFieldsAsTouched() {
     Object.values(this.loginForm.controls).forEach(control => {

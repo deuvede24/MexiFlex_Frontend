@@ -480,6 +480,119 @@ body.modal-open {
       color: #2196F3; // Un azul moderno
     }
   }
+}
 
- 
+// Estilos para el modo preview
+.preview-mode {
+  // Heredamos los estilos base del modal
+  .modal-body {
+    position: relative;
+    overflow: hidden;
+    max-height: 300px;
+
+    @media (max-width: 768px) {
+      max-height: 250px;
+    }
+  }
+
+  .preview-content {
+    position: relative;
+  }
+}
+
+// Overlay con efecto periódico
+.preview-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.9) 70%,
+    rgba(255, 255, 255, 1) 100%
+  );
+  animation: pulseOverlay 3s infinite;
+}
+
+@keyframes pulseOverlay {
+  0% {
+    opacity: 0.7;
+  }
+  50% {
+    opacity: 0.9;
+  }
+  100% {
+    opacity: 0.7;
+  }
+}
+
+// Sección CTA
+.cta-section {
+  position: relative;
+  z-index: 2;
+  padding: 2rem;
+  text-align: center;
+  background: white;
+  border-top: 1px solid $color-gray-light;
+
+  @media (max-width: 768px) {
+    padding: 1.5rem 1rem;
+  }
+
+  .cta-text {
+    font-size: 1.2rem;
+    color: $color-dark;
+    margin-bottom: 1.5rem;
+    font-weight: 500;
+
+    @media (max-width: 768px) {
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+    }
+  }
+
+  .cta-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+
+    @media (max-width: 480px) {
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .btn-register,
+    .btn-login {
+      padding: 0.75rem 1.5rem;
+      border-radius: 2rem;
+      border: none;
+      font-weight: 500;
+      transition: all 0.3s ease;
+
+      &:hover {
+        transform: translateY(-2px);
+      }
+    }
+
+    .btn-register {
+      background-color: $color-traditional;
+      color: white;
+
+      &:hover {
+        background-color: darken($color-traditional, 10%);
+      }
+    }
+
+    .btn-login {
+      background-color: white;
+    color: $color-traditional;
+    border: 2px solid $color-traditional;
+
+    &:hover {
+      background-color: rgba($color-traditional, 0.1);
+      }
+    }
+  }
 }

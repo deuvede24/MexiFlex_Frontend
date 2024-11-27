@@ -12,13 +12,13 @@ import { FavoriteRecipe } from '../../interfaces/favoriteRecipe.interface';
 import { RecipeModalComponent } from '../recipe-modal/recipe-modal.component';
 import { environment } from '../../../environments/environment'
 import { ActivatedRoute } from '@angular/router';
-import { RecipePreviewComponent } from '../recipe-preview/recipe-preview.component';
+
 
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, RouterModule, FormsModule, HeaderComponent, RecipeModalComponent, RecipePreviewComponent],
+  imports: [CommonModule, RouterModule, FormsModule, HeaderComponent, RecipeModalComponent],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
@@ -47,15 +47,13 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.isUserLoggedIn = this.authService.isLoggedIn();
-  
+    
     if (this.isUserLoggedIn) {
       this.loadFavoriteRecipes();
       this.loadAllRecipes();
-  
       this.recipeService.favoriteRecipes$.subscribe(favorites => {
         this.favoriteRecipes = favorites;
       });
-  
       this.recipeService.top3Favorites$.subscribe(top3 => {
         this.top3Favorites = top3;
       });
@@ -63,35 +61,26 @@ export class HomeComponent implements OnInit {
       this.loadGroupedRecipes();
     }
   
+    // Manejar parámetros de ruta
     this.route.params.subscribe(params => {
       if (params['id']) {
         const recipeId = Number(params['id']);
         console.log('Buscando receta con ID:', recipeId);
   
-        // Primero buscar en recetas harcodeadas
+        // Buscar primero en recetas hardcodeadas
         let foundRecipe = this.recipeService.getInitialRecipes()
           .find(r => r.id_recipe === recipeId);
   
         if (foundRecipe) {
           console.log('Receta encontrada en hardcoded:', foundRecipe);
-          if (this.isUserLoggedIn) {
-            this.openRecipeModal(foundRecipe, foundRecipe.category);
-          } else {
-            this.selectedRecipe = foundRecipe;
-            this.showRecipePreview = true; // Nueva propiedad en el componente
-          }
+          this.openRecipeModal(foundRecipe, foundRecipe.category);
         } else {
-          // Buscar en backend sin importar si está logueado o no
+          // Si no está en hardcodeadas, buscar en el backend
           this.recipeService.getRecipeById(recipeId).subscribe({
             next: (response) => {
               if (response && response.data) {
                 console.log('Receta encontrada en backend:', response.data);
-                if (this.isUserLoggedIn) {
-                  this.openRecipeModal(response.data, response.data.category);
-                } else {
-                  this.selectedRecipe = response.data;
-                  this.showRecipePreview = true;
-                }
+                this.openRecipeModal(response.data, response.data.category);
               }
             },
             error: (err) => {
@@ -102,7 +91,6 @@ export class HomeComponent implements OnInit {
       }
     });
   }
-
   
   initializePortions(): void {
     if (this.selectedRecipe) {

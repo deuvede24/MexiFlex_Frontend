@@ -5,8 +5,7 @@ import { RegisterComponent } from './components/register/register.component';
 import { RecipeGeneratorComponent } from './components/recipe-generator/recipe-generator.component';
 import { AuthGuard } from './guards/auth.guard'; // Asumiendo que tienes un AuthGuard
 import { MapComponent } from './components/map/map.component'; // Importa tu MapComponent
-import { RecipePreviewComponent } from './components/recipe-preview/recipe-preview.component';
-import { PreviewGuard } from './guards/preview.guard';
+
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },  // Ruta por defecto que carga HomeComponent
@@ -28,19 +27,13 @@ export const routes: Routes = [
     component: MapComponent,
     canActivate: [AuthGuard]  // Añadido aquí
   },
- /* {
+  {
     path: 'recipes/:id',
     component: HomeComponent
-  },*/
-
-  { 
-    path: 'recipes/:id',
-    component: HomeComponent,
-    resolve: {
-      preview: PreviewGuard  // En vez de canActivate
-    }
   }
- 
+
+
+
   // { path: '**', redirectTo: '' } // Redirección por defecto
 
 

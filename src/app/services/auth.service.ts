@@ -31,7 +31,7 @@ export class AuthService {
   };
 
   // Registrar un usuario (solo tipo "user")
-  register(user: User): Observable<AuthResponse> {
+ /* register(user: User): Observable<AuthResponse> {
     return this.httpClient.post<AuthResponse>(`${this.apiUrl}/auth/register`, user, { withCredentials: true }).pipe(
       tap((response: AuthResponse) => {
         if (response.user.username) {
@@ -58,7 +58,53 @@ export class AuthService {
         console.log('AuthService - Usuario actual guardado en memoria:', this.currentUser); // Debug
       })
     );
-  }
+  }*/
+
+    register(user: User): Observable<AuthResponse> {
+      return this.httpClient.post<AuthResponse>(`${this.apiUrl}/auth/register`, user, { withCredentials: true }).pipe(
+        tap((response: AuthResponse) => {
+          if (response.user.username) {
+            response.user.avatar = this.getAvatarUrl(response.user.username);
+          } else {
+            response.user.avatar = '/images/default-avatar.png';
+          }
+          
+          this.currentUser = response.user;
+          
+          // Verificar si hay una receta pendiente
+          const lastViewedRecipe = sessionStorage.getItem('lastViewedRecipe');
+          if (lastViewedRecipe) {
+            this.router.navigate(['/recipes', lastViewedRecipe]);
+            sessionStorage.removeItem('lastViewedRecipe');
+          } else {
+            this.router.navigate(['/']);
+          }
+        })
+      );
+    }
+  
+    login(user: Login): Observable<AuthResponse> {
+      return this.httpClient.post<AuthResponse>(`${this.apiUrl}/auth/login`, user, { withCredentials: true }).pipe(
+        tap((response: AuthResponse) => {
+          console.log('AuthService - Usuario logueado:', response.user);
+  
+          if (!response.user.avatar && response.user.username) {
+            response.user.avatar = this.getAvatarUrl(response.user.username);
+          }
+          this.currentUser = response.user;
+          console.log('AuthService - Usuario actual guardado en memoria:', this.currentUser);
+          
+          // Verificar si hay una receta pendiente
+          const lastViewedRecipe = sessionStorage.getItem('lastViewedRecipe');
+          if (lastViewedRecipe) {
+            this.router.navigate(['/recipes', lastViewedRecipe]);
+            sessionStorage.removeItem('lastViewedRecipe');
+          } else {
+            this.router.navigate(['/']);
+          }
+        })
+      );
+    }
 
   isLoggedIn(): boolean {
     return !!this.currentUser;

@@ -148,7 +148,7 @@ export class RegisterComponent implements OnInit {
       });
     }*/
       // register.component.ts
-      register(): void {
+   /*   register(): void {
         this.submitted = true;
         if (this.registerForm.invalid) {
           this.errorMessage = 'Please fill out the form correctly.';
@@ -196,7 +196,69 @@ export class RegisterComponent implements OnInit {
             }
           }
         });
-      }
+      }*/
+
+        register(): void {
+          this.submitted = true;
+          if (this.registerForm.invalid) {
+            this.errorMessage = 'Please fill out the form correctly.';
+            this.markAllFieldsAsTouched();
+            return;
+          }
+        
+          console.log('Registro - Iniciando registro...');
+          const { username, email, password } = this.registerForm.value;
+        
+          this.authService.register({ username, email, password }).subscribe({
+            next: (response) => {
+              console.log('Registro - Registro exitoso, respuesta:', response);
+              console.log('Registro - Iniciando login automático...');
+              this.authService.login({ email, password }).subscribe({
+                next: () => {
+                  console.log('Registro - Login automático exitoso');
+                  
+                  // Primero verificamos si hay una receta pendiente
+                  const lastViewedRecipe = sessionStorage.getItem('lastViewedRecipe');
+                  console.log('Registro - Verificando receta pendiente:', lastViewedRecipe);
+                  
+                  if (lastViewedRecipe) {
+                    console.log('Registro - Redirigiendo a receta:', lastViewedRecipe);
+                    this.router.navigate(['/recipes', lastViewedRecipe]);
+                    sessionStorage.removeItem('lastViewedRecipe');
+                  } else {
+                    // Si no hay receta, seguimos con la lógica de lastAttemptedUrl
+                    const lastAttemptedUrl = localStorage.getItem('lastAttemptedUrl');
+                    console.log('Registro - URL recuperada en login automático:', lastAttemptedUrl);
+                    console.log('Registro - Estado de localStorage completo:', JSON.stringify(localStorage));
+        
+                    if (lastAttemptedUrl) {
+                      console.log('Registro - Redirigiendo a URL guardada:', lastAttemptedUrl);
+                      this.router.navigate([lastAttemptedUrl]);
+                      localStorage.removeItem('lastAttemptedUrl');
+                      console.log('Registro - localStorage después de limpiar:', JSON.stringify(localStorage));
+                    } else {
+                      console.log('Registro - No hay URL guardada, redirigiendo a home');
+                      this.router.navigate(['/']);
+                    }
+                  }
+                },
+                error: (err) => {
+                  console.error('Registro - Error en login automático:', err);
+                  this.errorMessage = 'Registration successful, but login failed. Please try logging in manually.';
+                  this.router.navigate(['/login']);
+                }
+              });
+            },
+            error: (err) => {
+              console.error('Registro - Error en registro:', err);
+              if (err.status === 400) {
+                this.errorMessage = 'The user already exists. Please try with another email.';
+              } else {
+                this.errorMessage = 'An unknown error occurred. Please try again.';
+              }
+            }
+          });
+        }
       
   markAllFieldsAsTouched() {
     Object.values(this.registerForm.controls).forEach(control => {

@@ -135,7 +135,7 @@ export class RecipeService {
   // Todas las recetas disponibles
   recipes: Recipe[] = [
     {
-      id_recipe: 1,
+      id_recipe: 21,
       title: 'Tacos de Alambre',
       description: 'Deliciosos tacos de alambre con carne asada, pimientos y cebolla.',
       preparation_time: 30,
@@ -153,7 +153,7 @@ export class RecipeService {
       initialAverageRating: 4.5
     },
     {
-      id_recipe: 2,
+      id_recipe: 22,
       title: "Tacos de Alambre",
       description: "Tacos de tofu marinado",
       preparation_time: 12,
@@ -171,7 +171,7 @@ export class RecipeService {
       initialAverageRating: 4.5
     },
     {
-      id_recipe: 3,
+      id_recipe: 23,
       title: 'Tacos de Chicharrón',
       description: 'Chicharrón crujiente acompañado de salsa verde y aguacate.',
       preparation_time: 35,
@@ -189,7 +189,7 @@ export class RecipeService {
       initialAverageRating: 4.5
     },
     {
-      id_recipe: 4,
+      id_recipe: 24,
       title: 'Tacos de Chicharrón',
       description: 'Tacos de chicharrón vegano con aguacate.',
       preparation_time: 45,  // Cambiamos el tiempo de preparación

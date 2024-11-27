@@ -4,6 +4,7 @@ import { RecipeService } from '../../services/recipe.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth.service'; // Import AuthService
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-recipe-modal',
@@ -17,6 +18,7 @@ export class RecipeModalComponent implements OnInit {
   @Input() category: string = '';
   @Input() isUserLoggedIn: boolean = false;
   @Input() portions: number = 1; // Asegúrate de que `portions` esté declarado aquí con @Input
+  @Input() isSharedView: boolean = false; // Nueva propiedad para identificar si es vista compartida
   @Output() closeModalEvent = new EventEmitter<void>();
 
   originalIngredients: RecipeIngredient[] = [];
@@ -27,10 +29,15 @@ export class RecipeModalComponent implements OnInit {
   isLoadingRating: boolean = false;
   ratingErrorMessage: string = '';
 
-  constructor(public recipeService: RecipeService, private authService: AuthService) { }
+  // Nueva propiedad para controlar si es una receta hardcodeada
+  isHardcodedRecipe: boolean = false;
+
+  constructor(public recipeService: RecipeService, private authService: AuthService, private router: Router) { }
 
   ngOnInit(): void {
     if (this.recipe) {
+      // Verificar si es una receta hardcodeada
+      this.isHardcodedRecipe = this.recipe.id_recipe >= 21 && this.recipe.id_recipe <= 24;
       this.initializeModal();
     }
 
@@ -163,62 +170,110 @@ export class RecipeModalComponent implements OnInit {
     this.closeModalEvent.emit();
   }
 
-async shareRecipe(): Promise<void> {
-  if (!this.recipe) return;
+  /*async shareRecipe(): Promise<void> {
+    if (!this.recipe) return;
 
-  const shareUrl = `${window.location.origin}/recipes/${this.recipe.id_recipe}`;
-  const shareData = {
-    title: this.recipe.title,
-    text: `¡Mira esta receta de ${this.recipe.title}!`,
-    url: shareUrl
-  };
-  
-  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    const shareUrl = `${window.location.origin}/recipes/${this.recipe.id_recipe}`;
+    const shareData = {
+      title: this.recipe.title,
+      text: `¡Mira esta receta de ${this.recipe.title}!`,
+      url: shareUrl
+    };
 
-  if (isMobile && navigator.share) {
-    try {
-      await navigator.share(shareData);
-      this.showShareToast('¡Compartido exitosamente!');
-    } catch (error) {
-      console.log('Error compartiendo:', error);
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+    if (isMobile && navigator.share) {
+      try {
+        await navigator.share(shareData);
+        this.showShareToast('¡Compartido exitosamente!');
+      } catch (error) {
+        console.log('Error compartiendo:', error);
+        await navigator.clipboard.writeText(shareUrl);
+        this.showShareToast('¡Enlace copiado exitosamente!');
+      }
+    } else {
       await navigator.clipboard.writeText(shareUrl);
       this.showShareToast('¡Enlace copiado exitosamente!');
     }
-  } else {
-    await navigator.clipboard.writeText(shareUrl);
-    this.showShareToast('¡Enlace copiado exitosamente!');
+  }*/
+
+  async shareRecipe(): Promise<void> {
+    if (!this.recipe) return;
+
+    const shareUrl = `${window.location.origin}/recipes/${this.recipe.id_recipe}`;
+    const shareData = {
+      title: this.recipe.title,
+      text: `¡Mira esta receta de ${this.recipe.title}!`,
+      url: shareUrl
+    };
+
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+    try {
+      if (isMobile && navigator.share) {
+        await navigator.share(shareData);
+        this.showShareToast('¡Compartido exitosamente!');
+      } else {
+        await navigator.clipboard.writeText(shareUrl);
+        this.showShareToast('¡Enlace copiado exitosamente!');
+      }
+    } catch (error) {
+      console.error('Error al compartir:', error);
+      await navigator.clipboard.writeText(shareUrl);
+      this.showShareToast('¡Enlace copiado exitosamente!');
+    }
   }
-}
+  // Método para manejar el login desde la vista compartida
+  navigateToLogin(): void {
+    if (this.recipe) {
+      console.log('Modal - Guardando receta en sessionStorage:', this.recipe.id_recipe);
+      sessionStorage.setItem('lastViewedRecipe', this.recipe.id_recipe.toString());
+      // Pequeño delay antes de navegar para asegurar que se guarda
+      setTimeout(() => {
+        this.router.navigate(['/login']);
+      }, 100);
+    } else {
+      this.router.navigate(['/login']);
+    }
+  }
 
-private showShareToast(message: string): void {
-  const toastContainer = document.querySelector('.toast-container') || document.createElement('div');
-  toastContainer.className = 'toast-container';
+  navigateToRegister(): void {
+    if (this.recipe) {
+      // Guardar el ID de la receta en sessionStorage
+      sessionStorage.setItem('lastViewedRecipe', this.recipe.id_recipe.toString());
+      this.router.navigate(['/register']);
+    }
+  }
 
-  const toast = document.createElement('div');
-  toast.className = 'toast-notification';
-  toast.innerHTML = `
+  private showShareToast(message: string): void {
+    const toastContainer = document.querySelector('.toast-container') || document.createElement('div');
+    toastContainer.className = 'toast-container';
+
+    const toast = document.createElement('div');
+    toast.className = 'toast-notification';
+    toast.innerHTML = `
     <div class="toast-content">
       <i class="fas fa-check-circle"></i>
       <span>${message}</span>
     </div>
   `;
 
-  if (!document.querySelector('.toast-container')) {
-    document.body.appendChild(toastContainer);
-  }
-  toastContainer.appendChild(toast);
+    if (!document.querySelector('.toast-container')) {
+      document.body.appendChild(toastContainer);
+    }
+    toastContainer.appendChild(toast);
 
-  setTimeout(() => {
-    toast.classList.add('show');
     setTimeout(() => {
-      toast.classList.remove('show');
+      toast.classList.add('show');
       setTimeout(() => {
-        toastContainer.removeChild(toast);
-        if (toastContainer.children.length === 0) {
-          document.body.removeChild(toastContainer);
-        }
-      }, 300);
-    }, 2000);
-  }, 100);
-}
+        toast.classList.remove('show');
+        setTimeout(() => {
+          toastContainer.removeChild(toast);
+          if (toastContainer.children.length === 0) {
+            document.body.removeChild(toastContainer);
+          }
+        }, 300);
+      }, 2000);
+    }, 100);
+  }
 }
