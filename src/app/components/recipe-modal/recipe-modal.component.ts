@@ -20,6 +20,7 @@ export class RecipeModalComponent implements OnInit {
   @Input() portions: number = 1; // Asegúrate de que `portions` esté declarado aquí con @Input
   @Input() isSharedView: boolean = false; // Nueva propiedad para identificar si es vista compartida
   @Output() closeModalEvent = new EventEmitter<void>();
+  
 
   originalIngredients: RecipeIngredient[] = [];
   currentRating: number = 0;
@@ -34,7 +35,7 @@ export class RecipeModalComponent implements OnInit {
 
   constructor(public recipeService: RecipeService, private authService: AuthService, private router: Router) { }
 
-  ngOnInit(): void {
+  /*ngOnInit(): void {
     if (this.recipe) {
       // Verificar si es una receta hardcodeada
       this.isHardcodedRecipe = this.recipe.id_recipe >= 21 && this.recipe.id_recipe <= 24;
@@ -45,7 +46,28 @@ export class RecipeModalComponent implements OnInit {
     this.recipeService.favoriteRecipes$.subscribe((favorites) => {
       this.favoriteRecipes = favorites;
     });
-  }
+  }*/
+
+    ngOnInit(): void {
+      if (this.recipe) {
+        this.isHardcodedRecipe = this.recipe.id_recipe >= 21 && this.recipe.id_recipe <= 24;
+    
+        // Solo inicializar datos completos si el usuario está logueado O es una receta hardcodeada
+        if (this.isUserLoggedIn || this.isHardcodedRecipe) {
+          this.initializeModal();
+        } else {
+          // Para usuarios no logueados, solo inicializar lo básico
+          this.initializePortions(); // Solo las porciones básicas
+        }
+    
+        // Solo suscribirse a favoritos si el usuario está logueado
+        if (this.isUserLoggedIn) {
+          this.recipeService.favoriteRecipes$.subscribe((favorites) => {
+            this.favoriteRecipes = favorites;
+          });
+        }
+      }
+    }
 
   private initializeModal(): void {
     this.initializePortions();
@@ -199,6 +221,19 @@ export class RecipeModalComponent implements OnInit {
 
   async shareRecipe(): Promise<void> {
     if (!this.recipe) return;
+
+      // Guardar datos para preview
+  const previewData = {
+    id_recipe: this.recipe.id_recipe,
+    title: this.recipe.title,
+    image: this.recipe.image,
+    description: this.recipe.description,
+    preparation_time: this.recipe.preparation_time,
+    serving_size: this.recipe.serving_size,
+    RecipeIngredients: this.recipe.RecipeIngredients.slice(0, 3),
+    category: this.recipe.category
+  };
+  sessionStorage.setItem(`recipe_preview_${this.recipe.id_recipe}`, JSON.stringify(previewData));
 
     const shareUrl = `${window.location.origin}/recipes/${this.recipe.id_recipe}`;
     const shareData = {

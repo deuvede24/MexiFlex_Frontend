@@ -9,6 +9,7 @@ import { tap } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { AuthService } from './auth.service'; // Import AuthService
 import { GenerateRecipeRequest, GenerateRecipeResponse } from '../interfaces/recipe-generator.interface.ts';
+import { map } from 'rxjs/operators';
 
 
 @Injectable({
@@ -100,9 +101,38 @@ export class RecipeService {
     return this.http.get<{ ratings: number[] }>(`${this.ratingUrl}/${recipeId}/ratings`, { withCredentials: true });
   }
   // Obtener una receta por ID
-  getRecipeById(id: number): Observable<{ code: number; message: string; data: Recipe }> {
+ /* getRecipeById(id: number): Observable<{ code: number; message: string; data: Recipe }> {
     return this.http.get<{ code: number; message: string; data: Recipe }>(`${this.apiUrl}/${id}`, { withCredentials: true });
-  }
+  }*/
+   /* getRecipeById(id: number): Observable<any> {
+      // Primero verificar si es hardcodeada
+      const hardcodedRecipe = this.getInitialRecipes().find(r => r.id_recipe === id);
+      if (hardcodedRecipe) {
+        return of({ code: 200, message: 'success', data: hardcodedRecipe });
+      }
+    
+      // Si viene de un enlace compartido y no está logueado
+      const isSharedLink = window.location.pathname.includes('/recipes/');
+      if (isSharedLink && !this.authService.isLoggedIn()) {
+        return this.http.get<any>(`${this.apiUrl}/${id}/shared`);
+      }
+    
+      // Para todos los demás casos, usar la ruta protegida normal
+      return this.http.get<any>(`${this.apiUrl}/${id}`, { withCredentials: true });
+    }*/
+      getRecipeById(id: number): Observable<any> {
+        const hardcodedRecipe = this.getInitialRecipes().find(r => r.id_recipe === id);
+        if (hardcodedRecipe) {
+          return of({ code: 200, message: 'success', data: hardcodedRecipe });
+        }
+      
+        const isSharedLink = window.location.pathname.includes('/recipes/');
+        if (isSharedLink && !this.authService.isLoggedIn()) {
+          return this.http.get<any>(`${this.apiUrl}/${id}/shared`);
+        }
+      
+        return this.http.get<any>(`${this.apiUrl}/${id}`, { withCredentials: true });
+      }
 
   // Agregar una nueva receta
   addRecipe(recipe: Recipe): Observable<{ code: number; message: string; data: Recipe }> {
@@ -280,7 +310,15 @@ export class RecipeService {
   }
 
   // Obtener el promedio de calificación de una receta
+/* getRecipeRating(recipeId: number): Observable<{ averageRating: number }> {
+    return this.http.get<{ averageRating: number }>(`${this.ratingUrl}/${recipeId}/average`, { withCredentials: true });
+  }*/
+
   getRecipeRating(recipeId: number): Observable<{ averageRating: number }> {
+    const isSharedLink = window.location.pathname.includes('/recipes/');
+    if (isSharedLink && !this.authService.isLoggedIn()) {
+      return of({ averageRating: 0 });
+    }
     return this.http.get<{ averageRating: number }>(`${this.ratingUrl}/${recipeId}/average`, { withCredentials: true });
   }
 

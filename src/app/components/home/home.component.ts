@@ -65,21 +65,18 @@ export class HomeComponent implements OnInit {
     this.route.params.subscribe(params => {
       if (params['id']) {
         const recipeId = Number(params['id']);
-        console.log('Buscando receta con ID:', recipeId);
-  
-        // Buscar primero en recetas hardcodeadas
+        
+        // Primero buscar en hardcodeadas
         let foundRecipe = this.recipeService.getInitialRecipes()
           .find(r => r.id_recipe === recipeId);
-  
+    
         if (foundRecipe) {
-          console.log('Receta encontrada en hardcoded:', foundRecipe);
           this.openRecipeModal(foundRecipe, foundRecipe.category);
         } else {
-          // Si no está en hardcodeadas, buscar en el backend
+          // Si no está en hardcodeadas, intentar siempre del backend
           this.recipeService.getRecipeById(recipeId).subscribe({
             next: (response) => {
               if (response && response.data) {
-                console.log('Receta encontrada en backend:', response.data);
                 this.openRecipeModal(response.data, response.data.category);
               }
             },
@@ -89,8 +86,7 @@ export class HomeComponent implements OnInit {
           });
         }
       }
-    });
-  }
+    });}
   
   initializePortions(): void {
     if (this.selectedRecipe) {

@@ -8,6 +8,7 @@ import { Recipe, RecipeIngredient } from '../../interfaces/recipe.interface';
 import { RecipeModalComponent } from '../recipe-modal/recipe-modal.component';
 import { NotificationService } from '../../services/notification.service';
 
+
 @Component({
   selector: 'app-navbar',
   standalone: true,
@@ -116,7 +117,7 @@ export class NavbarComponent implements OnInit {
             };
     
             // Guardamos los ingredientes originales
-            this.originalIngredients = response.data.RecipeIngredients.map(ingredient => ({
+            this.originalIngredients = response.data.RecipeIngredients.map((ingredient: RecipeIngredient) => ({
               ...ingredient,
               quantity: ingredient.quantity
             }));

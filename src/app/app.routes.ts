@@ -27,9 +27,21 @@ export const routes: Routes = [
     component: MapComponent,
     canActivate: [AuthGuard]  // Añadido aquí
   },
+  /*{
+     path: 'recipes/:id',
+     component: HomeComponent,
+     data: { revalidate: 0 } // Deshabilita el caché
+   }*/
   {
     path: 'recipes/:id',
-    component: HomeComponent
+    component: HomeComponent,
+    data: {
+      revalidate: 0,
+      isSharedRecipe: true
+    },
+    resolve: {
+      keepAlive: () => true
+    }
   }
 
 
