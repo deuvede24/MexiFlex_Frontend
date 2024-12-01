@@ -1,7 +1,37 @@
-<app-navbar></app-navbar>
+<app-navbar 
+  [accountModal]="accountModalRef" 
+  (openAuth)="openAuthModal()">
+</app-navbar>
+
 <router-outlet></router-outlet>
 
-<!-- Modal de error -->
+<!-- Modal de autenticación -->
+<div class="modal auth-modal" tabindex="-1" 
+     [class.show]="isAuthModalOpen" 
+     [style.display]="isAuthModalOpen ? 'block' : 'none'" 
+     (click)="closeAuthModal()">
+  <div class="modal-dialog" (click)="$event.stopPropagation()">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Autenticación</h5>
+        <button type="button" class="btn-close" (click)="closeAuthModal()"></button>
+      </div>
+      <div class="modal-body">
+        <button routerLink="/login" class="btn w-100 mb-2" (click)="closeAuthModal()">
+          Iniciar sesión
+        </button>
+        <button routerLink="/register" class="btn w-100" (click)="closeAuthModal()">
+          Registrarse
+        </button>
+        <p class="register-legend">
+          Al registrarte, podrás disfrutar de beneficios como guardar recetas, 
+          recibir recomendaciones personalizadas y más.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- Modal de error -->
 <div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
@@ -24,4 +54,6 @@
     </div>
   </div>
 </div>
+
+<app-account-modal #accountModalRef></app-account-modal>
 <app-footer></app-footer>

@@ -81,3 +81,110 @@
     }
   }
 }
+/* Estilos específicos para el modal de autenticación */
+.modal.auth-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1900;
+
+  &.show {
+    display: block;
+  }
+
+  .modal-dialog {
+    margin: 15vh auto;
+    max-width: 400px;
+    
+    @media (max-width: 576px) {
+      margin: 10vh 15px;
+    }
+  }
+
+  .modal-content {
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: none;
+      padding-bottom: 15px;
+      background-color: transparent; // Quitamos el fondo naranja
+      margin: 0; // Quitamos los márgenes negativos
+      padding: 0 0 15px 0; // Ajustamos el padding
+
+      .modal-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #333; // Cambiamos a texto negro
+      }
+
+      .btn-close {
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        color: #888; // Color gris para el botón de cerrar
+        cursor: pointer;
+        filter: none; // Quitamos el filtro de color
+        opacity: 1;
+
+        &:hover {
+          color: #FF6200; // Naranja al hover
+        }
+      }
+    }
+
+    .modal-body {
+      padding: 20px 0;
+      
+      .btn {
+        background-color: #FF6200;
+        color: #fff;
+        border-radius: 20px;
+        padding: 10px 20px;
+        font-size: 1rem;
+        width: 100%;
+        margin-bottom: 15px;
+        text-align: center;
+        transition: all 0.3s ease;
+        border: none;
+        font-weight: 500;
+
+        &:hover {
+          background-color: #038009;
+          transform: scale(1.05);
+        }
+
+        &:active {
+          transform: scale(0.95);
+        }
+
+        &:focus {
+          outline: none;
+          box-shadow: 0 0 0 3px rgba(3, 128, 9, 0.5);
+        }
+      }
+
+      .register-legend {
+        font-size: 0.9rem;
+        color: #888;
+        text-align: center;
+        margin-top: 10px;
+      }
+    }
+  }
+}
+
+/* Asegurarnos que el backdrop está por debajo del modal pero por encima del resto */
+.modal-backdrop {
+  z-index: 1850;
+}

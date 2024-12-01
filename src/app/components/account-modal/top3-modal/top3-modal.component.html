@@ -1,0 +1,44 @@
+<div class="modal favorites-modal" tabindex="-1" [ngClass]="{ 'show': isOpen }" (click)="close()">
+    <div class="modal-dialog" (click)="$event.stopPropagation()">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Tus Top 3 Recetas</h5>
+          <button type="button" class="btn-close" (click)="close()">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="mini-cards-container">
+            @if (top3Favorites.length > 0) {
+              @for (recipe of top3Favorites; track $index) {
+                <div class="mini-card">
+                  <img [src]="recipeService.getImageUrl(recipe.image || '')" 
+                       alt="{{ recipe.title }}" 
+                       class="recipe-img" />
+                  <div class="recipe-details">
+                    <h4>{{ recipe.title }}</h4>
+                    <p>Tiempo de preparación: {{ recipe.preparation_time }} min</p>
+                    <button class="btn-ver-mas" (click)="openRecipeModal(recipe)">
+                      Ver más
+                    </button>
+                  </div>
+                </div>
+              }
+            } @else {
+              <p>No tienes recetas en tus favoritos.</p>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  @if (selectedRecipe) {
+    <app-recipe-modal
+      [recipe]="selectedRecipe"
+      [category]="selectedCategory"
+      [portions]="selectedPortions"
+      [isUserLoggedIn]="true"
+      (closeModalEvent)="closeRecipeModal()">
+    </app-recipe-modal>
+  }

@@ -1,0 +1,19 @@
+<div class="modal account-modal" tabindex="-1" [ngClass]="{ 'show': isOpen }" (click)="close()">
+    <div class="modal-dialog" (click)="$event.stopPropagation()">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Tu cuenta</h5>
+          <button type="button" class="btn-close" (click)="close()">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <h5>Hola, {{ username }}!</h5>
+          <button class="btn" (click)="openTop3()">Tus recetas Top 3</button>
+          <button class="btn btn-outline-danger" (click)="logout()">Cerrar sesión</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <app-top3-modal #top3Modal></app-top3-modal>

@@ -1,14 +1,18 @@
 <nav class="navbar navbar-expand-lg" [ngClass]="{ 'scrolled': scrolled }">
   <div class="container-fluid">
+    <!-- Logo -->
     <a class="navbar-brand" routerLink="/">
-      <img src='/icons/Food-Taco-icon.png' alt="Mexi-Flex">
+      <img src="/icons/Food-Taco-icon.png" alt="Mexi-Flex">
       <span class="logo-text">MexiFlex</span>
     </a>
 
+    <!-- Navbar toggler (para móviles) -->
     <button class="navbar-toggler" type="button" (click)="toggleMenu()" [attr.aria-expanded]="isMenuOpen">
       <i class="fa-solid fa-bars navbar-toggler-icon" [class.d-none]="isMenuOpen"></i>
       <i class="fa-solid fa-x close-icon" [class.d-none]="!isMenuOpen"></i>
     </button>
+
+    <!-- Links del menú -->
     <div class="collapse navbar-collapse" id="navbarNav" [class.show]="isMenuOpen" (click)="closeMenu()">
       <ul class="navbar-nav mx-auto">
         <li class="nav-item">
@@ -17,8 +21,6 @@
           </a>
         </li>
         <li class="nav-item">
-          <!-- <a class="nav-link" routerLink="/eventos" (click)="closeMenu()">-->
-          <!-- Después -->
           <a class="nav-link" (click)="navigateToRecipesAndCloseMenu()">
             <i class="fas fa-star"></i> Más Recetas
           </a>
@@ -31,90 +33,16 @@
       </ul>
     </div>
 
+    <!-- Botones de autenticación o avatar -->
     <div class="nav-auth-buttons">
       @if (authService.isLoggedIn()) {
-      <img [src]="getAvatarUrl()" alt="avatar" class="user-avatar" (click)="openAccountModal()">
+        <img [src]="getAvatarUrl()" 
+             alt="avatar" 
+             class="user-avatar" 
+             (click)="openAccountModal()">
       } @else {
-      <i class="fa fa-user" (click)="openAuthModal()"></i>
+        <i class="fa fa-user" (click)="openAuth.emit()"></i>
       }
     </div>
   </div>
-
-  <!-- Modal de autenticación -->
-  <div class="modal auth-modal" tabindex="-1" [ngClass]="{ 'show': isAuthModalOpen }" (click)="closeAuthModal()">
-    <div class="modal-dialog" (click)="$event.stopPropagation()">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Autenticación</h5>
-          <button type="button" class="btn-close" (click)="closeAuthModal()"></button>
-        </div>
-        <div class="modal-body">
-          <button routerLink="/login" class="btn w-100 mb-2" (click)="closeAuthModal()">Iniciar sesión</button>
-          <button routerLink="/register" class="btn w-100" (click)="closeAuthModal()">Registrarse</button>
-          <p class="register-legend">Al registrarte, podrás disfrutar de beneficios como guardar recetas, recibir
-            recomendaciones personalizadas y más.</p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal de cuenta -->
-  <div class="modal account-modal" tabindex="-1" [ngClass]="{ 'show': isAccountModalOpen }"
-    (click)="closeAccountModal()">
-    <div class="modal-dialog" (click)="$event.stopPropagation()">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Tu cuenta</h5>
-          <button type="button" class="btn-close" (click)="closeAccountModal()">
-            <i class="fas fa-times"></i>
-          </button>
-        </div>
-        <div class="modal-body">
-          <h5>Hola, {{ getUsername() }}!</h5>
-          <button class="btn " (click)="goToTop3()">Tus recetas Top 3</button>
-          <button class="btn btn-outline-danger" (click)="logout()">Cerrar sesión</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal Top 3 Recetas Favoritas -->
-  <div class="modal favorites-modal" tabindex="-1" [ngClass]="{ 'show': isTop3ModalOpen }" (click)="closeTop3Modal()">
-    <div class="modal-dialog" (click)="$event.stopPropagation()">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Tus Top 3 Recetas</h5>
-          <button type="button" class="btn-close" (click)="closeTop3Modal()">
-            <i class="fas fa-times"></i>
-          </button>
-        </div>
-        <div class="modal-body">
-          <div class="mini-cards-container">
-            @if (top3Favorites.length > 0) {
-            @for (recipe of top3Favorites; track $index) {
-            <div class="mini-card">
-              <img [src]="recipeService.getImageUrl(recipe.image || '')" alt="{{ recipe.title }}" class="recipe-img" />
-              <div class="recipe-details">
-                <h4>{{ recipe.title }}</h4>
-                <p>Tiempo de preparación: {{ recipe.preparation_time }} min</p>
-                <button class="btn-ver-mas" (click)="openRecipeModal(recipe)">
-                  Ver más
-                </button>
-              </div>
-            </div>
-            }
-            } @else {
-            <p>No tienes recetas en tus favoritos.</p>
-            }
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- Recipe Modal -->
-  @if (selectedRecipe) {
-  <app-recipe-modal [recipe]="selectedRecipe" [category]="selectedCategory" [portions]="selectedPortions"
-    [isUserLoggedIn]="authService.isLoggedIn()" (closeModalEvent)="closeRecipeModal()">
-  </app-recipe-modal>
-  }
 </nav>
