@@ -1,6 +1,9 @@
 @if (!startedGenerator) {
-  <div class="intro-modal">
-  <div class="modal-content">
+  <div class="intro-modal-backdrop" (click)="startGenerator($event)">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+    <button type="button" class="btn-close-top" (click)="startGenerator()">
+      <i class="fas fa-times"></i>
+    </button>
     <h2>Bienvenido al Generador de Recetas con IA</h2>
     <p>Descubre deliciosas recetas personalizadas según tus ingredientes y preferencias. Nuestro generador de recetas impulsado por IA te guiará paso a paso para crear platos únicos y sorprendentes.</p>
     <button class="start-button" (click)="startGenerator()">Comenzar</button>

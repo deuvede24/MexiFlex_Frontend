@@ -378,8 +378,15 @@ export class RecipeGeneratorComponent implements OnInit, OnDestroy {
 
    return suggestions;
  }
- startGenerator() {
+ /*startGenerator() {
   this.startedGenerator = true;
+}*/
+// En recipe-generator.component.ts
+startGenerator(event?: MouseEvent): void {
+  // Si no hay evento (botón Comenzar o X) o si el evento target es la capa de fondo
+  if (!event || (event.target as HTMLElement).classList.contains('intro-modal-backdrop')) {
+    this.startedGenerator = true;
+  }
 }
  closeModal(): void {
    this.generatedRecipe$.next(null);
