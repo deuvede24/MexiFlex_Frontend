@@ -57,8 +57,9 @@ export class RecipeGeneratorComponent implements OnInit, OnDestroy {
  //
  private loadingMessages = [
   'Estamos preparando tu receta...',
-  'Ya casi esá lista...',
-  'Ultimando los detalles!'
+  'Ya casi está lista...',
+  'Ultimando los detalles!',
+  'Últimos segundos!'
 ];
 private messageInterval: any;
 
