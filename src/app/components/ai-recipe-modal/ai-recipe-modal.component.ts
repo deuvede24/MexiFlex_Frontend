@@ -21,6 +21,11 @@ export class AIRecipeModalComponent {
       console.log('Full recipe:', this.recipe);
     }
   }
+  ngOnInit(): void {
+    if (this.recipe) {
+      document.body.classList.add('modal-open'); // Bloquea el scroll al abrir el modal
+    }
+  }
 
   // En ai-recipe-modal.component.ts
   get isVegetarianRecipe(): boolean {
@@ -42,6 +47,7 @@ export class AIRecipeModalComponent {
 
 
   closeModal(): void {
+    document.body.classList.remove('modal-open'); // Reactiva el scroll al cerrar el modal
     this.closeModalEvent.emit();
   }
 }

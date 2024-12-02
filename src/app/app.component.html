@@ -14,7 +14,10 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">Autenticación</h5>
-        <button type="button" class="btn-close" (click)="closeAuthModal()"></button>
+        <button type="button" class="btn-close" (click)="closeAuthModal()">
+          <i class="fas fa-times"></i>
+        </button>
+        
       </div>
       <div class="modal-body">
         <button routerLink="/login" class="btn w-100 mb-2" (click)="closeAuthModal()">

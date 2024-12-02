@@ -132,13 +132,13 @@
         background: none;
         border: none;
         font-size: 1.5rem;
-        color: #888; // Color gris para el botón de cerrar
+        color: #888 !important; // Color gris para el botón de cerrar
         cursor: pointer;
         filter: none; // Quitamos el filtro de color
         opacity: 1;
 
         &:hover {
-          color: #FF6200; // Naranja al hover
+          color: #FF6200 !important; // Naranja al hover
         }
       }
     }
@@ -183,6 +183,8 @@
     }
   }
 }
+
+
 
 /* Asegurarnos que el backdrop está por debajo del modal pero por encima del resto */
 .modal-backdrop {

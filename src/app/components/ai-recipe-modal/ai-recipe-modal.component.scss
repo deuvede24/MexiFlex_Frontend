@@ -17,6 +17,7 @@
 
   body {
     overflow: hidden;
+    max-height: none;
   }
 }
 
@@ -51,6 +52,7 @@ $color-gray-light: #f5f5f5;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   position: relative;
+  max-height: none;
 }
 
 // Header y contenido
@@ -296,4 +298,7 @@ $color-gray-light: #f5f5f5;
     }
   }
 }
+}
+body.modal-open {
+  overflow: hidden;
 }

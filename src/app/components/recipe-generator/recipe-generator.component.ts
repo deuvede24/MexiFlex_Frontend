@@ -2,12 +2,12 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, FormControl } from '@angular/forms';
 import { BehaviorSubject, Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, finalize } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { RecipeService } from '../../services/recipe.service';
 import { AuthService } from '../../services/auth.service';
 import { NotificationService } from '../../services/notification.service';
-import { GeneratedRecipe, GenerateRecipeRequest, RecipeTips } from '../../interfaces/recipe-generator.interface.ts';
+import { GeneratedRecipe, GenerateRecipeRequest, RecipeTips, GenerateRecipeResponse } from '../../interfaces/recipe-generator.interface.ts';
 import { MEXICAN_INGREDIENTS, RECIPE_CUSTOMIZATIONS } from './config';
 import { RecipeTypeCustomization } from './config/recipe-customizations.config';
 import { AIRecipeModalComponent } from '../ai-recipe-modal/ai-recipe-modal.component';
@@ -17,6 +17,23 @@ interface IngredientCategory {
  icon: string;
  ingredients: string[];
 }
+interface SeasoningLimit {
+  baseQuantity: string;
+  unit: string;
+}
+
+const BASE_SEASONING_QUANTITIES: Record<string, SeasoningLimit> = {
+  'Ajo': { baseQuantity: '4', unit: 'dientes' },
+  'Cebolla en Polvo': { baseQuantity: '2', unit: 'cucharaditas' },
+  'Comino': { baseQuantity: '1', unit: 'cucharadita' },
+  'Chile en Polvo': { baseQuantity: '2', unit: 'cucharaditas' },
+  'Orégano Mexicano': { baseQuantity: '2', unit: 'cucharaditas' },
+  'Epazote': { baseQuantity: '4', unit: 'hojas' },
+  'Pimienta': { baseQuantity: '1', unit: 'cucharadita' },
+  'Sal': { baseQuantity: '2', unit: 'cucharaditas' },
+  'Limón': { baseQuantity: '2', unit: 'piezas' },
+  'Chipotle': { baseQuantity: '2', unit: 'piezas' }
+};
 
 @Component({
  selector: 'app-recipe-generator',
@@ -36,6 +53,14 @@ export class RecipeGeneratorComponent implements OnInit, OnDestroy {
    'camarón': 'corazones de palmito'
  };
  startedGenerator = false;
+
+ //
+ private loadingMessages = [
+  'Estamos preparando tu receta...',
+  'Ya casi esá lista...',
+  'Ultimando los detalles!'
+];
+private messageInterval: any;
 
  // Cache de valores frecuentes
  private readonly vegetarianProteins = new Set(['tofu', 'seitán', 'tempeh']);
@@ -195,7 +220,7 @@ export class RecipeGeneratorComponent implements OnInit, OnDestroy {
  }
 
  // Generar receta
- generateRecipe(): void {
+ /*generateRecipe(): void {
    if (!this.authService.isLoggedIn()) {
      this.notificationService.showError(
        'Para generar recetas necesitas iniciar sesión o registrarte'
@@ -254,7 +279,106 @@ export class RecipeGeneratorComponent implements OnInit, OnDestroy {
        },
        complete: () => this.loading$.next(false)
      });
- }
+ }*/
+
+     generateRecipe(): void {
+      if (!this.authService.isLoggedIn()) {
+        this.notificationService.showError(
+          'Para generar recetas necesitas iniciar sesión o registrarte'
+        );
+        this.router.navigate(['/login']);
+        return;
+      }
+    
+      if (!this.canProceed()) return;
+    
+      this.loading$.next(true);
+      let messageIndex = 0;
+      this.loadingMessage$.next(this.loadingMessages[messageIndex]);
+    
+      this.messageInterval = setInterval(() => {
+        messageIndex = (messageIndex + 1) % this.loadingMessages.length;
+        this.loadingMessage$.next(this.loadingMessages[messageIndex]);
+      }, 15000);
+    
+      const recipeType = this.recipeForm.get('recipeType')?.value;
+      const selectedIngredientsArray = Array.from(this.selectedIngredients$.value);
+    
+      const payload: GenerateRecipeRequest = {
+        recipeType,
+        ingredients: {
+          proteins: selectedIngredientsArray.filter(ing => 
+            MEXICAN_INGREDIENTS.proteins.includes(ing)
+          ),
+          vegetables: selectedIngredientsArray.filter(ing => 
+            MEXICAN_INGREDIENTS.vegetables.includes(ing)
+          ),
+          carbs: selectedIngredientsArray.filter(ing => 
+            MEXICAN_INGREDIENTS.carbohidratos.includes(ing)
+          ),
+          fats: selectedIngredientsArray.filter(ing => 
+            MEXICAN_INGREDIENTS.condimentos.includes(ing)
+          )
+        }
+      };
+    
+      this.recipeService.generateRecipe(payload)
+        .pipe(
+          takeUntil(this.destroy$),
+          finalize(() => {
+            clearInterval(this.messageInterval);
+            this.loading$.next(false);
+          })
+        )
+        .subscribe({
+          next: (response: GenerateRecipeResponse) => {  // Añadir el tipo aquí
+            if (response.code === 1) {
+              const customization = RECIPE_CUSTOMIZATIONS[recipeType];
+              
+              // Primero ajustamos las cantidades
+              const adjustedIngredients = this.adjustSeasoningQuantities(
+                response.data.RecipeIngredients || []
+              );
+              
+              // Luego enriquecemos los pasos
+              const enrichedSteps = this.enrichStepsWithCustomization(
+                response.data.steps || [],
+                customization,
+                adjustedIngredients
+              );
+        
+              const generatedRecipe: GeneratedRecipe = {
+                ...response.data,
+                RecipeIngredients: adjustedIngredients,
+                steps: enrichedSteps,
+                tips: this.generateEnhancedRecipeTips(response.data, recipeType)
+              };
+              this.generatedRecipe$.next(generatedRecipe);
+            }
+          },
+          error: (error) => {
+            console.error('Error:', error);
+            this.notificationService.showError(
+              'Hubo un problema generando tu receta. Por favor, intenta de nuevo.'
+            );
+          }
+        });
+    }
+
+    private adjustSeasoningQuantities(ingredients: { ingredient_name: string; quantity: string }[]): { ingredient_name: string; quantity: string }[] {
+      return ingredients.map(ingredient => {
+        if (MEXICAN_INGREDIENTS.condimentos.includes(ingredient.ingredient_name)) {
+          const seasoning = BASE_SEASONING_QUANTITIES[ingredient.ingredient_name];
+          if (seasoning) {
+            return {
+              ...ingredient,
+              quantity: `${seasoning.baseQuantity} ${seasoning.unit}`
+            };
+          }
+        }
+        return ingredient;
+      });
+    }
 
  private enrichStepsWithCustomization(
    steps: string[],
@@ -394,6 +518,10 @@ startGenerator(event?: MouseEvent): void {
  }
 
  ngOnDestroy(): void {
+  //
+  if (this.messageInterval) {
+    clearInterval(this.messageInterval);
+  }
    this.destroy$.next();
    this.destroy$.complete();
  }

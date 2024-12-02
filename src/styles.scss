@@ -117,3 +117,14 @@ html {
       }
     }
    }
+
+   body.modal-open {
+    overflow: hidden;
+    padding-right: 0;
+  }
+  
+  html.modal-open {
+    overflow: hidden;
+  }
+  
+  $color-flexi: #038009; // Verde usado para recetas Flexi

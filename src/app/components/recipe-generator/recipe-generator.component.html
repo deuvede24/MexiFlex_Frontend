@@ -101,7 +101,7 @@
   @if (loading$ | async) {
   <div class="loading-state">
     <div class="taco-loader"></div>
-    <div class="loading-message">Estamos preparando tu receta</div>
+    <div class="loading-message">{{ loadingMessage$ | async }}</div>
     <div class="loading-progress"></div> <!-- Esta es la línea nueva -->
   </div>
   }
