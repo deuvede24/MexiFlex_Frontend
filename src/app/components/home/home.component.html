@@ -2,50 +2,59 @@
 <app-header></app-header>
 
 <div class="container mt-2">
-  <div id="backend-recipes">  <!-- Añadimos este id aquí -->
-    <div id="recipeCarousel" class="carousel slide"  data-bs-interval="false"  data-bs-touch="true">
+  <div id="backend-recipes"> <!-- Añadimos este id aquí -->
+    <div id="recipeCarousel" class="carousel slide" data-bs-interval="false" data-bs-touch="true">
       <div class="carousel-inner">
         @for (group of groupedRecipes; track $index) {
-          <div class="carousel-item" [class.active]="$index === 0">
-            <div class="row justify-content-center">
-              <div class="col-md-8">
-                <div class="recipe-card">
-                  <div class="recipe-image">
-                    <img [src]="recipeService.getImageUrl(group.versions[0]?.image)" [alt]="group.title">
-                    <div class="recipe-overlay"></div>
+        <div class="carousel-item" [class.active]="$index === 0">
+          <div class="row justify-content-center">
+            <div class="col-md-8">
+              <div class="recipe-card">
+                <div class="recipe-image">
+                  <img [src]="recipeService.getImageUrl(group.versions[0]?.image)" [alt]="group.title">
+                  <div class="recipe-overlay"></div>
+                </div>
+
+                <div class="recipe-content">
+                  <div class="recipe-header">
+                    <h3 class="recipe-title">{{ group.title }}</h3>
+                    <div class="recipe-time">
+                      <i class="fas fa-clock"></i>
+                      <span>{{ group.averagePreparationTime }} min</span>
+                    </div>
                   </div>
-                  
-                  <div class="recipe-content">
-                    <div class="recipe-header">
-                      <h3 class="recipe-title">{{ group.title }}</h3>
-                      <div class="recipe-time">
-                        <i class="fas fa-clock"></i>
-                        <span>{{ group.averagePreparationTime }} min</span>
-                      </div>
-                    </div>
-                    
-                    <p class="recipe-description">{{ group.generalDescription }}</p>
-                    
-                    <div class="recipe-actions">
-                      <button (click)="openRecipeModal(group.traditionalVersion, 'Tradicional')"
-                              class="btn-version btn-traditional">
+
+                  <p class="recipe-description">{{ group.generalDescription }}</p>
+
+                  <div class="recipe-actions">
+                    <button (click)="openRecipeModal(group.traditionalVersion, 'Tradicional')"
+                      class="btn-version btn-traditional" 
+                      data-bs-toggle="tooltip"
+                      title="Versión Tradicional de la receta">
+                      <div class="d-flex align-items-center gap-2">
+                        <i class="fa-solid fa-burger  d-inline d-md-none"></i>
                         <span>Tradicional</span>
-                        <i class="fas fa-arrow-right"></i>
-                      </button>
-                      <button (click)="openRecipeModal(group.flexiVersion, 'Flexi')"
-                              class="btn-version btn-flexi">
+                      </div>
+                      <i class="fas fa-arrow-right"></i>
+                    </button>
+                    <button (click)="openRecipeModal(group.flexiVersion, 'Flexi')" 
+                      class="btn-version btn-flexi" data-bs-toggle="tooltip" 
+                      title="Versión plant-based de la receta">
+                      <div class="d-flex align-items-center gap-2">
+                        <i class="fa-solid fa-leaf d-inline d-md-none"></i>
                         <span>Flexi</span>
-                        <i class="fas fa-arrow-right"></i>
-                      </button>
-                    </div>
+                      </div>
+                      <i class="fas fa-arrow-right"></i>
+                    </button>
                   </div>
                 </div>
               </div>
             </div>
           </div>
+        </div>
         }
       </div>
-      
+
       <!-- Controles del carrusel -->
       <button class="carousel-control-prev" type="button" data-bs-target="#recipeCarousel" data-bs-slide="prev">
         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -56,7 +65,7 @@
         <span class="visually-hidden">Siguiente</span>
       </button>
     </div>
-  </div>  <!-- Cierre del div backend-recipes -->
+  </div> <!-- Cierre del div backend-recipes -->
 
   <!-- Nuevo CTA -->
   @if (!isUserLoggedIn) {
@@ -87,17 +96,12 @@
     </button>
   </div>}
 </div>
-  
+
 
 <!-- Modal -->
 @if (selectedRecipe) {
-  <app-recipe-modal
-    [recipe]="selectedRecipe"
-    [category]="selectedCategory"
-    [portions]="selectedPortions"
-    [isUserLoggedIn]="isUserLoggedIn"
-    (closeModalEvent)="closeRecipeModal()"
-  ></app-recipe-modal>
+<app-recipe-modal [recipe]="selectedRecipe" [category]="selectedCategory" [portions]="selectedPortions"
+  [isUserLoggedIn]="isUserLoggedIn" (closeModalEvent)="closeRecipeModal()"></app-recipe-modal>
 }
 
 <div class="toast-container">
@@ -108,4 +112,3 @@
     </div>
   </div>
 </div>
-

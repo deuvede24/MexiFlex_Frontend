@@ -1,5 +1,5 @@
 import { RecipeIngredient } from './../../interfaces/recipe.interface';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, AfterViewInit} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
@@ -12,8 +12,9 @@ import { FavoriteRecipe } from '../../interfaces/favoriteRecipe.interface';
 import { RecipeModalComponent } from '../recipe-modal/recipe-modal.component';
 import { environment } from '../../../environments/environment'
 import { ActivatedRoute } from '@angular/router';
+import { TooltipService } from '../../services/tooltip.service';
 
-
+declare var bootstrap: any;
 
 @Component({
   selector: 'app-home',
@@ -22,7 +23,7 @@ import { ActivatedRoute } from '@angular/router';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, AfterViewInit {
   isUserLoggedIn: boolean = false;
   selectedRecipe: Recipe | null = null;
   selectedCategory: string = '';
@@ -43,6 +44,7 @@ export class HomeComponent implements OnInit {
     private router: Router,
     public recipeService: RecipeService,
     private route: ActivatedRoute,
+    private tooltipService: TooltipService,
   ) { }
 
   ngOnInit(): void {
@@ -87,6 +89,11 @@ export class HomeComponent implements OnInit {
         }
       }
     });}
+    
+    ngAfterViewInit() {
+      this.tooltipService.initializeTooltips();
+    }
+  
   
   initializePortions(): void {
     if (this.selectedRecipe) {
@@ -126,6 +133,11 @@ export class HomeComponent implements OnInit {
           group.traditionalVersion = group.versions.find((v: Recipe) => v.category === 'tradicional');
           group.flexiVersion = group.versions.find((v: Recipe) => v.category === 'flexi');
         });
+
+        // Inicializar tooltips después de actualizar el DOM pero antes del scroll
+      setTimeout(() => {
+        this.tooltipService.initializeTooltips();
+      }, 50);
 
 
         //this.showWelcomeToast = true;

@@ -332,3 +332,55 @@ $color-gray-light: #f5f5f5;
    margin-bottom: 0.5rem;
  }
 }
+::ng-deep {
+  .custom-tooltip {
+    .tooltip {
+      transition: opacity 0.3s;
+
+      &.show {
+        opacity: 1;
+      }
+
+      .tooltip-inner {
+        padding: 10px;
+        font-size: 14px;
+        border-radius: 6px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+      }
+
+      &.bs-tooltip-top {
+        margin-bottom: 8px;
+
+        .tooltip-arrow::before {
+          border-top-color: transparent;
+        }
+      }
+    }
+
+    &.btn-traditional {
+      .tooltip {
+        .tooltip-inner {
+          background-color: $color-traditional !important;
+          color: white !important;
+        }
+
+        &.bs-tooltip-top .tooltip-arrow::before {
+          border-top-color: $color-traditional !important;
+        }
+      }
+    }
+
+    &.btn-flexi {
+      .tooltip {
+        .tooltip-inner {
+          background-color: $color-flexi !important;
+          color: white !important;
+        }
+
+        &.bs-tooltip-top .tooltip-arrow::before {
+          border-top-color: $color-flexi !important;
+        }
+      }
+    }
+  }
+}

@@ -129,3 +129,74 @@ html {
   
   $color-flexi: #038009; // Verde usado para recetas Flexi
   //
+
+  // En styles.scss (estilos globales)
+.tooltip {
+  opacity: 1 !important; // Forzar opacidad completa
+
+  .tooltip-inner {
+    padding: 8px 16px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    max-width: none; // Evitar que el texto se corte
+  }
+
+  &.tooltip-traditional {
+    .tooltip-inner {
+      background: linear-gradient(45deg, #f06306, #ff7b2c) !important;
+      color: white !important;
+    }
+    .tooltip-arrow::before {
+      border-top-color: #f06306 !important;
+    }
+  }
+
+  &.tooltip-flexi {
+    .tooltip-inner {
+      background: linear-gradient(45deg, #038009, #0aa012) !important;
+      color: white !important;
+    }
+    .tooltip-arrow::before {
+      border-top-color: #038009 !important;
+    }
+  }
+
+  // Animación instantánea
+  &.fade {
+    transition: none !important;
+  }
+}
+
+// En styles.scss
+.btn-close-top {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: white;
+  border: none;
+  border-radius: 50%;
+  width: 2.2rem;
+  height: 2.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+
+  i {
+    font-size: 1.1rem;
+    color: #333333 !important; // Forzar el color gris
+  }
+
+  &:hover {
+    transform: scale(1.1);
+    
+    i {
+      color: #555555 !important; // Color más oscuro al hover
+    }
+  }
+}
