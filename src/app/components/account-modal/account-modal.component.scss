@@ -69,16 +69,19 @@
         transform: translateY(0);
       }
 
-      &.btn-outline-danger {
-        background-color: #1a1a1a;
-        color: white;
+      &.btn-logout {
+        background-color: white;
+        color: #333333; // Un gris oscuro para el texto
+        border: 2px solid #333333;
         border-radius: 2rem;
-        border: none;
+        padding: 0.75rem 1.5rem;
+        font-weight: 500;
         transition: all 0.3s ease;
+        width: 100%;
       
         &:hover {
-          background-color: #333333;
-          transform: translateY(-2px);
+          background-color: rgba(51, 51, 51, 0.1); // Una versión transparente del gris
+          transform: translateY(-2px); // Mantiene la animación de elevación
         }
       }
     }
