@@ -42,7 +42,29 @@ export interface CookingMethod {
           prep: 'cortar en trozos medianos',
           cooking: 'cocinar a la plancha con limón y especias',
           tips: ['No sobrecocinar para mantener la jugosidad']
-        }
+        },
+        // Añadimos las proteínas que faltaban
+      'chorizo': {
+        prep: 'retirar de la tripa si es necesario',
+        cooking: 'dorar a fuego medio-alto hasta que esté bien cocido',
+        serving: 'desmenuzar ligeramente'
+      },
+      'tofu': {
+        prep: 'escurrir bien y cortar en cubos medianos',
+        cooking: 'dorar en sartén con aceite hasta que esté crujiente por fuera',
+        serving: 'agregar las especias al final'
+      },
+      'heura': {
+        prep: 'descongelar si es necesario',
+        cooking: 'saltear a fuego alto con especias mexicanas',
+        serving: 'servir inmediatamente para mantener la textura'
+      },
+      // Añadimos un default para proteínas no especificadas
+      'default': {
+        prep: 'preparar según el tipo de proteína',
+        cooking: 'cocinar hasta que esté en su punto',
+        serving: 'servir caliente'
+      }
       },
       vegetables: {
         default: 'cortar en juliana fina',
