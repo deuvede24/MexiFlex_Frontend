@@ -41,55 +41,21 @@ export class RecipeService {
     });
   }
 
-  
-  // Añadir método para actualizar el Top 3
- /* private updateTop3Favorites(): void {
+  //Método para actualizar el Top 3
+  updateTop3Favorites(): void {
     this.getTop3FavoriteRecipes().subscribe({
       next: (response) => {
-        console.log("Top 3 Favorites Response:", response.data); // Verifica categoría y título aquí
-        response.data.forEach(recipe => {
-          console.log(`Recipe: ${recipe.title}, Category: ${recipe.category}`);
-        });
-        this.top3FavoritesSubject.next(response.data);
+        const processedFavorites = response.data.map(recipe => ({
+          ...recipe,
+          category: recipe.category
+            ? recipe.category.charAt(0).toUpperCase() + recipe.category.slice(1).toLowerCase()
+            : ''
+        }));
+        this.top3FavoritesSubject.next(processedFavorites);
       },
       error: (error) => console.error('Error actualizando Top 3:', error)
     });
-  }*/
-
-   /* private updateTop3Favorites(): void {
-      this.getTop3FavoriteRecipes().subscribe({
-        next: (response) => {
-          console.log("Top 3 Favorites Raw Response:", response);
-          // Asegurarse que la categoría se mantenga en mayúsculas si es necesario
-          const processedFavorites = response.data.map(recipe => ({
-            ...recipe,
-            category: recipe.category.charAt(0).toUpperCase() + recipe.category.slice(1).toLowerCase()
-          }));
-          console.log("Top 3 Favorites Processed:", processedFavorites);
-          this.top3FavoritesSubject.next(processedFavorites);
-        },
-        error: (error) => console.error('Error actualizando Top 3:', error)
-      });
-    }*/
-   // RecipeService - updateTop3Favorites
-// RecipeService
- updateTop3Favorites(): void {
-  this.getTop3FavoriteRecipes().subscribe({
-    next: (response) => {
-      const processedFavorites = response.data.map(recipe => ({
-        ...recipe,
-        category: recipe.category
-          ? recipe.category.charAt(0).toUpperCase() + recipe.category.slice(1).toLowerCase()
-          : ''
-      }));
-      this.top3FavoritesSubject.next(processedFavorites);
-    },
-    error: (error) => console.error('Error actualizando Top 3:', error)
-  });
-}
-
-
-
+  }
   // Obtener todas las recetas con código, mensaje y data
   getRecipes(): Observable<{ code: number; message: string; data: Recipe[] }> {
     return this.http.get<{ code: number; message: string; data: Recipe[] }>(this.apiUrl, { withCredentials: true });
@@ -101,38 +67,19 @@ export class RecipeService {
     return this.http.get<{ ratings: number[] }>(`${this.ratingUrl}/${recipeId}/ratings`, { withCredentials: true });
   }
   // Obtener una receta por ID
- /* getRecipeById(id: number): Observable<{ code: number; message: string; data: Recipe }> {
-    return this.http.get<{ code: number; message: string; data: Recipe }>(`${this.apiUrl}/${id}`, { withCredentials: true });
-  }*/
-   /* getRecipeById(id: number): Observable<any> {
-      // Primero verificar si es hardcodeada
-      const hardcodedRecipe = this.getInitialRecipes().find(r => r.id_recipe === id);
-      if (hardcodedRecipe) {
-        return of({ code: 200, message: 'success', data: hardcodedRecipe });
-      }
-    
-      // Si viene de un enlace compartido y no está logueado
-      const isSharedLink = window.location.pathname.includes('/recipes/');
-      if (isSharedLink && !this.authService.isLoggedIn()) {
-        return this.http.get<any>(`${this.apiUrl}/${id}/shared`);
-      }
-    
-      // Para todos los demás casos, usar la ruta protegida normal
-      return this.http.get<any>(`${this.apiUrl}/${id}`, { withCredentials: true });
-    }*/
-      getRecipeById(id: number): Observable<any> {
-        const hardcodedRecipe = this.getInitialRecipes().find(r => r.id_recipe === id);
-        if (hardcodedRecipe) {
-          return of({ code: 200, message: 'success', data: hardcodedRecipe });
-        }
-      
-        const isSharedLink = window.location.pathname.includes('/recipes/');
-        if (isSharedLink && !this.authService.isLoggedIn()) {
-          return this.http.get<any>(`${this.apiUrl}/${id}/shared`);
-        }
-      
-        return this.http.get<any>(`${this.apiUrl}/${id}`, { withCredentials: true });
-      }
+  getRecipeById(id: number): Observable<any> {
+    const hardcodedRecipe = this.getInitialRecipes().find(r => r.id_recipe === id);
+    if (hardcodedRecipe) {
+      return of({ code: 200, message: 'success', data: hardcodedRecipe });
+    }
+
+    const isSharedLink = window.location.pathname.includes('/recipes/');
+    if (isSharedLink && !this.authService.isLoggedIn()) {
+      return this.http.get<any>(`${this.apiUrl}/${id}/shared`);
+    }
+
+    return this.http.get<any>(`${this.apiUrl}/${id}`, { withCredentials: true });
+  }
 
   // Agregar una nueva receta
   addRecipe(recipe: Recipe): Observable<{ code: number; message: string; data: Recipe }> {
@@ -154,10 +101,6 @@ export class RecipeService {
     return this.http.post<{ code: number; message: string; data: Recipe }>(this.apiUrl, recipe, { withCredentials: true });
   }
 
-  /* getRecipeCategoryCount() {
-     return this.http.get<{ code: number; message: string; data: any[] }>('/recipes/category-count');
-   }*/
-
   getRecipeCategoryCount(): Observable<{ code: number; message: string; data: any[] }> {
     return this.http.get<{ code: number; message: string; data: any[] }>(`${this.apiUrl}/category-count`, { withCredentials: true });
   }
@@ -167,20 +110,32 @@ export class RecipeService {
     {
       id_recipe: 21,
       title: 'Tacos de Alambre',
-      description: 'Deliciosos tacos de alambre con carne asada, pimientos y cebolla.',
+      description: 'Deliciosos tacos de alambre con carne asada, bacon, pimientos y cebolla.',
       preparation_time: 30,
       image: '/images/tacos-establo-res.jpg',
       RecipeIngredients: [
-        { ingredient_name: 'Carne', quantity: '200 gramos' },
-        { ingredient_name: 'Pimiento', quantity: '1 unidad' }
+        { ingredient_name: 'Ternera', quantity: '200 g' },
+        { ingredient_name: 'Bacon', quantity: '100 g' },
+        { ingredient_name: 'Cebolla', quantity: '1 mediana' },
+        { ingredient_name: 'Pimiento verde', quantity: '1 unidad' },
+        { ingredient_name: 'Pimiento rojo', quantity: '1 unidad' },
+        { ingredient_name: 'Pimiento amarillo', quantity: '1 unidad' },
+        { ingredient_name: 'Salsa Maggi', quantity: '1 cucharada' },
+        { ingredient_name: 'Sal de cebolla', quantity: '1/2 cucharadita' },
+        { ingredient_name: 'Ajo en polvo', quantity: '1/2 cucharadita' },
+        { ingredient_name: 'Tortillas de maíz', quantity: '8-10 piezas' },
+        { ingredient_name: 'Limón', quantity: '1 unidad' },
       ],
       category: 'Tradicional',
       is_premium: false,
       serving_size: 2,
       created_at: new Date(),
-      steps: 'Paso 1: Hacer esto. Paso 2: Hacer aquello.',
+      steps: `1. Corta la ternera, cebolla, pimientos y bacon en trozos pequeños.
+              2. Dora cada ingrediente por separado en una sartén con un poco de aceite.
+              3. Sazona con salsa Maggi, sal de cebolla, ajo en polvo y un toque de limón.
+              4. Mezcla todos los ingredientes y sirve en tortillas de maíz calientes.`,
       averageRating: undefined,
-      initialAverageRating: 4.5
+      initialAverageRating: 4.5,
     },
     {
       id_recipe: 22,
@@ -189,23 +144,33 @@ export class RecipeService {
       preparation_time: 12,
       image: '/images/tacos-establo-res.jpg',
       RecipeIngredients: [
-        { ingredient_name: "Tofu", quantity: "150 gramos" },
-        { ingredient_name: "Salsa de soja", quantity: "50 ml" }
+        { ingredient_name: 'Tofu firme', quantity: '150 g' },
+        { ingredient_name: 'Salsa de soja', quantity: '2 cucharadas' },
+        { ingredient_name: 'Sal de cebolla', quantity: '1/2 cucharadita' },
+        { ingredient_name: 'Ajo en polvo', quantity: '1 cucharadita' },
+        { ingredient_name: 'Limón', quantity: '1 unidad' },
+        { ingredient_name: 'Cebolla', quantity: '1 mediana' },
+        { ingredient_name: 'Pimiento verde', quantity: '1 unidad' },
+        { ingredient_name: 'Pimiento rojo', quantity: '1 unidad' },
+        { ingredient_name: 'Tortillas de maíz', quantity: '6-8 piezas' },
       ],
-      category: "Flexi",
+      category: 'Flexi',
       is_premium: true,
-      serving_size: 1,
+      serving_size: 3, // Porciones ajustadas
       created_at: new Date(),
-      steps: 'Paso 1: Marinar el tofu. Paso 2: Cocinar a la plancha.',
+      steps: `1. Corta el tofu en cubos y marínalo con salsa de soja, sal de cebolla, ajo en polvo y un toque de limón.
+              2. Cocina el tofu en la air fryer a 200°C durante 15 minutos o dórarlo en una sartén.
+              3. Sofríe la cebolla y los pimientos hasta que estén tiernos.
+              4. Mezcla el tofu con los vegetales y sirve en tortillas de maíz calientes, acompañados de limón.`,
       averageRating: undefined,
-      initialAverageRating: 4.5
+      initialAverageRating: 4.5,
     },
     {
       id_recipe: 23,
       title: 'Tacos de Chicharrón',
       description: 'Chicharrón crujiente acompañado de salsa verde y aguacate.',
       preparation_time: 35,
-      image: '/images/tacos-establo-res.jpg',
+      image: '/images/chicha.jpeg',
       RecipeIngredients: [
         { ingredient_name: 'Chicharrón', quantity: '150 gramos' },
         { ingredient_name: 'Aguacate', quantity: '1 unidad' }
@@ -223,7 +188,7 @@ export class RecipeService {
       title: 'Tacos de Chicharrón',
       description: 'Tacos de chicharrón vegano con aguacate.',
       preparation_time: 45,  // Cambiamos el tiempo de preparación
-      image: '/images/tacos-establo-res.jpg',
+      image: '/images/chicha.jpeg',
       RecipeIngredients: [
         { ingredient_name: 'Chicharrón vegano', quantity: '150 gramos' },
         { ingredient_name: 'Aguacate', quantity: '1 unidad' }
@@ -251,7 +216,7 @@ export class RecipeService {
       'Ensalada Caesar': 'La legendaria ensalada originaria de Tijuana, con lechuga romana fresca, aderezo Caesar casero y crutones crujientes',
       'Tostadas de Maíz con Pollo': 'Crujientes tostadas de maíz montadas con lechuga, aguacate y crema. Un platillo fresco y delicioso de la cocina mexicana'
     };
-  
+
     const grouped = recipes.reduce((acc: { [key: string]: Recipe[] }, recipe) => {
       if (!acc[recipe.title]) {
         acc[recipe.title] = [];
@@ -259,7 +224,7 @@ export class RecipeService {
       acc[recipe.title].push(recipe);
       return acc;
     }, {});
-  
+
     return Object.keys(grouped).map(title => ({
       title,
       versions: grouped[title],
@@ -275,12 +240,11 @@ export class RecipeService {
     if (!this.authService.isLoggedIn()) {
       // Si el usuario no está logueado, devuelve un observable vacío
       return of({ data: [] });
-  }
+    }
     return this.http.get<{ data: { recipe_id: number }[] }>(`${this.favoriteUrl}`, { withCredentials: true });
   }
 
   // Agregar una receta a favoritos y actualizar el BehaviorSubject
-  // Modificar los métodos de añadir/eliminar favoritos
   addFavoriteRecipe(recipeId: number): Observable<{ message: string }> {
     return this.http.post<{ message: string }>(this.favoriteUrl, { recipe_id: recipeId }, { withCredentials: true }).pipe(
       tap(() => {
@@ -310,10 +274,6 @@ export class RecipeService {
   }
 
   // Obtener el promedio de calificación de una receta
-/* getRecipeRating(recipeId: number): Observable<{ averageRating: number }> {
-    return this.http.get<{ averageRating: number }>(`${this.ratingUrl}/${recipeId}/average`, { withCredentials: true });
-  }*/
-
   getRecipeRating(recipeId: number): Observable<{ averageRating: number }> {
     const isSharedLink = window.location.pathname.includes('/recipes/');
     if (isSharedLink && !this.authService.isLoggedIn()) {
@@ -327,45 +287,36 @@ export class RecipeService {
     if (!this.authService.isLoggedIn()) {
       // Si el usuario no está logueado, devuelve un observable vacío
       return of({ data: [] });
-  }
+    }
     return this.http.get<{ data: FavoriteRecipe[] }>(`${this.favoriteUrl}/top3`, { withCredentials: true });
   }
 
-// Añadir al RecipeService actual
-/*generateRecipe(data: any): Observable<any> {
-  return this.http.post<any>(`${this.apiUrl}/generate`, data, {
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    withCredentials: true // Si necesitas cookies/sesión
-  });
-}*/
-getImageUrl(imagePath: string): string {
-  if (!imagePath) {
-    return '/assets/images/default.jpg'; // Imagen por defecto si no hay imagen
+
+  getImageUrl(imagePath: string): string {
+    if (!imagePath) {
+      return '/assets/images/default.jpg'; // Imagen por defecto si no hay imagen
+    }
+
+    // Si la ruta ya es una URL completa (Cloudinary u otra), no la modifiques
+    if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+      return imagePath;
+    }
+
+    // Si es una imagen local (en /images/)
+    if (imagePath.startsWith('/images/')) {
+      return imagePath;
+    }
+
+    // Si es una ruta generada por el backend
+    return `http://localhost:3001/uploads/${imagePath}`;
   }
 
-  // Si la ruta ya es una URL completa (Cloudinary u otra), no la modifiques
-  if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
-    return imagePath;
+  generateRecipe(data: GenerateRecipeRequest): Observable<GenerateRecipeResponse> {
+    return this.http.post<GenerateRecipeResponse>(
+      `${this.apiUrl}/generate`,
+      data,
+      { withCredentials: true }
+    );
   }
-
-  // Si es una imagen local (en /images/)
-  if (imagePath.startsWith('/images/')) {
-    return imagePath;
-  }
-
-  // Si es una ruta generada por el backend
-  return `http://localhost:3001/uploads/${imagePath}`;
-}
-
-
-generateRecipe(data: GenerateRecipeRequest): Observable<GenerateRecipeResponse> {
-  return this.http.post<GenerateRecipeResponse>(
-    `${this.apiUrl}/generate`, 
-    data,
-    { withCredentials: true }
-  );
-}
 
 }
