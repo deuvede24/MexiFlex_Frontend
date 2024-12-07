@@ -278,7 +278,13 @@ export class HomeComponent implements OnInit, AfterViewInit {
   }*/
 
   // En el home.component.ts
-  redirectToLogin(): void {
+  /*redirectToLogin(): void {
     this.router.navigate(['/login']);
+  }*/
+  redirectToLogin(): void {
+    this.router.navigate(['/login']).then(() => {
+      window.scrollTo(0, 0); // Lleva al inicio de la página
+    });
   }
+  
 }
