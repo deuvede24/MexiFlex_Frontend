@@ -42,6 +42,27 @@ export class AccountModalComponent implements OnDestroy {
     this.top3Modal.open();
   }
 
+  //
+  goToFeaturedRecipe(): void {
+    this.close();
+    this.router.navigate(['/recipes', 21]); // ID de la receta destacada
+  }
+  
+
+  goToMap(): void {
+    this.close(); // Cierra el modal primero
+    this.router.navigate(['/mapa']).then(() => {
+      window.scrollTo(0, 0); // Desplaza la pantalla al inicio
+    });
+  }
+  
+
+  goToIARecipes(): void {
+    this.close();
+    this.router.navigate(['/recetas-ia']); // Ruta a las recetas generadas por IA.
+  }
+
+
   logout(): void {
     this.authService.logout();
     this.close();
