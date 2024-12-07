@@ -56,7 +56,7 @@
           {{ category.name }}
         </h3>
         <div class="ingredients-grid">
-          @for (ingredient of category.ingredients; track ingredient) {
+          @for (ingredient of getIngredients(category); track ingredient) {
           <button type="button" class="ingredient-chip" [class.selected]="isIngredientSelected(ingredient)"
             (click)="toggleIngredient(ingredient)">
             <i [class]="isIngredientSelected(ingredient) ? 'fas fa-check' : 'fas fa-plus'"></i>
