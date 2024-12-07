@@ -49,6 +49,11 @@ export const RECIPE_CUSTOMIZATIONS: Record<string, RecipeTypeCustomization> = {
         cooking: 'dorar a fuego medio-alto hasta que esté bien cocido',
         serving: 'desmenuzar ligeramente'
       },
+      'carne molida': {
+        prep: 'poner la carne a cocer con un chorrito de aceite',
+        cooking: 'dorar a fuego medio-alto hasta que esté bien cocida',
+        serving: 'escurrir exceso de grasa y reservar'
+      },
       'tofu': {
         prep: 'escurrir bien y cortar en cubos medianos',
         cooking: 'dorar en sartén con aceite hasta que esté crujiente por fuera',
@@ -75,7 +80,8 @@ export const RECIPE_CUSTOMIZATIONS: Record<string, RecipeTypeCustomization> = {
       default: 'cortar en juliana fina',
       'aguacate': 'cortar en cubos o preparar guacamole fresco',
       'cebolla': 'picar finamente y opcionalmente curtir en limón',
-      'tomate': 'cortar en cubos pequeños, retirar semillas'
+      'tomate': 'cortar en cubos pequeños, retirar semillas',
+      'chile': 'cortar en cubos pequeños, retirar semillas'
     },
     general: {
       preparation: [
