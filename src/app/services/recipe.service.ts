@@ -123,12 +123,12 @@ export class RecipeService {
         { ingredient_name: 'Salsa Maggi', quantity: '1 cucharada' },
         { ingredient_name: 'Sal de cebolla', quantity: '1/2 cucharadita' },
         { ingredient_name: 'Ajo en polvo', quantity: '1/2 cucharadita' },
-        { ingredient_name: 'Tortillas de maíz', quantity: '8-10 piezas' },
+        { ingredient_name: 'Tortillas de maíz', quantity: '4 piezas' },
         { ingredient_name: 'Limón', quantity: '1 unidad' },
       ],
       category: 'Tradicional',
       is_premium: false,
-      serving_size: 2,
+      serving_size: 1,
       created_at: new Date(),
       steps: `1. Corta la ternera, cebolla, pimientos y bacon en trozos pequeños.
               2. Dora cada ingrediente por separado en una sartén con un poco de aceite.
@@ -152,11 +152,11 @@ export class RecipeService {
         { ingredient_name: 'Cebolla', quantity: '1 mediana' },
         { ingredient_name: 'Pimiento verde', quantity: '1 unidad' },
         { ingredient_name: 'Pimiento rojo', quantity: '1 unidad' },
-        { ingredient_name: 'Tortillas de maíz', quantity: '6-8 piezas' },
+        { ingredient_name: 'Tortillas de maíz', quantity: '4 piezas' },
       ],
       category: 'Flexi',
       is_premium: true,
-      serving_size: 3, // Porciones ajustadas
+      serving_size: 1, // Porciones ajustadas
       created_at: new Date(),
       steps: `1. Corta el tofu en cubos y marínalo con salsa de soja, sal de cebolla, ajo en polvo y un toque de limón.
               2. Cocina el tofu en la air fryer a 200°C durante 15 minutos o dórarlo en una sartén.
