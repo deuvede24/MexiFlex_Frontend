@@ -1,6 +1,4 @@
 // ai-recipe-modal.component.scss
-
-// Para el scroll del modal (añadir al principio)
 .modal.fade.show {
   position: fixed;
   top: 0;
@@ -301,5 +299,56 @@ $color-gray-light: #f5f5f5;
 }
 body.modal-open {
   overflow: hidden;
+}
+
+
+.btn-download-pdf {
+  background: linear-gradient(135deg, $color-ai, darken($color-ai, 10%)); // Degradado a oscuro
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 50px; // Forma redondeada
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  i {
+    font-size: 1.2rem;
+  }
+
+  &:hover {
+    background: linear-gradient(135deg, darken($color-ai, 10%), darken($color-ai, 20%)); 
+    transform: translateY(-2px); 
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.pdf-mode {
+  width: 794px; /* Ancho de una página A4 en píxeles */
+  font-size: 12px; /* Tamaño reducido para que todo quepa */
+  line-height: 1.5; 
+  padding: 20px; 
+  box-sizing: border-box;
+
+  .ingredients-list li,
+  .steps-list li {
+    font-size: 12px; 
+  }
+
+  .recipe-title {
+    font-size: 24px; 
+    margin-bottom: 10px;
+  }
+
+  .modal-body {
+    overflow: visible !important; /* Evita cortar contenido */
+    max-height: unset !important; /* Asegura que todo el contenido esté visible */
+  }
 }
 
