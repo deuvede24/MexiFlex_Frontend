@@ -90,10 +90,13 @@ export class AppComponent implements OnInit {
 
   openAuthModal() {
     this.isAuthModalOpen = true;
+    document.body.style.overflow = 'hidden'; // Bloquea el scroll en el fondo
+    window.scrollTo({ top: 0, behavior: 'smooth' }); // Desplaza al inicio suavemente
   }
 
   closeAuthModal() {
     this.isAuthModalOpen = false;
+    document.body.style.overflow = 'auto'; // Restaura el scroll del fondo
   }
 }
 
