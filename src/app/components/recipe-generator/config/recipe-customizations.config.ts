@@ -105,7 +105,27 @@ export const RECIPE_CUSTOMIZATIONS: Record<string, RecipeTypeCustomization> = {
         prep: 'cortar en cubos pequeños',
         cooking: 'sellar primero y luego cocinar en el caldo',
         tips: ['Usar cortes con grasa para más sabor']
-      }
+      },
+      'chorizo': {
+        prep: 'retirar de la tripa si es necesario',
+        cooking: 'dorar a fuego medio-alto hasta que esté bien cocido',
+        serving: 'desmenuzar ligeramente'
+      },
+      'pescado': {
+        prep: 'cortar en trozos medianos',
+        cooking: 'cocinar a la plancha con limón y especias y añadirlo al caldo',
+        tips: ['No sobrecocinar para mantener la jugosidad']
+      },
+      'tofu': {
+        prep: 'escurrir bien y cortar en cubos medianos',
+        cooking: 'dorar en sartén con aceite hasta que esté crujiente por fuera y añadir al caldo',
+        serving: 'agregar las especias al final'
+      },
+      'heura': {
+        prep: 'descongelar si es necesario',
+        cooking: 'saltear a fuego alto con especias mexicanas y añadir al caldo al final',
+        serving: 'servir inmediatamente para mantener la textura'
+      },
     },
     vegetables: {
       default: 'cortar en cubos uniformes',

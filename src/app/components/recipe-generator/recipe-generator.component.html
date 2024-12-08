@@ -85,6 +85,14 @@
       <i class="fas fa-arrow-right"></i>
       </button>
       } @else {
+        <!-- Aquí añadimos el contenedor del botón y mensaje -->
+    <div class="button-container">
+      @if (!canProceed() && validationMessages$.value['general']) {
+        <div class="validation-message">
+          <i class="fas fa-exclamation-circle"></i>
+          Selecciona al menos un ingrediente para generar una receta
+        </div>
+      }
       <button type="button" class="nav-button generate" [disabled]="!canProceed() || (loading$ | async)"
         (click)="generateRecipe()">
         @if (loading$ | async) {
@@ -95,6 +103,7 @@
         Generar Receta
         }
       </button>
+    </div>
       }
   </div>
 
