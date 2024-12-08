@@ -15,6 +15,7 @@ import html2canvas from 'html2canvas';
 export class AIRecipeModalComponent {
   @Input() recipe: GeneratedRecipe | null = null;
   @Output() closeModalEvent = new EventEmitter<void>();
+  isLoadingPDF = false; // Variable para manejar el overlay
 
 
   // Debug para ver los datos
@@ -51,26 +52,25 @@ export class AIRecipeModalComponent {
     const modalContent = document.querySelector('.modal-content') as HTMLElement;
   
     if (modalContent) {
-      // Aplica la clase temporal para ajustar el diseño al formato A4
+      this.isLoadingPDF = true; // Mostrar overlay del taco
+  
+      // Ajustar diseño al formato A4
       modalContent.classList.add('pdf-mode');
   
       html2canvas(modalContent, { scale: 2 }).then((canvas) => {
-        // Elimina la clase temporal después de capturar el contenido
         modalContent.classList.remove('pdf-mode');
   
         const imgData = canvas.toDataURL('image/png');
-        const pdf = new jsPDF('p', 'mm', 'a4'); // PDF en formato A4
-        const pdfWidth = pdf.internal.pageSize.getWidth(); // Ancho del PDF
-        const pdfHeight = (canvas.height * pdfWidth) / canvas.width; // Altura proporcional al ancho
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
   
         let heightLeft = pdfHeight;
         let position = 0;
   
-        // Añade la primera página del contenido
         pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, pdfHeight);
         heightLeft -= pdf.internal.pageSize.getHeight();
   
-        // Si hay contenido que excede la primera página, añade páginas adicionales
         while (heightLeft > 0) {
           position = heightLeft - pdfHeight;
           pdf.addPage();
@@ -78,13 +78,15 @@ export class AIRecipeModalComponent {
           heightLeft -= pdf.internal.pageSize.getHeight();
         }
   
-        // Guarda el archivo PDF con el título de la receta o un nombre genérico
         pdf.save(`${this.recipe?.title || 'Receta'}.pdf`);
+        this.isLoadingPDF = false; // Ocultar overlay
       }).catch((error) => {
         console.error('Error al generar el PDF:', error);
+        this.isLoadingPDF = false; // Ocultar overlay en caso de error
       });
     }
   }
+  
   
   closeModal(): void {
     document.body.classList.remove('modal-open'); // Reactiva el scroll al cerrar el modal
