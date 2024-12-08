@@ -50,22 +50,12 @@
     padding-bottom: 15px;
 
     .modal-title {
-      font-size: 1.5rem;
+      font-size: 1.6rem;
       font-weight: 600;
       color: #333;
+      text-align: center; /* Centrado si lo necesitas */
+      margin: 0 auto; /* Centra el texto en la cabecera */
     }
-
-    /*.btn-close {
-      background: none;
-      border: none;
-      font-size: 1.5rem;
-      color: #888;
-      cursor: pointer;
-
-      &:hover {
-        color: #FF6200;
-      }
-    }*/
   }
 
   .modal-body {
@@ -216,3 +206,4 @@
     }
   }
 }
+

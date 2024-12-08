@@ -21,43 +21,6 @@ $color-gray-light: #f5f5f5;
   }
 }
 
-/*.modal-content {
-  border: none;
-  border-radius: 1.5rem;
-  background-color: white;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-  position: relative;
-
-  &.modal-traditional {
-
-    .recipe-title,
-    .section-title {
-      color: $color-dark;
-      border-left: 4px solid $color-traditional;
-      padding-left: 1rem;
-    }
-
-    .recipe-category {
-      background-color: $color-traditional;
-    }
-  }
-
-  &.modal-flexi {
-
-    .recipe-title,
-    .section-title {
-      color: $color-dark;
-      border-left: 4px solid $color-flexi;
-      padding-left: 1rem;
-    }
-
-    .recipe-category {
-      background-color: $color-flexi;
-    }
-  }
-}*/
-
 .modal-content {
   border: none;
   border-radius: 1.5rem;
@@ -105,14 +68,9 @@ $color-gray-light: #f5f5f5;
     .recipe-category {
       color: $color-flexi;
     }
-  }
-
- 
+  } 
 }
 
-
-
-// Botón de cierre superior
 .btn-close-top {
   position: absolute;
   top: 1rem;
@@ -131,6 +89,7 @@ $color-gray-light: #f5f5f5;
   transition: transform 0.3s ease;
 
   @media (max-width: 768px) {
+    position: fixed;
     top: 0.75rem;
     right: 0.75rem;
     width: 2rem;

@@ -32,21 +32,29 @@
 
   .modal-header {
     display: flex;
+    justify-content: center !important; /* Centra horizontalmente el contenido */
+    align-items: center; /* Asegura alineación vertical */
     justify-content: space-between;
-    align-items: center;
     border-bottom: none;
     padding-bottom: 15px;
 
     .modal-title {
-      font-size: 1.5rem;
+      font-size: 1.6rem;
       font-weight: 600;
       color: #333;
+      text-align: center; /* Si lo necesitas centrado */
     }
-    // Removidos los estilos del antiguo btn-close
   }
 
   .modal-body {
     padding: 20px 0;
+    h5 {
+      margin-bottom: 20px; /* Añade un espacio entre el saludo y los botones */
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #333;
+      text-align: center; /* Centra el texto para más estética */
+    }
     
     .btn {
       background-color: #FF6200;
